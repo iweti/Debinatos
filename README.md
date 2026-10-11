@@ -4,7 +4,7 @@ Protótipo de loja virtual de artesanatos, bijuterias e itens personalizados, fe
 
 ## Executar
 
-O projeto usa **Node.js 26.11.1** e **npm 12.2.0**, as versões do ambiente em que foi validado. As dependências têm versões exatas, e o `package-lock.json` fixa também as dependências indiretas.
+O projeto usa **Node.js 24** e **npm 11**. O `.nvmrc` seleciona Node.js 24.21.0 para desenvolvimento local; a Vercel usa a versão 24.x disponível em seus builds e funções. As dependências têm versões exatas, e o `package-lock.json` fixa também as dependências indiretas.
 
 Se você usa nvm, selecione a versão definida em `.nvmrc` antes de instalar:
 
@@ -13,7 +13,7 @@ nvm install
 nvm use
 ```
 
-Confira `node --version` e `npm --version`; ambos devem corresponder às versões acima. Depois, instale pelo lockfile:
+Confira `node --version` e `npm --version`; devem ser versões 24.x e 11.x, respectivamente. Depois, instale pelo lockfile:
 
 ```sh
 npm ci
