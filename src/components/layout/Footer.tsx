@@ -107,11 +107,16 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <div className="mx-auto w-[calc(100%-36px)] max-w-310 md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] flex flex-col gap-2 border-t border-line py-5 text-[9px] text-muted md:flex-row md:justify-between">
+      <div className="mx-auto w-[calc(100%-36px)] max-w-310 md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] border-t border-line py-5 text-[9px] text-muted">
         <span>
-          © {new Date().getFullYear()} Debinatos. Feito para encantar.
+          Debinatos © {new Date().getFullYear()} · Desenvolvido por{" "}
+          <a
+            className="underline underline-offset-2 hover:text-brand"
+            href="https://iweti.com"
+          >
+            IWETI
+          </a>
         </span>
-        <span>Dados e imagens ilustrativos • Nenhuma compra é real.</span>
       </div>
     </footer>
   );

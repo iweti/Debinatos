@@ -137,7 +137,7 @@ export function Home() {
           Salve seus favoritos e volte quando quiser.
         </p>
         <Link
-          className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border px-5 py-3 text-xs/snug  font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec]"
+          className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug font-semibold text-white transition hover:-translate-y-px hover:bg-transparent hover:text-brand disabled:translate-y-0"
           href="/favoritos"
         >
           <Heart size={17} /> Meu cantinho de favoritos
