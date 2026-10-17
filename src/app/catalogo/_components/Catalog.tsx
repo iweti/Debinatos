@@ -169,9 +169,6 @@ export function Catalog() {
               Tente outro nome ou ajuste os filtros para explorar nossa coleção.
             </EmptyState>
           )}
-          <p className="mt-7 text-center text-[9px] leading-relaxed text-muted">
-            Todas as fotos e informações dos produtos são ilustrativas.
-          </p>
         </section>
       </div>
     </div>

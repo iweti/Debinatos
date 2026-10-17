@@ -88,10 +88,6 @@ export function Home() {
               Novos encantos em breve. Explore nosso catálogo.
             </p>
           )}
-          <p className="mt-7 text-center text-[9px] leading-relaxed text-muted">
-            Produtos, preços e imagens de demonstração. Explore e simule sua
-            compra.
-          </p>
         </div>
       </section>
       <section className="mx-auto w-[calc(100%-36px)] max-w-[1240px] md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] py-10 md:py-16">
@@ -121,9 +117,7 @@ export function Home() {
               para você, para presentear e para deixar seu cantinho especial.
             </p>
             <p className="mb-3 max-w-[460px] text-[11px] text-muted lg:text-xs">
-              Peças feitas com amor, qualidade e exclusividade, para levar mais
-              afeto e personalidade ao seu dia. Do nosso cantinho para todo o
-              Brasil.
+              Seu cantinho muito mais especial
             </p>
             <Link
               className="mt-3 inline-flex min-h-16 items-center justify-center gap-5 rounded-xl bg-brand px-7 py-4 text-base leading-snug font-semibold text-white transition-colors hover:bg-brand-dark"
