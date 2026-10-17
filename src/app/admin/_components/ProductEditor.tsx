@@ -146,7 +146,7 @@ export function ProductEditor({
           </small>
           {!images.length && (
             <button
-              className="inline-flex items-center gap-2 p-0 text-xs leading-relaxed font-semibold text-brand hover:underline hover:underline-offset-4 mt-3"
+              className="inline-flex items-center gap-2 p-0 text-xs/relaxed  font-semibold text-brand hover:underline hover:underline-offset-4 mt-3"
               type="button"
               onClick={() => setImages(["/images/placeholder.svg"])}
             >
@@ -155,7 +155,7 @@ export function ProductEditor({
           )}
           <div className="mt-4 flex flex-wrap gap-2.5">
             {images.map((source, i) => (
-              <div className="relative h-[92px] w-[83px]" key={source}>
+              <div className="relative h-23 w-20.75" key={source}>
                 <Photo
                   className="size-full rounded object-cover"
                   source={source}
@@ -178,7 +178,7 @@ export function ProductEditor({
                 )}
               </div>
             ))}
-            <label className="relative flex h-[92px] w-[105px] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded border border-dashed border-[#cdb7a3] bg-[#fcf8f1] text-brand focus-within:outline-2 focus-within:outline-brand text-[11px]">
+            <label className="relative flex h-23 w-26.25 cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded border border-dashed border-[#cdb7a3] bg-[#fcf8f1] text-brand focus-within:outline-2 focus-within:outline-brand text-[11px]">
               <ImagePlus size={24} />
               <span>{uploading ? "Salvando…" : "Adicionar fotos"}</span>
               <input
@@ -225,14 +225,14 @@ export function ProductEditor({
         )}
         <div className="mt-6 flex justify-end gap-3 border-t border-line pt-5">
           <button
-            className="inline-flex items-center justify-center gap-3 rounded-lg border py-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-11 px-3 text-[10px] md:px-4 md:text-[11px]"
+            className="inline-flex items-center justify-center gap-3 rounded-lg border p-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-11  text-[10px] md:px-4 md:text-[11px]"
             type="button"
             onClick={close}
           >
             Cancelar
           </button>
           <button
-            className="inline-flex items-center justify-center gap-3 rounded-lg border border-brand bg-brand py-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 min-h-11 px-3 text-[10px] md:px-4 md:text-[11px]"
+            className="inline-flex items-center justify-center gap-3 rounded-lg border border-brand bg-brand p-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 min-h-11  text-[10px] md:px-4 md:text-[11px]"
             type="submit"
             disabled={uploading}
           >

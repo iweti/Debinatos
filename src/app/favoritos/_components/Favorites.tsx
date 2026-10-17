@@ -9,7 +9,7 @@ import { useFavorites } from "../_lib/use-favorites";
 export function Favorites() {
   const { products, hasUnavailable } = useFavorites();
   return (
-    <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+    <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
       <Breadcrumb items={[{ label: "Itens salvos" }]} />
       <PageHeading eyebrow="UM CANTINHO SÓ SEU" title="Meus favoritos">
         Guarde os detalhes que fizeram seus olhos brilhar.

@@ -74,7 +74,7 @@ export function ProductCard({ product }: { product: Product }) {
             )}
           </div>
           <button
-            className="grid size-7 place-items-center rounded-full border border-[#e8d8cc] text-brand transition hover:border-brand hover:bg-brand hover:text-white md:size-[30px]"
+            className="grid size-7 place-items-center rounded-full border border-[#e8d8cc] text-brand transition hover:border-brand hover:bg-brand hover:text-white md:size-7.5"
             disabled={!product.stock}
             onClick={() => add(product.id)}
             aria-label={`Adicionar ${product.name} ao carrinho`}

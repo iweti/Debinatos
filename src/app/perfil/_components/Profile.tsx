@@ -40,14 +40,14 @@ export function Profile() {
   if (!ready) return <Loading />;
   if (!loggedIn)
     return (
-      <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+      <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
         <LoginPanel
           next={`/perfil?aba=${tab === "dados" ? "dados" : "pedidos"}`}
         />
       </div>
     );
   return (
-    <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+    <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
       <Breadcrumb items={[{ label: "Meu perfil" }]} />
       <PageHeading
         eyebrow="BEM-VINDA AO SEU CANTINHO"
@@ -118,7 +118,7 @@ export function Profile() {
                 navegador.
               </p>
               <label
-                className="block max-w-[450px] text-[11px]"
+                className="block max-w-112.5 text-[11px]"
                 htmlFor="profile-name"
               >
                 Nome
@@ -148,7 +148,7 @@ export function Profile() {
                 </p>
               )}
               <button
-                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 mt-6"
+                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug  font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 mt-6"
                 type="submit"
               >
                 Salvar meus dados <Check size={16} />

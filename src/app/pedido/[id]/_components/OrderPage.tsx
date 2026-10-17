@@ -23,19 +23,19 @@ export function OrderPage() {
   const { id, loggedIn, order, statuses, currentStep, isNew } = useOrder();
   if (!loggedIn)
     return (
-      <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+      <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
         <LoginPanel next={`/pedido/${id}`} />
       </div>
     );
   if (!order)
     return (
-      <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+      <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
         <EmptyState
           icon={<Package size={32} />}
           title="Pedido não encontrado."
           action={
             <Link
-              className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
+              className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug  font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
               href="/perfil"
             >
               Ver meus pedidos
@@ -47,7 +47,7 @@ export function OrderPage() {
       </div>
     );
   return (
-    <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+    <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
       <Breadcrumb
         items={[{ label: "Meu perfil", to: "/perfil" }, { label: order.id }]}
       />
@@ -179,7 +179,7 @@ export function OrderPage() {
             demonstração salvo apenas neste navegador.
           </p>
           <Link
-            className="min-h-12 items-center justify-center gap-3 rounded-lg border py-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] flex w-full px-3 text-[11px] mt-6"
+            className="min-h-12 items-center justify-center gap-3 rounded-lg border p-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] flex w-full  text-[11px] mt-6"
             href="/perfil?aba=pedidos"
           >
             Meus pedidos <ArrowRight size={16} />

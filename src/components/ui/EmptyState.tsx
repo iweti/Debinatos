@@ -20,12 +20,12 @@ export function EmptyState({
         {icon}
       </div>
       <h2 className="mb-3 text-2xl md:text-[27px]">{title}</h2>
-      <p className="mx-auto mb-6 max-w-[430px] text-xs text-muted">
+      <p className="mx-auto mb-6 max-w-107.5 text-xs text-muted">
         {children}
       </p>
       {action ?? (
         <Link
-          className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
+          className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug  font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
           href="/catalogo"
         >
           Explorar a loja <ArrowRight size={16} />

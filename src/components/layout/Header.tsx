@@ -18,7 +18,7 @@ export function Header() {
   } = useHeader();
   return (
     <header className="relative z-20 border-b border-line bg-white">
-      <div className="mx-auto w-[calc(100%-36px)] max-w-[1240px] md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] flex h-[76px] items-center justify-between gap-3 md:h-[92px] md:gap-6">
+      <div className="mx-auto w-[calc(100%-36px)] max-w-310 md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] flex h-19 items-center justify-between gap-3 md:h-23 md:gap-6">
         <Link
           className="inline-flex shrink-0 items-center gap-2.5"
           href="/"
@@ -41,28 +41,28 @@ export function Header() {
           aria-label="Navegação principal"
         >
           <Link
-            className="relative whitespace-nowrap py-3 text-[#665047] hover:text-brand aria-[current=page]:text-brand aria-[current=page]:after:absolute aria-[current=page]:after:right-0 aria-[current=page]:after:bottom-0 aria-[current=page]:after:left-0 aria-[current=page]:after:h-0.5 aria-[current=page]:after:rounded aria-[current=page]:after:bg-brand"
+            className="relative whitespace-nowrap py-3 text-[#665047] hover:text-brand aria-[current=page]:text-brand aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-0 aria-[current=page]:after:bottom-0  aria-[current=page]:after:h-0.5 aria-[current=page]:after:rounded aria-[current=page]:after:bg-brand"
             href="/"
             aria-current={pathname === "/" ? "page" : undefined}
           >
             Início
           </Link>
           <Link
-            className="relative whitespace-nowrap py-3 text-[#665047] hover:text-brand aria-[current=page]:text-brand aria-[current=page]:after:absolute aria-[current=page]:after:right-0 aria-[current=page]:after:bottom-0 aria-[current=page]:after:left-0 aria-[current=page]:after:h-0.5 aria-[current=page]:after:rounded aria-[current=page]:after:bg-brand"
+            className="relative whitespace-nowrap py-3 text-[#665047] hover:text-brand aria-[current=page]:text-brand aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-0 aria-[current=page]:after:bottom-0  aria-[current=page]:after:h-0.5 aria-[current=page]:after:rounded aria-[current=page]:after:bg-brand"
             href="/catalogo"
             aria-current={pathname === "/catalogo" ? "page" : undefined}
           >
             Todos os produtos
           </Link>
           <Link
-            className="relative whitespace-nowrap py-3 text-[#665047] hover:text-brand aria-[current=page]:text-brand aria-[current=page]:after:absolute aria-[current=page]:after:right-0 aria-[current=page]:after:bottom-0 aria-[current=page]:after:left-0 aria-[current=page]:after:h-0.5 aria-[current=page]:after:rounded aria-[current=page]:after:bg-brand"
+            className="relative whitespace-nowrap py-3 text-[#665047] hover:text-brand aria-[current=page]:text-brand aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-0 aria-[current=page]:after:bottom-0  aria-[current=page]:after:h-0.5 aria-[current=page]:after:rounded aria-[current=page]:after:bg-brand"
             href="/sobre"
             aria-current={pathname === "/sobre" ? "page" : undefined}
           >
             Sobre a Debinatos
           </Link>
           <Link
-            className="relative whitespace-nowrap py-3 text-[#665047] hover:text-brand aria-[current=page]:text-brand aria-[current=page]:after:absolute aria-[current=page]:after:right-0 aria-[current=page]:after:bottom-0 aria-[current=page]:after:left-0 aria-[current=page]:after:h-0.5 aria-[current=page]:after:rounded aria-[current=page]:after:bg-brand"
+            className="relative whitespace-nowrap py-3 text-[#665047] hover:text-brand aria-[current=page]:text-brand aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-0 aria-[current=page]:after:bottom-0  aria-[current=page]:after:h-0.5 aria-[current=page]:after:rounded aria-[current=page]:after:bg-brand"
             href="/contato"
             aria-current={pathname === "/contato" ? "page" : undefined}
           >
@@ -102,7 +102,7 @@ export function Header() {
           >
             <ShoppingBag size={21} />
             {count > 0 && (
-              <span className="absolute -right-0.5 top-0.5 grid h-[17px] min-w-[17px] place-items-center rounded-full border-2 border-white bg-brand px-0.5 text-[8px] text-white">
+              <span className="absolute -right-0.5 top-0.5 grid h-4.25 min-w-4.25 place-items-center rounded-full border-2 border-white bg-brand px-0.5 text-[8px] text-white">
                 {count}
               </span>
             )}
@@ -119,7 +119,7 @@ export function Header() {
       </div>
       {searchOpen && (
         <form
-          className="mx-auto w-[calc(100%-36px)] max-w-[1240px] md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] flex items-center gap-2 border-t border-line py-4 md:gap-3"
+          className="mx-auto w-[calc(100%-36px)] max-w-310 md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] flex items-center gap-2 border-t border-line py-4 md:gap-3"
           onSubmit={search}
         >
           <label htmlFor="header-search" className="sr-only">

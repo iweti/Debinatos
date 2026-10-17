@@ -6,7 +6,7 @@ import { useDemoLogin } from "@/lib/hooks/use-demo-login";
 export function LoginPanel({ next = "/perfil" }: { next?: string }) {
   const { ready, login } = useDemoLogin(next);
   return (
-    <div className="mx-auto my-5 max-w-[470px] rounded-xl border border-line bg-[#fffcf7] px-6 py-8 text-center md:my-9 md:p-9">
+    <div className="mx-auto my-5 max-w-117.5 rounded-xl border border-line bg-[#fffcf7] px-6 py-8 text-center md:my-9 md:p-9">
       <div className="mx-auto mb-5 grid size-16 place-items-center rounded-full bg-cream text-brand">
         <UserRound size={30} />
       </div>
@@ -32,13 +32,13 @@ export function LoginPanel({ next = "/perfil" }: { next?: string }) {
         </div>
       </div>
       <button
-        className="min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 flex w-full"
+        className="min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug  font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 flex w-full"
         disabled={!ready}
         onClick={login}
       >
         Usar perfil de demonstração <ArrowRight size={17} />
       </button>
-      <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f] mb-5 text-left">
+      <p className="my-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]  text-left">
         <ShieldCheck className="mt-px text-brand" size={17} /> Não há senha ou
         conta real. Seus itens salvos e carrinho serão preservados.
       </p>

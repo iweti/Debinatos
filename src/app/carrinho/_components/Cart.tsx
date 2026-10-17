@@ -36,7 +36,7 @@ export function Cart() {
     changeCep,
   } = useCart();
   return (
-    <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+    <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
       <Breadcrumb items={[{ label: "Carrinho" }]} />
       <PageHeading
         eyebrow="SEUS PEQUENOS ACHADOS"
@@ -95,7 +95,7 @@ export function Cart() {
                       Remover
                     </button>
                   </div>
-                  <div className="absolute right-0 bottom-4 left-[88px] flex items-center justify-between gap-3 md:static md:flex-col md:items-end md:gap-5">
+                  <div className="absolute right-0 bottom-4 left-22 flex items-center justify-between gap-3 md:static md:flex-col md:items-end md:gap-5">
                     <Quantity
                       compact
                       value={item.quantity}
@@ -111,7 +111,7 @@ export function Cart() {
               ))}
             </div>
             <Link
-              className="inline-flex items-center gap-2 p-0 text-xs leading-relaxed font-semibold text-brand hover:underline hover:underline-offset-4 my-6"
+              className="inline-flex items-center gap-2 p-0 text-xs/relaxed  font-semibold text-brand hover:underline hover:underline-offset-4 my-6"
               href="/catalogo"
             >
               <ArrowLeft size={16} /> Continuar escolhendo
@@ -245,7 +245,7 @@ export function Cart() {
               </p>
             ) : (
               <Link
-                className="min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand py-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 flex w-full px-3 text-[11px]"
+                className="min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand p-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 flex w-full  text-[11px]"
                 href={`/checkout?entrega=${delivery}`}
               >
                 Continuar para a compra <ArrowRight size={16} />

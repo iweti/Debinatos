@@ -29,7 +29,7 @@ export function ProductPage() {
   } = useProduct();
   if (!product)
     return (
-      <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+      <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
         <EmptyState
           icon={<ShoppingBag size={32} />}
           title="Este encanto não está disponível."
@@ -39,7 +39,7 @@ export function ProductPage() {
       </div>
     );
   return (
-    <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+    <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
       <Breadcrumb
         items={[
           { label: "Todos os produtos", to: "/catalogo" },
@@ -117,7 +117,7 @@ export function ProductPage() {
               name={product.name}
             />
             <button
-              className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand py-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 flex-1 basis-full px-3 text-[11px] sm:basis-auto md:basis-full lg:basis-auto"
+              className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand p-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 flex-1 basis-full  text-[11px] sm:basis-auto md:basis-full lg:basis-auto"
               disabled={!product.stock || count > product.stock}
               onClick={() => add(product.id, count)}
             >

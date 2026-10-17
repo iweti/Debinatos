@@ -49,7 +49,7 @@ export function Admin() {
   } = useAdmin();
   return (
     <div className="bg-surface">
-      <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+      <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-5 pt-3 md:pt-5">
           <div>
             <span className="inline-flex items-center gap-2 text-[9px] leading-relaxed font-semibold tracking-[.18em] text-brand uppercase">
@@ -106,7 +106,7 @@ export function Admin() {
             <Package size={18} /> Pedidos
           </button>
           <button
-            className="flex items-center gap-2 border-b-2 border-transparent py-3.5 text-muted md:text-xs ml-auto px-0 text-[10px] md:text-[10px] max-md:basis-[100%] max-md:justify-end max-md:[border-top:1px_solid_var(--color-line)]"
+            className="flex items-center gap-2 border-b-2 border-transparent py-3.5 text-muted md:text-xs ml-auto px-0 text-[10px] md:text-[10px] max-md:basis-full max-md:justify-end max-md:[border-top:1px_solid_var(--color-line)]"
             onClick={() => setResetOpen(true)}
           >
             <RotateCcw size={16} /> Restaurar demonstração
@@ -183,7 +183,7 @@ export function Admin() {
                   cara.
                 </p>
                 <button
-                  className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 mt-4 text-xs"
+                  className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 mt-4 "
                   onClick={() => setEditor(null)}
                 >
                   <Plus size={17} /> Cadastrar produto
@@ -201,13 +201,13 @@ export function Admin() {
                 </span>
               </div>
               <button
-                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
+                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug  font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
                 onClick={() => setEditor(null)}
               >
                 <Plus size={18} /> Novo produto
               </button>
             </div>
-            <div className="flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-1 focus-within:ring-2 focus-within:ring-brand/20 mb-6 max-w-[500px]">
+            <div className="flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-1 focus-within:ring-2 focus-within:ring-brand/20 mb-6 max-w-125">
               <Search className="size-5 text-muted" size={19} />
               <input
                 className="min-w-0 flex-1 border-0 bg-transparent px-2 text-xs focus:ring-0"
@@ -386,7 +386,7 @@ export function Admin() {
                       <label className="block text-[9px] text-muted">
                         Andamento{" "}
                         <select
-                          className="mt-1.5 block max-w-[190px] p-2.5 text-[10px]"
+                          className="mt-1.5 block max-w-47.5 p-2.5 text-[10px]"
                           aria-label={`Andamento do pedido ${order.id}`}
                           value={order.status}
                           onChange={(e) =>
@@ -416,7 +416,7 @@ export function Admin() {
                 title="Nenhum pedido por aqui."
                 action={
                   <button
-                    className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-[#d7bbb0] bg-transparent px-5 py-3 text-xs leading-snug font-semibold text-brand transition hover:-translate-y-px hover:border-brand hover:bg-[#fff4ec] disabled:translate-y-0"
+                    className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-[#d7bbb0] bg-transparent px-5 py-3 text-xs/snug  font-semibold text-brand transition hover:-translate-y-px hover:border-brand hover:bg-[#fff4ec] disabled:translate-y-0"
                     onClick={() => setOrderFilter("")}
                   >
                     Mostrar todos os pedidos
@@ -448,14 +448,14 @@ export function Admin() {
             </p>
             <div className="mt-6 flex justify-end gap-3 border-t border-line pt-5">
               <button
-                className="inline-flex items-center justify-center gap-3 rounded-lg border py-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-11 px-3 text-[10px] md:px-4 md:text-[11px]"
+                className="inline-flex items-center justify-center gap-3 rounded-lg border p-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-11  text-[10px] md:px-4 md:text-[11px]"
                 disabled={resetting}
                 onClick={() => setResetOpen(false)}
               >
                 Manter meus dados
               </button>
               <button
-                className="inline-flex items-center justify-center gap-3 rounded-lg border border-brand bg-brand py-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 min-h-11 px-3 text-[10px] md:px-4 md:text-[11px]"
+                className="inline-flex items-center justify-center gap-3 rounded-lg border border-brand bg-brand p-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 min-h-11  text-[10px] md:px-4 md:text-[11px]"
                 disabled={resetting}
                 onClick={restoreDemo}
               >

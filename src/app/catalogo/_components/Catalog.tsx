@@ -23,7 +23,7 @@ export function Catalog() {
     products,
   } = useCatalog();
   return (
-    <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+    <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
       <Breadcrumb items={[{ label: "Todos os produtos" }]} />
       <PageHeading
         eyebrow="ESCOLHA SEUS PEQUENOS ENCANTOS"
@@ -106,7 +106,7 @@ export function Catalog() {
           </fieldset>
           {(category || maximum || query) && (
             <button
-              className="inline-flex items-center gap-2 p-0 text-xs leading-relaxed font-semibold text-brand hover:underline hover:underline-offset-4"
+              className="inline-flex items-center gap-2 p-0 text-xs/relaxed  font-semibold text-brand hover:underline hover:underline-offset-4"
               onClick={clearFilters}
             >
               Limpar filtros
@@ -159,7 +159,7 @@ export function Catalog() {
               title="Esse encanto ainda não apareceu."
               action={
                 <button
-                  className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
+                  className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug  font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
                   onClick={clearFilters}
                 >
                   Limpar filtros

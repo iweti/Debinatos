@@ -7,7 +7,7 @@ export function Toast() {
   return (
     toast && (
       <div
-        className="group/toast fixed right-4 bottom-4 left-4 z-100 flex items-center gap-3 rounded-xl bg-ink py-3.5 pr-3 pl-4 text-[11px] leading-relaxed text-[#fff8ed] shadow-xl md:right-6 md:bottom-6 md:left-auto md:max-w-[430px] md:text-xs [animation:toast-in_0.2s_ease] data-[error=true]:bg-[#8e2018]"
+        className="group/toast fixed inset-x-4 bottom-4  z-100 flex items-center gap-3 rounded-xl bg-ink py-3.5 pr-3 pl-4 text-[11px] leading-relaxed text-[#fff8ed] shadow-xl md:right-6 md:bottom-6 md:left-auto md:max-w-107.5 md:text-xs animate-[toast-in_0.2s_ease] data-[error=true]:bg-[#8e2018]"
         data-error={toast.error}
         role={toast.error ? "alert" : "status"}
       >
