@@ -20,21 +20,17 @@ export function Header() {
     <header className="relative z-20 border-b border-line bg-white">
       <div className="mx-auto w-[calc(100%-36px)] max-w-310 md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] flex h-19 items-center justify-between gap-3 md:h-23 md:gap-6">
         <Link
-          className="inline-flex shrink-0 items-center gap-2.5"
+          className="inline-flex shrink-0 items-center"
           href="/"
           aria-label="Debinatos, início"
         >
           <img
-            className="size-9 rounded-full object-cover md:size-12"
-            src="/images/marca-debinatos.jpg"
-            alt=""
+            className="h-auto w-40 object-contain sm:w-51 md:w-63.75"
+            src="/images/logo-debinatos-transparente.png"
+            width={340}
+            height={120}
+            alt="Debinatos"
           />
-          <span className="font-serif text-[25px] leading-none font-semibold tracking-[-1px] text-brand italic md:text-[30px]">
-            Debinatos
-            <span className="mt-2 block font-sans text-[5px] leading-none font-medium tracking-[2px] text-muted not-italic md:text-[7px]">
-              DETALHES QUE ENCANTAM
-            </span>
-          </span>
         </Link>
         <nav
           className="hidden items-center gap-6 text-[11px] lg:flex"
