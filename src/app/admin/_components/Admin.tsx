@@ -49,57 +49,72 @@ export function Admin() {
   } = useAdmin();
   return (
     <div className="bg-surface">
-      <div className="page-container">
-        <div className="admin-heading">
+      <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-5 pt-3 md:pt-5">
           <div>
-            <span className="eyebrow">
+            <span className="inline-flex items-center gap-2 text-[9px] leading-relaxed font-semibold tracking-[.18em] text-brand uppercase">
               <Sparkles size={14} /> ESPAÇO DA DEBINATOS
             </span>
-            <h1>Olá, vamos cuidar da loja?</h1>
-            <p>Seu painel de administração demonstrativo.</p>
+            <h1 className="mt-3 mb-2.5 text-[28px] md:text-[34px]">
+              Olá, vamos cuidar da loja?
+            </h1>
+            <p className="text-xs text-muted">
+              Seu painel de administração demonstrativo.
+            </p>
           </div>
-          <Link className="button outline small" href="/">
+          <Link
+            className="inline-flex items-center justify-center gap-3 rounded-lg border leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-10 px-4 py-2.5 text-[11px]"
+            href="/"
+          >
             <ArrowLeft size={16} /> Ver a loja
           </Link>
         </div>
-        <div className="admin-demo">
+        <div className="mb-7 flex items-start gap-3 rounded-lg border border-[#edddcb] bg-[#f5ebdf] px-4 py-3.5 text-[#77563e] md:items-center">
           <ShieldCheck size={21} />
-          <p>
-            <strong>Painel aberto para demonstração.</strong> Produtos, fotos e
-            pedidos ficam apenas neste navegador. Não há autenticação
-            administrativa real.
+          <p className="text-[10px] leading-relaxed md:text-[11px]">
+            <strong className="font-medium">
+              Painel aberto para demonstração.
+            </strong>{" "}
+            Produtos, fotos e pedidos ficam apenas neste navegador. Não há
+            autenticação administrativa real.
           </p>
         </div>
         <div
-          className="admin-tabs"
+          className="mb-7 flex flex-wrap items-center gap-1 border-b border-[#e3d6c8] md:gap-2"
           role="navigation"
           aria-label="Painel administrativo"
         >
           <button
-            className={tab === "visao" ? "selected" : ""}
+            className="flex items-center gap-2 border-b-2 border-transparent px-3 py-3.5 text-[11px] text-muted md:px-4 md:text-xs data-[selected=true]:border-brand data-[selected=true]:text-brand"
+            data-selected={tab === "visao"}
             onClick={() => changeTab("visao")}
           >
             <LayoutDashboard size={18} /> Visão geral
           </button>
           <button
-            className={tab === "produtos" ? "selected" : ""}
+            className="flex items-center gap-2 border-b-2 border-transparent px-3 py-3.5 text-[11px] text-muted md:px-4 md:text-xs data-[selected=true]:border-brand data-[selected=true]:text-brand"
+            data-selected={tab === "produtos"}
             onClick={() => changeTab("produtos")}
           >
             <ShoppingBag size={18} /> Produtos
           </button>
           <button
-            className={tab === "pedidos" ? "selected" : ""}
+            className="flex items-center gap-2 border-b-2 border-transparent px-3 py-3.5 text-[11px] text-muted md:px-4 md:text-xs data-[selected=true]:border-brand data-[selected=true]:text-brand"
+            data-selected={tab === "pedidos"}
             onClick={() => changeTab("pedidos")}
           >
             <Package size={18} /> Pedidos
           </button>
-          <button className="reset-button" onClick={() => setResetOpen(true)}>
+          <button
+            className="flex items-center gap-2 border-b-2 border-transparent py-3.5 text-muted md:text-xs ml-auto px-0 text-[10px] md:text-[10px] max-md:basis-[100%] max-md:justify-end max-md:[border-top:1px_solid_var(--color-line)]"
+            onClick={() => setResetOpen(true)}
+          >
             <RotateCcw size={16} /> Restaurar demonstração
           </button>
         </div>
         {tab === "visao" ? (
           <>
-            <div className="stats-grid mb-7 grid grid-cols-2 gap-3.5 lg:grid-cols-4 lg:gap-5">
+            <div className="mb-7 grid grid-cols-2 gap-3.5 lg:grid-cols-4 lg:gap-5">
               <StatsCard
                 icon={<ShoppingBag size={22} />}
                 label="Produtos ativos"
@@ -125,41 +140,52 @@ export function Admin() {
                 hint="Produtos com até 3 unidades"
               />
             </div>
-            <div className="admin-overview grid items-start gap-6 lg:grid-cols-[1.5fr_1fr]">
-              <section className="panel">
-                <div className="section-heading compact">
-                  <h2>Últimos pedidos</h2>
+            <div className="grid items-start gap-6 lg:grid-cols-[1.5fr_1fr]">
+              <section className="rounded-xl border border-line bg-white p-5 md:p-7">
+                <div className="mb-6 flex justify-between gap-4 md:mb-8 items-center">
+                  <h2 className="text-2xl">Últimos pedidos</h2>
                   <button
-                    className="text-link"
+                    className="inline-flex items-center gap-2 p-0 leading-relaxed font-semibold text-brand hover:underline hover:underline-offset-4 max-w-28 text-[10px] md:max-w-none md:text-xs"
                     onClick={() => changeTab("pedidos")}
                   >
                     Ver todos <ArrowRight size={15} />
                   </button>
                 </div>
                 {latestOrders.map((order) => (
-                  <div className="overview-order" key={order.id}>
-                    <div>
-                      <strong>{order.id}</strong>
-                      <small>
+                  <div
+                    className="flex items-center gap-3 border-t border-line py-5"
+                    key={order.id}
+                  >
+                    <div className="flex-1">
+                      <strong className="text-[11px]">{order.id}</strong>
+                      <small className="mt-1.5 block text-[9px] text-muted">
                         {order.customerName} • {dateLabel(order.createdAt)}
                       </small>
                     </div>
                     <StatusBadge order={order} />
-                    <strong>{money(order.total)}</strong>
+                    <strong className="text-xs font-medium whitespace-nowrap">
+                      {money(order.total)}
+                    </strong>
                   </div>
                 ))}
               </section>
-              <section className="panel overview-note hidden lg:block">
+              <section className="rounded-xl border border-line bg-white p-8 text-center hidden lg:block">
                 <img
+                  className="mx-auto mb-5 size-25 rounded-full"
                   src="/images/marca-debinatos.jpg"
                   alt="Mascote Debinatos"
                 />
-                <h2>Mais um encanto na vitrine?</h2>
-                <p>
+                <h2 className="mb-6 items-center gap-3 text-xl block">
+                  Mais um encanto na vitrine?
+                </h2>
+                <p className="text-[11px] text-muted">
                   Adicione produtos, escolha fotos e deixe a loja com a sua
                   cara.
                 </p>
-                <button className="button" onClick={() => setEditor(null)}>
+                <button
+                  className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 mt-4 text-xs"
+                  onClick={() => setEditor(null)}
+                >
                   <Plus size={17} /> Cadastrar produto
                 </button>
               </section>
@@ -167,70 +193,96 @@ export function Admin() {
           </>
         ) : tab === "produtos" ? (
           <>
-            <div className="admin-toolbar">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h2>Seus produtos</h2>
-                <span className="muted">
+                <h2 className="mb-2 text-[27px]">Seus produtos</h2>
+                <span className="text-xs text-muted text-[11px]">
                   {totalProducts} produtos no catálogo local
                 </span>
               </div>
-              <button className="button" onClick={() => setEditor(null)}>
+              <button
+                className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
+                onClick={() => setEditor(null)}
+              >
                 <Plus size={18} /> Novo produto
               </button>
             </div>
-            <div className="catalog-search admin-search">
-              <Search size={19} />
+            <div className="flex items-center gap-2 rounded-lg border border-line bg-white px-3 py-1 focus-within:ring-2 focus-within:ring-brand/20 mb-6 max-w-[500px]">
+              <Search className="size-5 text-muted" size={19} />
               <input
+                className="min-w-0 flex-1 border-0 bg-transparent px-2 text-xs focus:ring-0"
                 aria-label="Buscar produtos no painel"
                 placeholder="Buscar produto por nome…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div className="table-wrap panel">
-              <table className="admin-table">
+            <div className="rounded-xl border border-line bg-white overflow-x-auto p-0">
+              <table className="w-full border-collapse text-left text-[11px] whitespace-nowrap">
                 <thead>
                   <tr>
-                    <th>Produto</th>
-                    <th>Categoria</th>
-                    <th>Preço</th>
-                    <th>Estoque</th>
-                    <th>Visibilidade</th>
-                    <th>
+                    <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">
+                      Produto
+                    </th>
+                    <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">
+                      Categoria
+                    </th>
+                    <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">
+                      Preço
+                    </th>
+                    <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">
+                      Estoque
+                    </th>
+                    <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">
+                      Visibilidade
+                    </th>
+                    <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">
                       <span className="sr-only">Ações</span>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {products.map((p) => (
-                    <tr key={p.id}>
-                      <td>
-                        <div className="table-product">
-                          <Photo source={p.images[0]} alt="" />
-                          <strong>{p.name}</strong>
+                    <tr className="group/tr" key={p.id}>
+                      <td className="border-b border-[#f0e8de] px-5 py-4 last:px-2.5 group-last/tr:border-0">
+                        <div className="flex items-center gap-3">
+                          <Photo
+                            className="h-12 w-10 rounded object-cover"
+                            source={p.images[0]}
+                            alt=""
+                          />
+                          <strong className="text-[11px] font-medium">
+                            {p.name}
+                          </strong>
                         </div>
                       </td>
-                      <td>{p.category}</td>
-                      <td>{money(p.price)}</td>
-                      <td>
-                        <span className={p.stock <= 3 ? "low-stock" : ""}>
+                      <td className="border-b border-[#f0e8de] px-5 py-4 last:px-2.5 group-last/tr:border-0">
+                        {p.category}
+                      </td>
+                      <td className="border-b border-[#f0e8de] px-5 py-4 last:px-2.5 group-last/tr:border-0">
+                        {money(p.price)}
+                      </td>
+                      <td className="border-b border-[#f0e8de] px-5 py-4 last:px-2.5 group-last/tr:border-0">
+                        <span
+                          className={p.stock <= 3 ? "text-brand" : undefined}
+                        >
                           {p.stock} un.
                         </span>
                       </td>
-                      <td>
+                      <td className="border-b border-[#f0e8de] px-5 py-4 last:px-2.5 group-last/tr:border-0">
                         <button
-                          className={`status-toggle ${p.active ? "is-active" : ""}`}
+                          className="group/status-toggle inline-flex items-center gap-2 rounded-full bg-[#f3efea] px-2.5 py-1.5 text-[10px] text-muted aria-pressed:bg-[#edf2e6] aria-pressed:text-leaf"
                           aria-label={`${p.active ? "Desativar" : "Ativar"} ${p.name}`}
                           aria-pressed={p.active}
                           onClick={() => toggleProduct(p)}
                         >
-                          <span />
+                          <span className="size-1 rounded-full bg-muted group-aria-pressed/status-toggle:bg-leaf" />
                           {p.active ? "Ativo" : "Inativo"}
                         </button>
                       </td>
-                      <td>
+                      <td className="border-b border-[#f0e8de] px-5 py-4 last:px-2.5 group-last/tr:border-0">
                         <button
-                          className="icon-button"
+                          className="relative inline-flex size-10 shrink-0 items-center justify-center rounded-full transition hover:bg-cream"
                           aria-label={`Editar ${p.name}`}
                           onClick={() => setEditor(p)}
                         >
@@ -242,22 +294,25 @@ export function Admin() {
                 </tbody>
               </table>
               {!products.length && (
-                <p className="table-empty">Nenhum produto encontrado.</p>
+                <p className="p-8 text-center text-xs text-muted">
+                  Nenhum produto encontrado.
+                </p>
               )}
             </div>
           </>
         ) : (
           <>
-            <div className="admin-toolbar">
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h2>Pedidos da loja</h2>
-                <p className="muted">
+                <h2 className="mb-2 text-[27px]">Pedidos da loja</h2>
+                <p className="text-xs text-muted text-[11px]">
                   Atualize o andamento e acompanhe a mudança no perfil.
                 </p>
               </div>
-              <label className="admin-order-filter">
+              <label>
                 <span className="sr-only">Filtrar pedidos por andamento</span>
                 <select
+                  className="text-[11px]"
                   aria-label="Filtrar pedidos por andamento"
                   value={orderFilter}
                   onChange={(e) => setOrderFilter(e.target.value)}
@@ -274,46 +329,64 @@ export function Admin() {
             {orders.length ? (
               <div className="grid items-start gap-5 md:grid-cols-2">
                 {orders.map((order) => (
-                  <article className="panel" key={order.id}>
-                    <div className="order-card-header">
+                  <article
+                    className="rounded-xl border border-line bg-white p-5 md:p-7"
+                    key={order.id}
+                  >
+                    <div className="mb-5 flex items-center justify-between gap-3">
                       <div>
-                        <strong>{order.id}</strong>
-                        <small>
+                        <strong className="text-[11px] md:text-xs">
+                          {order.id}
+                        </strong>
+                        <small className="mt-1.5 block text-[9px] text-muted md:text-[10px]">
                           {dateLabel(order.createdAt)} • {order.customerName}
                         </small>
                       </div>
                       <StatusBadge order={order} />
                     </div>
-                    <div className="admin-order-items">
+                    <div className="mb-5 border-y border-line py-1">
                       {order.items.map((item) => (
-                        <div key={item.productId}>
-                          <Photo source={item.image} alt="" />
-                          <span>
+                        <div
+                          className="my-4 flex items-center gap-3 text-[11px]"
+                          key={item.productId}
+                        >
+                          <Photo
+                            className="h-11 w-10 rounded object-cover"
+                            source={item.image}
+                            alt=""
+                          />
+                          <span className="flex-1">
                             {item.quantity} × {item.name}
                           </span>
-                          <strong>{money(item.quantity * item.price)}</strong>
+                          <strong className="text-[11px] whitespace-nowrap">
+                            {money(item.quantity * item.price)}
+                          </strong>
                         </div>
                       ))}
                     </div>
-                    <div className="admin-order-address">
-                      <strong>
+                    <div className="mb-5 text-[10px] leading-[1.8]">
+                      <strong className="block font-medium">
                         {order.delivery === "shipping"
                           ? "Envio por CEP"
                           : "Retirada na loja"}
                       </strong>
-                      <span>
+                      <span className="text-muted">
                         {order.address
                           ? `${order.address.street}, ${order.address.number} • ${order.address.city}/${order.address.state} • ${order.address.cep}`
                           : "Endereço fictício da demonstração"}
                       </span>
                     </div>
-                    <div className="admin-order-bottom">
+                    <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line pt-5 text-[10px]">
                       <span>
-                        Total simulado <strong>{money(order.total)}</strong>
+                        Total simulado{" "}
+                        <strong className="mt-1 block text-[17px] text-brand">
+                          {money(order.total)}
+                        </strong>
                       </span>
-                      <label>
+                      <label className="block text-[9px] text-muted">
                         Andamento{" "}
                         <select
+                          className="mt-1.5 block max-w-[190px] p-2.5 text-[10px]"
                           aria-label={`Andamento do pedido ${order.id}`}
                           value={order.status}
                           onChange={(e) =>
@@ -343,7 +416,7 @@ export function Admin() {
                 title="Nenhum pedido por aqui."
                 action={
                   <button
-                    className="button outline"
+                    className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-[#d7bbb0] bg-transparent px-5 py-3 text-xs leading-snug font-semibold text-brand transition hover:-translate-y-px hover:border-brand hover:bg-[#fff4ec] disabled:translate-y-0"
                     onClick={() => setOrderFilter("")}
                   >
                     Mostrar todos os pedidos
@@ -361,28 +434,28 @@ export function Admin() {
       )}
       {resetOpen && (
         <Modal title="Restaurar a demonstração?" close={closeReset}>
-          <div className="reset-content">
-            <div className="empty-icon">
+          <div className="p-6 md:p-8">
+            <div className="mx-auto mb-5 grid size-16 place-items-center rounded-full bg-cream text-brand">
               <RotateCcw size={28} />
             </div>
-            <p>
+            <p className="mb-4 text-xs text-muted">
               Isso remove suas alterações de produtos, fotos, estoque, perfil,
               favoritos, carrinho e pedidos deste navegador.
             </p>
-            <p>
+            <p className="mb-4 text-xs text-muted">
               O catálogo e o pedido de exemplo serão recuperados. Esta ação não
               pode ser desfeita.
             </p>
-            <div className="modal-actions">
+            <div className="mt-6 flex justify-end gap-3 border-t border-line pt-5">
               <button
-                className="button outline"
+                className="inline-flex items-center justify-center gap-3 rounded-lg border py-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-11 px-3 text-[10px] md:px-4 md:text-[11px]"
                 disabled={resetting}
                 onClick={() => setResetOpen(false)}
               >
                 Manter meus dados
               </button>
               <button
-                className="button"
+                className="inline-flex items-center justify-center gap-3 rounded-lg border border-brand bg-brand py-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 min-h-11 px-3 text-[10px] md:px-4 md:text-[11px]"
                 disabled={resetting}
                 onClick={restoreDemo}
               >

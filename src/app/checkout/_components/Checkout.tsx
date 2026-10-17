@@ -41,7 +41,7 @@ export function Checkout() {
   if (!ready) return <Loading />;
   if (!rows.length)
     return (
-      <div className="page-container">
+      <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
         <EmptyState
           icon={<ShoppingBag size={32} />}
           title="Primeiro, escolha seus encantos."
@@ -52,7 +52,7 @@ export function Checkout() {
     );
   if (!loggedIn)
     return (
-      <div className="page-container">
+      <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
         <Breadcrumb
           items={[
             { label: "Carrinho", to: "/carrinho" },
@@ -63,7 +63,7 @@ export function Checkout() {
       </div>
     );
   return (
-    <div className="page-container">
+    <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
       <Breadcrumb
         items={[
           { label: "Carrinho", to: "/carrinho" },
@@ -81,57 +81,72 @@ export function Checkout() {
         onSubmit={submit}
       >
         <div className="flex flex-col gap-5">
-          <section className="panel">
-            <h2>
-              <span className="step-number">1</span> Seus dados
+          <section className="rounded-xl border border-line bg-white p-5 md:p-7">
+            <h2 className="mb-6 flex items-center gap-3 text-[22px]">
+              <span className="grid size-7 place-items-center rounded-full border border-[#e9cfc0] bg-[#fbf1e6] font-sans text-[11px] text-brand">
+                1
+              </span>{" "}
+              Seus dados
             </h2>
-            <p className="customer-line">
-              <UserRound size={20} />
+            <p className="flex flex-wrap items-center gap-3 text-xs">
+              <UserRound className="text-brand" size={20} />
               <strong>{customerName}</strong>
-              <Link className="text-link" href="/perfil?aba=dados">
+              <Link
+                className="inline-flex items-center gap-2 p-0 leading-relaxed font-semibold text-brand hover:underline hover:underline-offset-4 ml-auto text-[11px]"
+                href="/perfil?aba=dados"
+              >
                 Editar perfil
               </Link>
             </p>
           </section>
-          <section className="panel">
-            <h2>
-              <span className="step-number">2</span> Entrega ou retirada
+          <section className="rounded-xl border border-line bg-white p-5 md:p-7">
+            <h2 className="mb-6 flex items-center gap-3 text-[22px]">
+              <span className="grid size-7 place-items-center rounded-full border border-[#e9cfc0] bg-[#fbf1e6] font-sans text-[11px] text-brand">
+                2
+              </span>{" "}
+              Entrega ou retirada
             </h2>
-            <div className="choice-row">
-              <label
-                className={`choice ${delivery === "shipping" ? "chosen" : ""}`}
-              >
+            <div className="mb-5 flex flex-col gap-3 xl:flex-row">
+              <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-lg border border-[#ded3c8] px-3 py-3.5 font-normal has-checked:border-brand has-checked:bg-[#fdf5ed]">
                 <input
+                  className="m-0 size-3.5"
                   type="radio"
                   name="checkout-delivery"
                   checked={delivery === "shipping"}
                   onChange={() => setDelivery("shipping")}
                 />
-                <Truck size={20} />
+                <Truck className="text-brand" size={20} />
                 <span>
-                  <strong>Envio por CEP</strong>
-                  <small>{money(SHIPPING_FEE)} • 5 a 8 dias úteis</small>
+                  <strong className="block text-[11px] leading-normal font-medium">
+                    Envio por CEP
+                  </strong>
+                  <small className="mt-1 block text-[9px] leading-normal text-muted">
+                    {money(SHIPPING_FEE)} • 5 a 8 dias úteis
+                  </small>
                 </span>
               </label>
-              <label
-                className={`choice ${delivery === "pickup" ? "chosen" : ""}`}
-              >
+              <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-lg border border-[#ded3c8] px-3 py-3.5 font-normal has-checked:border-brand has-checked:bg-[#fdf5ed]">
                 <input
+                  className="m-0 size-3.5"
                   type="radio"
                   name="checkout-delivery"
                   checked={delivery === "pickup"}
                   onChange={() => setDelivery("pickup")}
                 />
-                <MapPin size={20} />
+                <MapPin className="text-brand" size={20} />
                 <span>
-                  <strong>Retirada gratuita</strong>
-                  <small>Em nossa loja fictícia</small>
+                  <strong className="block text-[11px] leading-normal font-medium">
+                    Retirada gratuita
+                  </strong>
+                  <small className="mt-1 block text-[9px] leading-normal text-muted">
+                    Em nossa loja fictícia
+                  </small>
                 </span>
               </label>
             </div>
             {delivery === "shipping" ? (
               <>
-                <p className="form-hint">
+                <p className="mb-6 text-[11px] text-muted">
                   Endereço de demonstração • campos obrigatórios, exceto
                   complemento.
                 </p>
@@ -142,102 +157,142 @@ export function Checkout() {
                 />
               </>
             ) : (
-              <div className="pickup-info">
-                <MapPin size={22} />
+              <div className="flex gap-4 rounded-lg bg-[#f9f5ec] p-5">
+                <MapPin className="text-brand" size={22} />
                 <div>
-                  <strong>Seu encanto espera por você aqui:</strong>
-                  <p>{PICKUP_ADDRESS}</p>
-                  <small>
+                  <strong className="text-xs">
+                    Seu encanto espera por você aqui:
+                  </strong>
+                  <p className="my-2 text-[11px] text-muted">
+                    {PICKUP_ADDRESS}
+                  </p>
+                  <small className="text-[10px] text-muted">
                     Retirada simulada em até 2 dias úteis após a preparação.
                   </small>
                 </div>
               </div>
             )}
           </section>
-          <section className="panel">
-            <h2>
-              <span className="step-number">3</span> Pagamento ilustrativo
+          <section className="rounded-xl border border-line bg-white p-5 md:p-7">
+            <h2 className="mb-6 flex items-center gap-3 text-[22px]">
+              <span className="grid size-7 place-items-center rounded-full border border-[#e9cfc0] bg-[#fbf1e6] font-sans text-[11px] text-brand">
+                3
+              </span>{" "}
+              Pagamento ilustrativo
             </h2>
-            <div className="choice-row">
-              <label className={`choice ${payment === "pix" ? "chosen" : ""}`}>
+            <div className="mb-5 flex flex-col gap-3 xl:flex-row">
+              <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-lg border border-[#ded3c8] px-3 py-3.5 font-normal has-checked:border-brand has-checked:bg-[#fdf5ed]">
                 <input
+                  className="m-0 size-3.5"
                   type="radio"
                   name="payment"
                   checked={payment === "pix"}
                   onChange={() => setPayment("pix")}
                 />
-                <Sparkles size={20} />
+                <Sparkles className="text-brand" size={20} />
                 <span>
-                  <strong>Pix</strong>
-                  <small>Sem QR code ou cobrança</small>
+                  <strong className="block text-[11px] leading-normal font-medium">
+                    Pix
+                  </strong>
+                  <small className="mt-1 block text-[9px] leading-normal text-muted">
+                    Sem QR code ou cobrança
+                  </small>
                 </span>
               </label>
-              <label className={`choice ${payment === "card" ? "chosen" : ""}`}>
+              <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-lg border border-[#ded3c8] px-3 py-3.5 font-normal has-checked:border-brand has-checked:bg-[#fdf5ed]">
                 <input
+                  className="m-0 size-3.5"
                   type="radio"
                   name="payment"
                   checked={payment === "card"}
                   onChange={() => setPayment("card")}
                 />
-                <CreditCard size={20} />
+                <CreditCard className="text-brand" size={20} />
                 <span>
-                  <strong>Cartão</strong>
-                  <small>Sem dados bancários</small>
+                  <strong className="block text-[11px] leading-normal font-medium">
+                    Cartão
+                  </strong>
+                  <small className="mt-1 block text-[9px] leading-normal text-muted">
+                    Sem dados bancários
+                  </small>
                 </span>
               </label>
             </div>
-            <p className="demo-note">
-              <ShieldCheck size={18} /> A escolha registra apenas a forma de
-              pagamento na simulação.
+            <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
+              <ShieldCheck className="mt-px text-brand" size={18} /> A escolha
+              registra apenas a forma de pagamento na simulação.
             </p>
           </section>
         </div>
-        <aside className="panel order-summary lg:sticky lg:top-6">
-          <span className="eyebrow">ESCOLHIDO COM CARINHO</span>
-          <h2>Seu pedido</h2>
-          <div className="mini-cart">
+        <aside className="rounded-xl border border-line p-5 md:p-7 bg-surface lg:sticky lg:top-6">
+          <span className="inline-flex items-center gap-2 leading-relaxed font-semibold tracking-[.18em] text-brand uppercase mb-3 text-[8px]">
+            ESCOLHIDO COM CARINHO
+          </span>
+          <h2 className="flex items-center gap-3 mb-7 text-[23px]">
+            Seu pedido
+          </h2>
+          <div className="mb-6 border-b border-line pb-2.5">
             {rows.map(({ item, product: p }) => {
               return (
-                <div key={item.productId}>
-                  <Photo source={p?.images[0] ?? ""} alt="" />
-                  <span>
+                <div
+                  className="mb-4 flex items-center gap-2.5"
+                  key={item.productId}
+                >
+                  <Photo
+                    className="h-[53px] w-[46px] rounded object-cover"
+                    source={p?.images[0] ?? ""}
+                    alt=""
+                  />
+                  <span className="flex-1 text-[11px]">
                     <strong>{p?.name ?? "Indisponível"}</strong>
-                    <small>Quantidade: {item.quantity}</small>
+                    <small className="mt-1 block text-[9px] text-muted">
+                      Quantidade: {item.quantity}
+                    </small>
                   </span>
-                  <strong>{money((p?.price ?? 0) * item.quantity)}</strong>
+                  <strong className="text-[10px] font-medium">
+                    {money((p?.price ?? 0) * item.quantity)}
+                  </strong>
                 </div>
               );
             })}
           </div>
-          <div className="summary-line">
-            <span>Subtotal</span>
-            <span>{money(subtotal)}</span>
+          <div className="my-4 flex justify-between gap-4 text-xs text-muted">
+            <span className="last:text-ink">Subtotal</span>
+            <span className="last:text-ink">{money(subtotal)}</span>
           </div>
-          <div className="summary-line">
-            <span>
+          <div className="my-4 flex justify-between gap-4 text-xs text-muted">
+            <span className="last:text-ink">
               {delivery === "shipping" ? "Envio demonstrativo" : "Retirada"}
             </span>
-            <span>
+            <span className="last:text-ink">
               {delivery === "shipping" ? money(SHIPPING_FEE) : "Grátis"}
             </span>
           </div>
-          <div className="summary-total">
+          <div className="mt-5 mb-1 flex items-center justify-between gap-4 border-t border-[#e3d6c8] py-5 text-[13px] font-medium">
             <span>Total simulado</span>
-            <strong>
+            <strong className="text-2xl font-semibold text-brand">
               {money(subtotal + (delivery === "shipping" ? SHIPPING_FEE : 0))}
             </strong>
           </div>
           {error && (
-            <p className="inline-error" role="alert">
+            <p
+              className="my-3 text-[11px] leading-relaxed text-[#b32217]"
+              role="alert"
+            >
               {error}
             </p>
           )}
-          <button className="button full" type="submit" disabled={submitting}>
+          <button
+            className="min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand py-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 flex w-full px-3 text-[11px]"
+            type="submit"
+            disabled={submitting}
+          >
             {submitting ? "Criando pedido…" : "Criar pedido de demonstração"}
             <ArrowRight size={16} />
           </button>
-          <p className="demo-note">
-            <ShieldCheck size={18} /> Nenhuma cobrança. Nenhuma entrega real.
+          <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
+            <ShieldCheck className="mt-px text-brand" size={18} /> Nenhuma
+            cobrança. Nenhuma entrega real.
           </p>
         </aside>
       </form>

@@ -16,7 +16,6 @@
     "@neon/env": "1.5.3",
     "lucide-react": "0.468.0",
     "next": "16.4.0",
-    "npm": "12.2.0",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -48,5 +47,8 @@
       "version": ">=11 <12",
       "onFail": "error"
     }
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
   }
 }

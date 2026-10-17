@@ -6,15 +6,20 @@ export function Quantity({
   max,
   onChange,
   name,
+  compact = false,
 }: {
   value: number;
   max: number;
   onChange: (quantity: number) => void;
   name: string;
+  compact?: boolean;
 }) {
   return (
-    <div className="quantity">
+    <div
+      className={`inline-flex shrink-0 items-center overflow-hidden rounded-lg border border-[#dfd4c8] bg-white ${compact ? "h-8 md:h-10" : "h-11"}`}
+    >
       <button
+        className="grid h-full w-7 place-items-center p-0 hover:bg-cream md:w-8"
         type="button"
         aria-label={`Diminuir quantidade de ${name}`}
         disabled={value <= 1}
@@ -22,8 +27,11 @@ export function Quantity({
       >
         <Minus size={14} />
       </button>
-      <span aria-live="polite">{value}</span>
+      <span className="min-w-6 text-center text-xs" aria-live="polite">
+        {value}
+      </span>
       <button
+        className="grid h-full w-7 place-items-center p-0 hover:bg-cream md:w-8"
         type="button"
         aria-label={`Aumentar quantidade de ${name}`}
         disabled={value >= max}

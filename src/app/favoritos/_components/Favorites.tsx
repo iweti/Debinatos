@@ -9,14 +9,14 @@ import { useFavorites } from "../_lib/use-favorites";
 export function Favorites() {
   const { products, hasUnavailable } = useFavorites();
   return (
-    <div className="page-container">
+    <div className="mx-auto min-h-[500px] w-[calc(100%-36px)] max-w-[1240px] pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
       <Breadcrumb items={[{ label: "Itens salvos" }]} />
       <PageHeading eyebrow="UM CANTINHO SÓ SEU" title="Meus favoritos">
         Guarde os detalhes que fizeram seus olhos brilhar.
       </PageHeading>
       {products.length ? (
         <>
-          <p className="muted favorites-count">
+          <p className="text-xs text-muted mb-6">
             {products.length}{" "}
             {products.length === 1 ? "encanto salvo" : "encantos salvos"} no seu
             navegador
@@ -37,7 +37,7 @@ export function Favorites() {
         </EmptyState>
       )}
       {hasUnavailable && (
-        <p className="demo-note">
+        <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
           Alguns itens salvos foram desativados e não estão disponíveis na
           vitrine.
         </p>

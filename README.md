@@ -95,6 +95,8 @@ O projeto usa **colocation por rotas**: o nome de cada pasta em `src/app` corres
 
 As pastas com `_` ficam fora do roteamento. Crie `_components` e `_lib` apenas quando a página precisar deles. Componentes reutilizados ficam em `src/components`; hooks, tipos, regras e armazenamento compartilhados ficam em `src/lib`. O cabeçalho usa `src/lib/hooks/use-header.ts` para busca, menu móvel e contadores. `layout.tsx` compõe a estrutura da loja dentro do provider, e as páginas que dependem de parâmetros de busca mantêm suas fronteiras de `Suspense`.
 
+Os componentes usam classes Tailwind diretamente no JSX, incluindo variações responsivas e estados de interação. `src/app/globals.css` é o único arquivo CSS e concentra fontes, tema, estilos base, acessibilidade e a animação de notificações. Padrões visuais reutilizados ficam nos próprios componentes React.
+
 A navegação principal oferece **Início**, **Todos os produtos** e **Sobre a Debinatos**. Bijuterias, Acessórios e Decoração continuam como filtros de `/catalogo`, sem atalhos de categoria na página inicial, cabeçalho ou rodapé. Novas categorias de produtos ativos cadastrados no painel aparecem automaticamente nos filtros. Busca, categoria, preço e ordenação usam os parâmetros `q`, `categoria`, `preco` e `ordem`, preservando URLs filtradas.
 
 O perfil, o checkout e `/admin` continuam demonstrativos, sem autenticação real.

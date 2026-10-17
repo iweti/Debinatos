@@ -44,15 +44,16 @@ export function ProductEditor({
       title={product ? "Editar produto" : "Cadastrar um novo encanto"}
       close={close}
     >
-      <form className="product-editor" onSubmit={submit}>
-        <p className="form-hint">
+      <form className="px-5 py-6 md:px-6" onSubmit={submit}>
+        <p className="mb-6 text-muted text-[10px]">
           Alterações válidas apenas neste navegador. Todos os campos são
           obrigatórios.
         </p>
         <div className="grid grid-cols-2 gap-x-3.5 gap-y-5 md:gap-5">
-          <label className="col-span-2">
+          <label className="text-[11px] col-span-2">
             Nome do produto
             <input
+              className="text-xs"
               autoFocus
               required
               maxLength={100}
@@ -61,9 +62,10 @@ export function ProductEditor({
               placeholder="Ex.: Colar Jardim"
             />
           </label>
-          <label>
+          <label className="text-[11px]">
             Categoria
             <input
+              className="text-xs"
               required
               maxLength={40}
               list="category-options"
@@ -76,9 +78,10 @@ export function ProductEditor({
               ))}
             </datalist>
           </label>
-          <label>
+          <label className="text-[11px]">
             Preço (R$)
             <input
+              className="text-xs"
               required
               type="number"
               min="0.01"
@@ -88,9 +91,10 @@ export function ProductEditor({
               placeholder="39,90"
             />
           </label>
-          <label>
+          <label className="text-[11px]">
             Estoque
             <input
+              className="text-xs"
               required
               type="number"
               min="0"
@@ -99,9 +103,10 @@ export function ProductEditor({
               onChange={(e) => setStock(e.target.value)}
             />
           </label>
-          <label>
+          <label className="text-[11px]">
             Material
             <input
+              className="text-xs"
               required
               maxLength={150}
               value={material}
@@ -109,9 +114,10 @@ export function ProductEditor({
               placeholder="Ex.: Liga metálica dourada"
             />
           </label>
-          <label className="col-span-2">
+          <label className="text-[11px] col-span-2">
             Medidas
             <input
+              className="text-xs"
               required
               maxLength={150}
               value={dimensions}
@@ -119,9 +125,10 @@ export function ProductEditor({
               placeholder="Ex.: 40 cm + extensor de 5 cm"
             />
           </label>
-          <label className="col-span-2">
+          <label className="text-[11px] col-span-2">
             Descrição
             <textarea
+              className="text-xs"
               required
               rows={3}
               maxLength={2000}
@@ -131,27 +138,31 @@ export function ProductEditor({
             />
           </label>
         </div>
-        <div className="editor-photos">
-          <h3>Fotos do produto</h3>
-          <small>
+        <div className="mt-6">
+          <h3 className="mb-2 text-xs">Fotos do produto</h3>
+          <small className="block text-[9px] leading-relaxed text-muted">
             JPG, PNG ou WebP • até 5 MB por foto • máximo de 5 fotos. A primeira
             é a capa.
           </small>
           {!images.length && (
             <button
-              className="text-link mt-3"
+              className="inline-flex items-center gap-2 p-0 text-xs leading-relaxed font-semibold text-brand hover:underline hover:underline-offset-4 mt-3"
               type="button"
               onClick={() => setImages(["/images/placeholder.svg"])}
             >
               Usar imagem de demonstração
             </button>
           )}
-          <div className="upload-list">
+          <div className="mt-4 flex flex-wrap gap-2.5">
             {images.map((source, i) => (
-              <div key={source}>
-                <Photo source={source} alt={`Foto ${i + 1} do produto`} />
+              <div className="relative h-[92px] w-[83px]" key={source}>
+                <Photo
+                  className="size-full rounded object-cover"
+                  source={source}
+                  alt={`Foto ${i + 1} do produto`}
+                />
                 <button
-                  className="icon-button"
+                  className="inline-flex shrink-0 items-center justify-center rounded-full transition absolute top-1 right-1 size-6 bg-white"
                   type="button"
                   onClick={() =>
                     setImages(images.filter((_, index) => i !== index))
@@ -160,13 +171,18 @@ export function ProductEditor({
                 >
                   <X size={14} />
                 </button>
-                {i === 0 && <span>Capa</span>}
+                {i === 0 && (
+                  <span className="absolute bottom-1 left-1 rounded-sm bg-[#fffaf4] px-1 py-0.5 text-[8px]">
+                    Capa
+                  </span>
+                )}
               </div>
             ))}
-            <label className="upload-button">
+            <label className="relative flex h-[92px] w-[105px] cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded border border-dashed border-[#cdb7a3] bg-[#fcf8f1] text-brand focus-within:outline-2 focus-within:outline-brand text-[11px]">
               <ImagePlus size={24} />
               <span>{uploading ? "Salvando…" : "Adicionar fotos"}</span>
               <input
+                className="text-xs absolute inset-0 cursor-pointer opacity-0"
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
                 multiple
@@ -179,17 +195,19 @@ export function ProductEditor({
             </label>
           </div>
         </div>
-        <div className="editor-checks">
-          <label>
+        <div className="mt-6 flex flex-wrap gap-4">
+          <label className="flex items-center gap-2 text-[11px]">
             <input
+              className="text-xs"
               type="checkbox"
               checked={active}
               onChange={(e) => setActive(e.target.checked)}
             />{" "}
             Visível na loja
           </label>
-          <label>
+          <label className="flex items-center gap-2 text-[11px]">
             <input
+              className="text-xs"
               type="checkbox"
               checked={featured}
               onChange={(e) => setFeatured(e.target.checked)}
@@ -198,15 +216,26 @@ export function ProductEditor({
           </label>
         </div>
         {error && (
-          <p className="inline-error" role="alert">
+          <p
+            className="my-3 text-[11px] leading-relaxed text-[#b32217]"
+            role="alert"
+          >
             {error}
           </p>
         )}
-        <div className="modal-actions">
-          <button className="button outline" type="button" onClick={close}>
+        <div className="mt-6 flex justify-end gap-3 border-t border-line pt-5">
+          <button
+            className="inline-flex items-center justify-center gap-3 rounded-lg border py-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-11 px-3 text-[10px] md:px-4 md:text-[11px]"
+            type="button"
+            onClick={close}
+          >
             Cancelar
           </button>
-          <button className="button" type="submit" disabled={uploading}>
+          <button
+            className="inline-flex items-center justify-center gap-3 rounded-lg border border-brand bg-brand py-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 min-h-11 px-3 text-[10px] md:px-4 md:text-[11px]"
+            type="submit"
+            disabled={uploading}
+          >
             <Check size={17} /> Salvar produto
           </button>
         </div>
