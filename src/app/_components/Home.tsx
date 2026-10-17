@@ -2,6 +2,7 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  ArrowUpRight,
   Flower2,
   Gem,
   Gift,
@@ -125,10 +126,10 @@ export function Home() {
               Brasil.
             </p>
             <Link
-              className="inline-flex items-center gap-2 p-0 text-xs leading-relaxed font-semibold text-brand hover:underline hover:underline-offset-4 mt-3"
+              className="mt-3 inline-flex min-h-16 items-center justify-center gap-5 rounded-xl bg-brand px-7 py-4 text-base leading-snug font-semibold text-white transition-colors hover:bg-brand-dark"
               href="/sobre"
             >
-              Conheça a Debinatos <ArrowRight size={17} />
+              Conheça a Debinatos <ArrowUpRight size={22} aria-hidden="true" />
             </Link>
           </div>
         </div>
