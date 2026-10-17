@@ -23,18 +23,21 @@ export function OrderPage() {
   const { id, loggedIn, order, statuses, currentStep, isNew } = useOrder();
   if (!loggedIn)
     return (
-      <div className="page-container">
+      <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
         <LoginPanel next={`/pedido/${id}`} />
       </div>
     );
   if (!order)
     return (
-      <div className="page-container">
+      <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
         <EmptyState
           icon={<Package size={32} />}
           title="Pedido não encontrado."
           action={
-            <Link className="button" href="/perfil">
+            <Link
+              className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug  font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
+              href="/perfil"
+            >
               Ver meus pedidos
             </Link>
           }
@@ -44,63 +47,83 @@ export function OrderPage() {
       </div>
     );
   return (
-    <div className="page-container">
+    <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
       <Breadcrumb
         items={[{ label: "Meu perfil", to: "/perfil" }, { label: order.id }]}
       />
       {isNew && (
-        <div className="order-success">
-          <CheckCircle2 size={42} />
+        <div className="mb-8 flex items-start gap-4 rounded-xl border border-[#e1ebd6] bg-[#f0f5e9] p-5 md:items-center md:gap-6 md:p-8">
+          <CheckCircle2 className="size-8 text-leaf md:size-11" size={42} />
           <div>
-            <span className="eyebrow">UM ENCANTO DE EXPERIÊNCIA</span>
-            <h2>Seu pedido de demonstração foi criado!</h2>
-            <p>
+            <span className="inline-flex items-center gap-2 leading-relaxed font-semibold tracking-[.18em] uppercase text-[8px] text-leaf">
+              UM ENCANTO DE EXPERIÊNCIA
+            </span>
+            <h2 className="mt-2 mb-3 text-2xl">
+              Seu pedido de demonstração foi criado!
+            </h2>
+            <p className="text-[11px] text-muted">
               Obrigada por explorar a Debinatos. Nenhuma cobrança ou entrega
               será realizada.
             </p>
           </div>
         </div>
       )}
-      <div className="order-title">
+      <div className="mb-7 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div>
-          <span className="eyebrow">ESCOLHIDO COM CARINHO</span>
-          <h1>Pedido {order.id}</h1>
-          <p className="muted">
+          <span className="inline-flex items-center gap-2 text-[9px] leading-relaxed font-semibold tracking-[.18em] text-brand uppercase">
+            ESCOLHIDO COM CARINHO
+          </span>
+          <h1 className="my-3 text-[29px] md:text-[32px]">Pedido {order.id}</h1>
+          <p className="text-xs text-muted text-[11px]">
             Criado em {dateLabel(order.createdAt)} • {order.customerName}
           </p>
         </div>
         <StatusBadge order={order} />
       </div>
-      <div className="panel timeline">
+      <div className="rounded-xl border border-line bg-white relative mb-8 flex justify-between px-2 py-7 md:px-2 md:py-7">
         {statuses.map((status, index) => (
-          <div className={index <= currentStep ? "done" : ""} key={status}>
-            <span>
+          <div
+            className="group/step relative flex-1 text-center before:absolute before:top-4 before:-left-1/2 before:right-1/2 before:h-px before:bg-[#e5dbd0] before:content-[''] first:before:hidden before:data-[done=true]:bg-brand"
+            data-done={index <= currentStep}
+            key={status}
+          >
+            <span className="relative mx-auto mb-3 grid size-8 place-items-center rounded-full border border-[#e5dbd0] bg-[#f6f1eb] text-[11px] text-muted group-data-[done=true]/step:border-brand group-data-[done=true]/step:bg-brand group-data-[done=true]/step:text-white">
               {index <= currentStep ? <Check size={17} /> : index + 1}
             </span>
-            <strong>{STATUS_LABELS[status]}</strong>
+            <strong className="block px-1 text-[8px] leading-relaxed font-normal text-muted md:text-[11px] group-data-[done=true]/step:text-brand">
+              {STATUS_LABELS[status]}
+            </strong>
           </div>
         ))}
       </div>
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_330px] lg:gap-8">
-        <section className="panel">
-          <h2>Seus encantos</h2>
+        <section className="rounded-xl border border-line bg-white p-5 md:p-7">
+          <h2 className="mb-6 flex items-center gap-3 text-[22px]">
+            Seus encantos
+          </h2>
           {order.items.map((item) => (
-            <div className="receipt-item" key={item.productId}>
+            <div
+              className="flex items-center gap-3 border-b border-line py-5 md:gap-4"
+              key={item.productId}
+            >
               <Photo
+                className="h-18 w-15 rounded object-cover md:h-20 md:w-18"
                 source={item.image}
                 alt={`Imagem ilustrativa de ${item.name}`}
               />
               <div>
-                <strong>{item.name}</strong>
-                <small>
+                <strong className="text-xs">{item.name}</strong>
+                <small className="mt-2.5 block text-[11px] text-muted">
                   {item.quantity} × {money(item.price)}
                 </small>
               </div>
-              <strong>{money(item.quantity * item.price)}</strong>
+              <strong className="ml-auto text-xs">
+                {money(item.quantity * item.price)}
+              </strong>
             </div>
           ))}
-          <div className="receipt-delivery">
-            <h3>
+          <div className="mt-6">
+            <h3 className="mb-4 flex items-center gap-2.5 text-[13px]">
               {order.delivery === "shipping" ? (
                 <Truck size={20} />
               ) : (
@@ -111,7 +134,7 @@ export function OrderPage() {
                 : "Retirada na loja fictícia"}
             </h3>
             {order.address ? (
-              <p>
+              <p className="text-xs text-muted">
                 {order.address.street}, {order.address.number}
                 {order.address.complement && `, ${order.address.complement}`}
                 <br />
@@ -121,35 +144,44 @@ export function OrderPage() {
                 CEP {order.address.cep}
               </p>
             ) : (
-              <p>{PICKUP_ADDRESS}</p>
+              <p className="text-xs text-muted">{PICKUP_ADDRESS}</p>
             )}
           </div>
         </section>
-        <aside className="panel order-summary lg:sticky lg:top-6">
-          <h2>Resumo do pedido</h2>
-          <div className="summary-line">
-            <span>Subtotal</span>
-            <span>{money(order.subtotal)}</span>
+        <aside className="rounded-xl border border-line p-5 md:p-7 bg-surface lg:sticky lg:top-6">
+          <h2 className="flex items-center gap-3 mb-7 text-[23px]">
+            Resumo do pedido
+          </h2>
+          <div className="my-4 flex justify-between gap-4 text-xs text-muted">
+            <span className="last:text-ink">Subtotal</span>
+            <span className="last:text-ink">{money(order.subtotal)}</span>
           </div>
-          <div className="summary-line">
-            <span>
+          <div className="my-4 flex justify-between gap-4 text-xs text-muted">
+            <span className="last:text-ink">
               {order.delivery === "shipping" ? "Envio simulado" : "Retirada"}
             </span>
-            <span>{order.shipping ? money(order.shipping) : "Grátis"}</span>
+            <span className="last:text-ink">
+              {order.shipping ? money(order.shipping) : "Grátis"}
+            </span>
           </div>
-          <div className="summary-total">
+          <div className="mt-5 mb-1 flex items-center justify-between gap-4 border-t border-[#e3d6c8] py-5 text-[13px] font-medium">
             <span>Total simulado</span>
-            <strong>{money(order.total)}</strong>
+            <strong className="text-2xl font-semibold text-brand">
+              {money(order.total)}
+            </strong>
           </div>
-          <p className="payment-line">
+          <p className="flex items-center gap-2.5 text-[11px] text-muted">
             <CreditCard size={18} />
             {order.payment === "pix" ? "Pix" : "Cartão"} • pagamento ilustrativo
           </p>
-          <p className="demo-note">
-            <ShieldCheck size={18} /> Pedido de demonstração salvo apenas neste
-            navegador.
+          <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
+            <ShieldCheck className="mt-px text-brand" size={18} /> Pedido de
+            demonstração salvo apenas neste navegador.
           </p>
-          <Link className="button outline full" href="/perfil?aba=pedidos">
+          <Link
+            className="min-h-12 items-center justify-center gap-3 rounded-lg border p-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] flex w-full  text-[11px] mt-6"
+            href="/perfil?aba=pedidos"
+          >
             Meus pedidos <ArrowRight size={16} />
           </Link>
         </aside>

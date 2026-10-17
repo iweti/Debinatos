@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Providers } from "./providers";
+import { StoreProvider } from "@/components/providers/StoreProvider";
 import { DemoBanner } from "@/components/layout/DemoBanner";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -24,8 +24,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR">
       <body>
-        <Providers>
-          <a className="skip-link" href="#conteudo">
+        <StoreProvider>
+          <a
+            className="fixed -top-24 left-4 z-100 bg-white p-4 focus:top-3"
+            href="#conteudo"
+          >
             Pular para o conteúdo
           </a>
           <DemoBanner />
@@ -35,7 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </main>
           <Footer />
           <Toast />
-        </Providers>
+        </StoreProvider>
       </body>
     </html>
   );

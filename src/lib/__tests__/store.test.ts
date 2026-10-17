@@ -21,7 +21,7 @@ describe("Carrinho e estoque", () => {
   });
   it("bloqueia produto esgotado, desativado e quantidade negativa", () => {
     const state = initialState();
-    expect(() => addToCart(state, "anel-flor")).toThrow("estoque");
+    expect(() => addToCart(state, "axolote-acrilico")).toThrow("estoque");
     state.products[0].active = false;
     expect(() => addToCart(state, state.products[0].id)).toThrow("disponível");
     expect(() => addToCart(state, state.products[1].id, -1)).toThrow("estoque");
@@ -31,7 +31,7 @@ describe("Carrinho e estoque", () => {
 describe("Pedido de demonstração", () => {
   function cart() {
     return {
-      ...addToCart(initialState(), "argolas-aurora", 2),
+      ...addToCart(initialState(), "terrario-ursos-polares", 2),
       loggedIn: true,
     };
   }
@@ -70,7 +70,7 @@ describe("Pedido de demonstração", () => {
     state.products[0].price = 99900;
     state.products[0].name = "Produto alterado";
     state.profile.address.street = "Outro endereço";
-    expect(order.items[0].name).toBe("Argolas Aurora");
+    expect(order.items[0].name).toBe("Terrário Ursos Polares");
     expect(order.items[0].price).toBe(3990);
     expect(order.address?.street).not.toBe("Outro endereço");
     expect(
@@ -117,8 +117,8 @@ describe("Pedido de demonstração", () => {
 describe("Persistência local", () => {
   it("recupera favoritos, carrinho, perfil e pedidos salvos", () => {
     const state = {
-      ...addToCart(initialState(), "argolas-aurora"),
-      favorites: ["argolas-aurora"],
+      ...addToCart(initialState(), "terrario-ursos-polares"),
+      favorites: ["terrario-ursos-polares"],
       loggedIn: true,
     };
     const data = new Map<string, string>();

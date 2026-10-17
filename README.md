@@ -33,6 +33,14 @@ Use `npm ci` em novas instalações, na integração contínua e na publicação
 
 O build usa a opção oficial `--webpack` para funcionar também em ambientes que restringem as portas internas do processamento de CSS do Turbopack. O servidor de desenvolvimento usa Turbopack.
 
+## WhatsApp de contato
+
+Copie `.env.example` para `.env.local` e preencha `WHATSAPP_PHONE` com o número da loja: código do país, DDD e número, apenas dígitos, sem `+`, espaços ou traços. Por exemplo, `5511999999999` ilustra o formato brasileiro. O arquivo `.env.local` não é versionado.
+
+Na hospedagem, configure a mesma variável `WHATSAPP_PHONE` antes do build e publique novamente após alterá-la. No desenvolvimento, reinicie `npm run dev` depois de configurar. A variável é lida no servidor; não precisa do prefixo `NEXT_PUBLIC_`.
+
+A página `/contato` apresenta os pedidos personalizados. Com o número preenchido, o botão abre o WhatsApp em nova aba com a mensagem “Olá! Gostaria de saber mais sobre pedidos personalizados.”. Sem número, o botão permanece desativado com o aviso “WhatsApp em breve”.
+
 ## Funcionalidades
 
 - Catálogo com 12 produtos fictícios, busca, categorias, filtro de preço e ordenação.
@@ -41,6 +49,7 @@ O build usa a opção oficial `--webpack` para funcionar também em ambientes qu
 - Perfil com edição de nome/endereço, histórico, detalhes e andamento dos pedidos.
 - Painel em `/admin` para cadastrar/editar produtos, adicionar até 5 fotos, alterar estoque, desativar itens e atualizar pedidos.
 - Restauração da demonstração mediante confirmação no painel.
+- Contato para pedidos personalizados pelo WhatsApp, com número configurável.
 
 Todas as operações são locais. O checkout não cobra, não solicita dados bancários e não gera entregas. O login e o painel não têm autenticação real. Use informações fictícias. A demonstração inclui um pedido inicial concluído.
 
@@ -64,6 +73,7 @@ src/
 │   ├── favoritos/                  # page.tsx, _components e _lib
 │   ├── produto/[id]/               # page.tsx, _components e _lib
 │   ├── sobre/                      # page.tsx e _components
+│   ├── contato/                    # /contato: personalizados e WhatsApp
 │   ├── perfil/                     # page.tsx, _components e _lib
 │   ├── checkout/                   # page.tsx, _components e _lib
 │   ├── pedido/[id]/                # page.tsx, _components e _lib
@@ -95,7 +105,9 @@ O projeto usa **colocation por rotas**: o nome de cada pasta em `src/app` corres
 
 As pastas com `_` ficam fora do roteamento. Crie `_components` e `_lib` apenas quando a página precisar deles. Componentes reutilizados ficam em `src/components`; hooks, tipos, regras e armazenamento compartilhados ficam em `src/lib`. O cabeçalho usa `src/lib/hooks/use-header.ts` para busca, menu móvel e contadores. `layout.tsx` compõe a estrutura da loja dentro do provider, e as páginas que dependem de parâmetros de busca mantêm suas fronteiras de `Suspense`.
 
-A navegação principal oferece **Início**, **Todos os produtos** e **Sobre a Debinatos**. Bijuterias, Acessórios e Decoração continuam como filtros de `/catalogo`, sem atalhos de categoria na página inicial, cabeçalho ou rodapé. Novas categorias de produtos ativos cadastrados no painel aparecem automaticamente nos filtros. Busca, categoria, preço e ordenação usam os parâmetros `q`, `categoria`, `preco` e `ordem`, preservando URLs filtradas.
+Os componentes usam classes Tailwind diretamente no JSX, incluindo variações responsivas e estados de interação. `src/app/globals.css` é o único arquivo CSS e concentra fontes, tema, estilos base, acessibilidade e a animação de notificações. Padrões visuais reutilizados ficam nos próprios componentes React.
+
+A navegação principal oferece **Início**, **Todos os produtos**, **Sobre a Debinatos** e **Contato**. Bijuterias, Acessórios e Decoração continuam como filtros de `/catalogo`, sem atalhos de categoria na página inicial, cabeçalho ou rodapé. Novas categorias de produtos ativos cadastrados no painel aparecem automaticamente nos filtros. Busca, categoria, preço e ordenação usam os parâmetros `q`, `categoria`, `preco` e `ordem`, preservando URLs filtradas.
 
 O perfil, o checkout e `/admin` continuam demonstrativos, sem autenticação real.
 

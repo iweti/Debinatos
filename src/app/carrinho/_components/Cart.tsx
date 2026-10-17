@@ -36,7 +36,7 @@ export function Cart() {
     changeCep,
   } = useCart();
   return (
-    <div className="page-container">
+    <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
       <Breadcrumb items={[{ label: "Carrinho" }]} />
       <PageHeading
         eyebrow="SEUS PEQUENOS ACHADOS"
@@ -54,94 +54,122 @@ export function Cart() {
       ) : (
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_330px] lg:gap-8">
           <div>
-            <div className="cart-list">
+            <div className="border-t border-line">
               {rows.map(({ item, product }) => (
-                <article className="cart-row" key={item.productId}>
-                  <Link href={`/produto/${item.productId}`}>
+                <article
+                  className="relative flex items-start gap-3 border-b border-line py-5 md:items-center md:gap-5 md:py-6"
+                  key={item.productId}
+                >
+                  <Link
+                    className="h-24 w-19 shrink-0 md:h-28 md:w-24"
+                    href={`/produto/${item.productId}`}
+                  >
                     <Photo
+                      className="size-full rounded-lg object-cover"
                       source={product?.images[0] ?? ""}
                       alt={`Imagem ilustrativa de ${product?.name ?? "Produto indisponível"}`}
                     />
                   </Link>
-                  <div className="cart-product-info">
-                    <span className="eyebrow">
+                  <div className="min-w-0 flex-1 pb-9 md:pb-0">
+                    <span className="inline-flex items-center gap-2 leading-relaxed font-semibold text-brand uppercase text-[7px] tracking-wider md:text-[8px]">
                       {product?.category ?? "Produto indisponível"}
                     </span>
                     <Link href={`/produto/${item.productId}`}>
-                      <h3>{product?.name ?? "Produto removido"}</h3>
+                      <h3 className="my-1.5 font-serif text-[15px] font-medium md:text-[17px]">
+                        {product?.name ?? "Produto removido"}
+                      </h3>
                     </Link>
-                    <span>{money(product?.price ?? 0)}</span>
+                    <span className="block text-[11px] text-muted">
+                      {money(product?.price ?? 0)}
+                    </span>
                     {(!product?.active || item.quantity > product.stock) && (
-                      <span className="inline-error">
+                      <span className="my-3 leading-relaxed block text-[11px] text-muted">
                         Indisponível ou estoque insuficiente. Remova ou ajuste o
                         item.
                       </span>
                     )}
                     <button
-                      className="text-button"
+                      className="pt-2 text-[10px] text-brand underline underline-offset-4"
                       onClick={() => quantity(item.productId, 0)}
                     >
                       Remover
                     </button>
                   </div>
-                  <div className="cart-row-end">
+                  <div className="absolute right-0 bottom-4 left-22 flex items-center justify-between gap-3 md:static md:flex-col md:items-end md:gap-5">
                     <Quantity
+                      compact
                       value={item.quantity}
                       max={product?.active ? product.stock : 0}
                       onChange={(count) => quantity(item.productId, count)}
                       name={product?.name ?? "produto"}
                     />
-                    <strong>
+                    <strong className="text-xs md:text-[13px]">
                       {money((product?.price ?? 0) * item.quantity)}
                     </strong>
                   </div>
                 </article>
               ))}
             </div>
-            <Link className="text-link back-shop" href="/catalogo">
+            <Link
+              className="inline-flex items-center gap-2 p-0 text-xs/relaxed  font-semibold text-brand hover:underline hover:underline-offset-4 my-6"
+              href="/catalogo"
+            >
               <ArrowLeft size={16} /> Continuar escolhendo
             </Link>
-            <section className="panel shipping-panel">
-              <h2>
-                <Truck size={22} /> Como seu encanto chega até você?
+            <section className="rounded-xl border border-line bg-white p-5 md:p-7">
+              <h2 className="mb-6 flex items-center gap-3 text-lg">
+                <Truck className="text-brand" size={22} /> Como seu encanto
+                chega até você?
               </h2>
-              <div className="choice-row">
-                <label
-                  className={`choice ${delivery === "shipping" ? "chosen" : ""}`}
-                >
+              <div className="mb-5 flex flex-col gap-3 xl:flex-row">
+                <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-lg border border-[#ded3c8] px-3 py-3.5 font-normal has-checked:border-brand has-checked:bg-[#fdf5ed]">
                   <input
+                    className="m-0 size-3.5"
                     type="radio"
                     name="cart-delivery"
                     checked={delivery === "shipping"}
                     onChange={() => setDelivery("shipping")}
                   />
-                  <Truck size={20} />
+                  <Truck className="text-brand" size={20} />
                   <span>
-                    <strong>Receber em casa</strong>
-                    <small>Frete demonstrativo: {money(SHIPPING_FEE)}</small>
+                    <strong className="block text-[11px] leading-normal font-medium">
+                      Receber em casa
+                    </strong>
+                    <small className="mt-1 block text-[9px] leading-normal text-muted">
+                      Frete demonstrativo: {money(SHIPPING_FEE)}
+                    </small>
                   </span>
                 </label>
-                <label
-                  className={`choice ${delivery === "pickup" ? "chosen" : ""}`}
-                >
+                <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-lg border border-[#ded3c8] px-3 py-3.5 font-normal has-checked:border-brand has-checked:bg-[#fdf5ed]">
                   <input
+                    className="m-0 size-3.5"
                     type="radio"
                     name="cart-delivery"
                     checked={delivery === "pickup"}
                     onChange={() => setDelivery("pickup")}
                   />
-                  <MapPin size={20} />
+                  <MapPin className="text-brand" size={20} />
                   <span>
-                    <strong>Retirar na loja</strong>
-                    <small>Grátis • endereço fictício</small>
+                    <strong className="block text-[11px] leading-normal font-medium">
+                      Retirar na loja
+                    </strong>
+                    <small className="mt-1 block text-[9px] leading-normal text-muted">
+                      Grátis • endereço fictício
+                    </small>
                   </span>
                 </label>
               </div>
               {delivery === "shipping" ? (
-                <form className="cep-form" onSubmit={calculateShipping}>
-                  <label htmlFor="cart-cep">Simular entrega por CEP</label>
-                  <div>
+                <form onSubmit={calculateShipping}>
+                  <label
+                    className="mb-2.5 block text-[11px]"
+                    htmlFor="cart-cep"
+                  >
+                    Simular entrega por CEP
+                  </label>
+                  <div className="flex max-w-80 gap-2.5">
                     <input
+                      className="min-w-0 flex-1 text-xs"
                       id="cart-cep"
                       inputMode="numeric"
                       maxLength={9}
@@ -149,71 +177,90 @@ export function Cart() {
                       value={cep}
                       onChange={(e) => changeCep(e.target.value)}
                     />
-                    <button className="button outline small" type="submit">
+                    <button
+                      className="inline-flex items-center justify-center gap-3 rounded-lg border leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-10 px-4 py-2.5 text-[11px]"
+                      type="submit"
+                    >
                       Calcular
                     </button>
                   </div>
                   {cepError && (
-                    <p className="inline-error" role="alert">
+                    <p
+                      className="my-3 text-[11px] leading-relaxed text-[#b32217]"
+                      role="alert"
+                    >
                       {cepError}
                     </p>
                   )}
                   {calculatedCep && (
-                    <p className="success-text">
+                    <p className="flex items-center gap-1.5 text-[11px] text-leaf">
                       <Check size={15} /> Para {calculatedCep}:{" "}
                       {money(SHIPPING_FEE)} • 5 a 8 dias úteis (simulação)
                     </p>
                   )}
-                  <small>
+                  <small className="mt-3 block text-[9px] text-muted">
                     Valor fixo ilustrativo. Não há consulta a transportadoras.
                   </small>
                 </form>
               ) : (
-                <p className="muted">{PICKUP_ADDRESS}</p>
+                <p className="text-xs text-muted">{PICKUP_ADDRESS}</p>
               )}
             </section>
           </div>
-          <aside className="panel order-summary lg:sticky lg:top-6">
-            <span className="eyebrow">UM POUCO MAIS PERTO</span>
-            <h2>Resumo do carrinho</h2>
-            <div className="summary-line">
-              <span>Subtotal ({itemCount} itens)</span>
-              <span>{money(subtotal)}</span>
+          <aside className="rounded-xl border border-line p-5 md:p-7 bg-surface lg:sticky lg:top-6">
+            <span className="inline-flex items-center gap-2 leading-relaxed font-semibold tracking-[.18em] text-brand uppercase mb-3 text-[8px]">
+              UM POUCO MAIS PERTO
+            </span>
+            <h2 className="flex items-center gap-3 mb-7 text-[23px]">
+              Resumo do carrinho
+            </h2>
+            <div className="my-4 flex justify-between gap-4 text-xs text-muted">
+              <span className="last:text-ink">
+                Subtotal ({itemCount} itens)
+              </span>
+              <span className="last:text-ink">{money(subtotal)}</span>
             </div>
-            <div className="summary-line">
-              <span>
+            <div className="my-4 flex justify-between gap-4 text-xs text-muted">
+              <span className="last:text-ink">
                 {delivery === "shipping"
                   ? "Envio demonstrativo"
                   : "Retirada na loja"}
               </span>
-              <span>{fee ? money(fee) : "Grátis"}</span>
+              <span className="last:text-ink">
+                {fee ? money(fee) : "Grátis"}
+              </span>
             </div>
-            <div className="summary-total">
+            <div className="mt-5 mb-1 flex items-center justify-between gap-4 border-t border-[#e3d6c8] py-5 text-[13px] font-medium">
               <span>Total</span>
-              <strong>{money(subtotal + fee)}</strong>
+              <strong className="text-2xl font-semibold text-brand">
+                {money(subtotal + fee)}
+              </strong>
             </div>
             {invalid ? (
-              <p className="inline-error" role="alert">
+              <p
+                className="my-3 text-[11px] leading-relaxed text-[#b32217]"
+                role="alert"
+              >
                 Revise os itens indisponíveis antes de continuar.
               </p>
             ) : (
               <Link
-                className="button full"
+                className="min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand p-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 flex w-full  text-[11px]"
                 href={`/checkout?entrega=${delivery}`}
               >
                 Continuar para a compra <ArrowRight size={16} />
               </Link>
             )}
-            <p className="demo-note">
-              <ShieldCheck size={18} /> Compra demonstrativa. Nenhum valor será
-              cobrado.
+            <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
+              <ShieldCheck className="mt-px text-brand" size={18} /> Compra
+              demonstrativa. Nenhum valor será cobrado.
             </p>
-            <div className="payment-icons">
-              <span>Pix</span>
-              <span>
+            <div className="mt-5 flex items-center justify-center gap-3 border-t border-line pt-5 text-[11px] text-muted">
+              <span className="flex items-center gap-1.5">Pix</span>
+              <span className="flex items-center gap-1.5">
                 <CreditCard size={16} /> Cartão
               </span>
-              <small>simulados</small>
+              <small className="text-[9px]">simulados</small>
             </div>
           </aside>
         </div>

@@ -44,11 +44,12 @@ export function AddressFields({
       ].map((field) => (
         <label
           key={field.key}
-          className={field.half ? "" : "span-two"}
+          className={`text-[11px] ${field.half ? "" : "col-span-2"}`}
           htmlFor={`${prefix}-${field.key}`}
         >
           {field.label}
           <input
+            className="text-xs"
             id={`${prefix}-${field.key}`}
             required={field.key !== "complement"}
             maxLength={field.max}
