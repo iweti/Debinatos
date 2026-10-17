@@ -61,6 +61,13 @@ export function Header() {
           >
             Sobre a Debinatos
           </Link>
+          <Link
+            className="relative whitespace-nowrap py-3 text-[#665047] hover:text-brand aria-[current=page]:text-brand aria-[current=page]:after:absolute aria-[current=page]:after:right-0 aria-[current=page]:after:bottom-0 aria-[current=page]:after:left-0 aria-[current=page]:after:h-0.5 aria-[current=page]:after:rounded aria-[current=page]:after:bg-brand"
+            href="/contato"
+            aria-current={pathname === "/contato" ? "page" : undefined}
+          >
+            Contato
+          </Link>
         </nav>
         <div className="flex items-center gap-1 md:gap-2">
           <button
@@ -163,6 +170,13 @@ export function Header() {
           </Link>
           <Link className="px-2 py-3 text-xs" href="/sobre">
             Sobre a Debinatos
+          </Link>
+          <Link
+            className="px-2 py-3 text-xs aria-[current=page]:font-semibold aria-[current=page]:text-brand"
+            href="/contato"
+            aria-current={pathname === "/contato" ? "page" : undefined}
+          >
+            Contato
           </Link>
         </nav>
       )}

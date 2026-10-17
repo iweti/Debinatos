@@ -72,6 +72,12 @@ export function Footer() {
           </Link>
           <Link
             className="my-3 block text-[11px] text-muted hover:text-brand"
+            href="/contato"
+          >
+            Contato
+          </Link>
+          <Link
+            className="my-3 block text-[11px] text-muted hover:text-brand"
             href="/sobre#entregas"
           >
             Envio e retirada
