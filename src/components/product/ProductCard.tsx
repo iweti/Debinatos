@@ -19,7 +19,7 @@ export function ProductCard({ product }: { product: Product }) {
           <Photo
             className="size-full object-cover transition-transform duration-500 group-hover/product-card:scale-[1.035]"
             source={product.images[0]}
-            alt={`Imagem ilustrativa de ${product.name}`}
+            alt={`Foto de ${product.name}`}
             loading="lazy"
           />
         </Link>
@@ -50,7 +50,7 @@ export function ProductCard({ product }: { product: Product }) {
           />
         </button>
         <span className="absolute bottom-2 left-2 rounded-sm bg-[#fffdf4de] px-1.5 py-0.5 text-[6px] text-[#594236] md:text-[7px]">
-          Imagem ilustrativa
+          Preço fictício
         </span>
       </div>
       <div className="pt-3 md:pt-4">

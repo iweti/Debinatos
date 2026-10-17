@@ -52,10 +52,10 @@ export function ProductPage() {
             <Photo
               className="size-full object-cover"
               source={product.images[photoIndex] ?? product.images[0]}
-              alt={`Imagem ilustrativa de ${product.name}`}
+              alt={`Foto de ${product.name}`}
             />
             <span className="absolute rounded-sm bg-[#fffdf4de] text-[#594236] bottom-3 left-3 px-2 py-1 text-[8px]">
-              Imagem ilustrativa • produto de demonstração
+              Preço fictício • compra de demonstração
             </span>
           </div>
           {product.images.length > 1 && (

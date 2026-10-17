@@ -46,15 +46,15 @@ export function Hero() {
           <div className="absolute w-81.25 h-102.5 left-26.25 top-8.75 rounded-[180px_180px_100px_100px] overflow-hidden shadow-[0_15px_45px_#76522d0b] max-md:w-55.5 max-md:h-68.75 max-md:left-25 max-md:top-5.5 max-md:rounded-[140px_140px_75px_75px]">
             <Photo
               className="size-full  object-cover object-[50%_48%]"
-              source="/images/earrings.jpg"
-              alt="Bijuterias douradas em uma composição delicada. Imagem ilustrativa."
+              source="/images/products/terrario-ursos-polares.webp"
+              alt="Terrário decorativo com ursos polares e tampa amadeirada da Debinatos."
             />
           </div>
           <div className="absolute left-0 bottom-13.75 w-51.5 p-[8px_8px_14px] bg-white rounded-[90px_90px_9px_9px] rotate-[-8deg] shadow-[0_14px_35px_#62432212] max-md:w-36.25 max-md:left-4.5 max-md:bottom-7.5 max-md:p-[6px_6px_10px]">
             <Photo
               className="h-47.5 w-full object-cover rounded-[84px_84px_3px_3px] max-md:h-32"
-              source="/images/bracelet.jpg"
-              alt="Pulseira dourada. Imagem ilustrativa."
+              source="/images/products/mini-aquario-axolote.webp"
+              alt="Mini aquário decorativo de axolote da Debinatos."
             />
             <span className="font-serif text-[14px] block text-center pt-2.75 max-md:pt-1.75 max-md:text-[11px]">
               Um toque de <em>encanto.</em>
@@ -88,7 +88,7 @@ export function Hero() {
             </span>
           </div>
           <span className="absolute bottom-4 left-35 text-[8px] text-[#86766b] max-md:bottom-2.5 max-md:left-auto max-md:w-full max-md:text-center max-md:text-[6px]">
-            Composição com imagens ilustrativas
+            Peças da Debinatos • preços fictícios
           </span>
         </div>
       </div>

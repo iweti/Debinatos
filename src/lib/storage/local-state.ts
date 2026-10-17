@@ -1,6 +1,7 @@
 import { initialState } from "../data/demo";
 import type { DemoState } from "../types/store";
 import { isDemoState } from "./validate-state";
+import { migrateCatalog } from "./migrate-catalog";
 
 export const STORAGE_KEY = "debinatos-demo-v1";
 
@@ -10,7 +11,7 @@ export function readState(): { state: DemoState; warning?: string } {
     if (!raw) return { state: initialState() };
     const state = JSON.parse(raw) as DemoState;
     if (!isDemoState(state)) throw new Error("Formato inválido");
-    return { state };
+    return { state: migrateCatalog(state) };
   } catch {
     return {
       state: initialState(),
