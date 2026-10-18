@@ -95,7 +95,7 @@ export function useStoreState(): Store {
       if (
         update(
           () => initialState(),
-          "Demonstração restaurada. Tudo pronto para recomeçar!",
+          "Dados restaurados. Tudo pronto para recomeçar!",
         )
       ) {
         try {

@@ -6,8 +6,7 @@ export function createOrder(
   state: DemoState,
   input: CheckoutInput,
 ): { state: DemoState; order: Order } {
-  if (!state.loggedIn)
-    throw new Error("Entre no perfil de demonstração para continuar.");
+  if (!state.loggedIn) throw new Error("Acesse seu perfil para continuar.");
   if (!state.cart.length) throw new Error("Seu carrinho está vazio.");
   if (!state.profile.name.trim())
     throw new Error("Informe seu nome no perfil.");

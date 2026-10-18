@@ -67,7 +67,7 @@ export function Cart() {
                     <Photo
                       className="size-full rounded-lg object-cover"
                       source={product?.images[0] ?? ""}
-                      alt={`Imagem ilustrativa de ${product?.name ?? "Produto indisponível"}`}
+                      alt={`Foto de ${product?.name ?? "Produto indisponível"}`}
                     />
                   </Link>
                   <div className="min-w-0 flex-1 pb-9 md:pb-0">
@@ -136,7 +136,7 @@ export function Cart() {
                       Receber em casa
                     </strong>
                     <small className="mt-1 block text-[9px] leading-normal text-muted">
-                      Frete demonstrativo: {money(SHIPPING_FEE)}
+                      Frete: {money(SHIPPING_FEE)}
                     </small>
                   </span>
                 </label>
@@ -154,7 +154,7 @@ export function Cart() {
                       Retirar na loja
                     </strong>
                     <small className="mt-1 block text-[9px] leading-normal text-muted">
-                      Grátis • endereço fictício
+                      Grátis • local a combinar
                     </small>
                   </span>
                 </label>
@@ -165,7 +165,7 @@ export function Cart() {
                     className="mb-2.5 block text-[11px]"
                     htmlFor="cart-cep"
                   >
-                    Simular entrega por CEP
+                    Consultar entrega por CEP
                   </label>
                   <div className="flex max-w-80 gap-2.5">
                     <input
@@ -195,11 +195,11 @@ export function Cart() {
                   {calculatedCep && (
                     <p className="flex items-center gap-1.5 text-[11px] text-leaf">
                       <Check size={15} /> Para {calculatedCep}:{" "}
-                      {money(SHIPPING_FEE)} • 5 a 8 dias úteis (simulação)
+                      {money(SHIPPING_FEE)} • 5 a 8 dias úteis
                     </p>
                   )}
                   <small className="mt-3 block text-[9px] text-muted">
-                    Valor fixo ilustrativo. Não há consulta a transportadoras.
+                    Frete com valor fixo para envio.
                   </small>
                 </form>
               ) : (
@@ -222,9 +222,7 @@ export function Cart() {
             </div>
             <div className="my-4 flex justify-between gap-4 text-xs text-muted">
               <span className="last:text-ink">
-                {delivery === "shipping"
-                  ? "Envio demonstrativo"
-                  : "Retirada na loja"}
+                {delivery === "shipping" ? "Envio" : "Retirada na loja"}
               </span>
               <span className="last:text-ink">
                 {fee ? money(fee) : "Grátis"}
@@ -252,15 +250,14 @@ export function Cart() {
               </Link>
             )}
             <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
-              <ShieldCheck className="mt-px text-brand" size={18} /> Compra
-              demonstrativa. Nenhum valor será cobrado.
+              <ShieldCheck className="mt-px text-brand" size={18} /> Confira os
+              itens antes de criar seu pedido.
             </p>
             <div className="mt-5 flex items-center justify-center gap-3 border-t border-line pt-5 text-[11px] text-muted">
               <span className="flex items-center gap-1.5">Pix</span>
               <span className="flex items-center gap-1.5">
                 <CreditCard size={16} /> Cartão
               </span>
-              <small className="text-[9px]">simulados</small>
             </div>
           </aside>
         </div>

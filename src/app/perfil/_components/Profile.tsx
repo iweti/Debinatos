@@ -63,7 +63,7 @@ export function Profile() {
             </span>
             <strong className="block text-[13px]">{profile.name}</strong>
             <small className="mt-2 block text-[10px] text-muted">
-              Perfil de demonstração
+              Meu perfil
             </small>
           </div>
           <nav
@@ -114,8 +114,7 @@ export function Profile() {
                 Meus dados
               </h2>
               <p className="mb-6 text-[11px] text-muted">
-                Use apenas dados fictícios. As informações ficam neste
-                navegador.
+                Suas informações ficam salvas neste navegador.
               </p>
               <label
                 className="block max-w-112.5 text-[11px]"
@@ -132,7 +131,7 @@ export function Profile() {
                 />
               </label>
               <h3 className="mt-7 mb-6 flex items-center gap-2 text-sm">
-                <MapPin size={18} /> Endereço de demonstração
+                <MapPin size={18} /> Endereço de entrega
               </h3>
               <AddressFields
                 address={address}
@@ -158,7 +157,7 @@ export function Profile() {
             <>
               <div className="mb-6 flex justify-between gap-4 md:mb-8 items-center">
                 <h2 className="text-2xl">Meus pedidos</h2>
-                <span className="text-xs text-muted">Compras simuladas</span>
+                <span className="text-xs text-muted">Histórico de pedidos</span>
               </div>
               {orders.length ? (
                 <div className="flex flex-col gap-5">
@@ -185,7 +184,7 @@ export function Profile() {
                               className="h-14 w-12 rounded object-cover md:h-16 md:w-14 nth-[n+3]:hidden nth-[n+3]:sm:block"
                               key={item.productId}
                               source={item.image}
-                              alt={`Imagem ilustrativa de ${item.name}`}
+                              alt={`Foto de ${item.name}`}
                             />
                           ))}
                         </div>
@@ -210,8 +209,7 @@ export function Profile() {
                       <div className="flex items-center justify-between gap-3 border-t border-line pt-4 text-[9px] text-muted md:text-[10px]">
                         <span>
                           Pagamento{" "}
-                          {order.payment === "pix" ? "Pix" : "com cartão"} •
-                          simulado
+                          {order.payment === "pix" ? "Pix" : "com cartão"}
                         </span>
                         <Link
                           className="inline-flex items-center gap-2 p-0 leading-relaxed font-semibold text-brand hover:underline hover:underline-offset-4 text-[11px]"
@@ -228,8 +226,7 @@ export function Profile() {
                   icon={<Package size={30} />}
                   title="Sua história de encantos começa aqui."
                 >
-                  Ao concluir uma compra simulada, o pedido aparecerá neste
-                  cantinho.
+                  Ao criar um pedido, ele aparecerá neste cantinho.
                 </EmptyState>
               )}
             </>

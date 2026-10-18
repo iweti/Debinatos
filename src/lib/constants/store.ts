@@ -1,5 +1,4 @@
-export const PICKUP_ADDRESS =
-  "Rua dos Encantos, 123 • Centro, São Paulo/SP (endereço fictício)";
+export const PICKUP_ADDRESS = "Local de retirada a combinar com a Debinatos";
 export const SHIPPING_FEE = 1490;
 export const STATUS_LABELS = {
   received: "Recebido",

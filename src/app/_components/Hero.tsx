@@ -75,20 +75,15 @@ export function Hero() {
             ✧
           </span>
           <div className="absolute bottom-21.25 right-1.25 bg-[#fffaf3] [border:1px_solid_#fff] rounded-[9px] p-[15px_18px] flex gap-3.25 items-center shadow-[0_10px_30px_#62432212] max-md:bottom-10 max-md:right-1.25 max-md:p-[11px_13px]">
-            <Heart
-              className="text-brand max-md:w-3.75"
-              size={17}
-            />
+            <Heart className="text-brand max-md:w-3.75" size={17} />
             <span className="text-[10px] leading-[1.7] text-muted">
               Seu novo favorito
               <br />
-              <strong className="text-ink font-medium">
-                está por aqui.
-              </strong>
+              <strong className="text-ink font-medium">está por aqui.</strong>
             </span>
           </div>
           <span className="absolute bottom-4 left-35 text-[8px] text-[#86766b] max-md:bottom-2.5 max-md:left-auto max-md:w-full max-md:text-center max-md:text-[6px]">
-            Peças da Debinatos • preços fictícios
+            Peças da Debinatos
           </span>
         </div>
       </div>

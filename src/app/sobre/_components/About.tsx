@@ -250,9 +250,8 @@ export function About() {
               Envios para todo o Brasil
             </h3>
             <p className="mt-3 text-xs text-muted">
-              Na demonstração, o envio custa R$ 14,90 e tem prazo ilustrativo de
-              5 a 8 dias úteis. Informe um CEP de 8 dígitos no checkout. Não há
-              consulta a transportadoras.
+              O frete tem valor fixo de R$ 14,90, com prazo estimado de 5 a 8
+              dias úteis. Informe um CEP de 8 dígitos ao criar seu pedido.
             </p>
           </article>
           <article className="rounded-xl border border-line p-6 md:p-8">
@@ -260,9 +259,7 @@ export function About() {
             <h3 className="mb-4 font-serif text-xl font-medium">
               Retire na loja
             </h3>
-            <p className="mt-3 text-xs text-muted">
-              A retirada simulada é gratuita.
-            </p>
+            <p className="mt-3 text-xs text-muted">A retirada é gratuita.</p>
             <p className="mt-3 text-xs text-muted">{PICKUP_ADDRESS}.</p>
           </article>
         </div>
@@ -274,16 +271,12 @@ export function About() {
         <h2 className="mt-3 mb-7">Dúvidas frequentes</h2>
         {[
           {
-            q: "Posso fazer uma compra real?",
-            a: "Esta é uma loja de demonstração. Produtos, preços, estoque, pedidos e pagamentos são fictícios. O checkout não cobra nenhum valor nem solicita dados bancários.",
-          },
-          {
             q: "Onde meus favoritos e pedidos ficam salvos?",
-            a: "Apenas neste navegador e dispositivo. Limpar os dados do navegador remove suas alterações. Use informações fictícias para experimentar o perfil e o endereço.",
+            a: "Apenas neste navegador e dispositivo. Limpar os dados do navegador remove suas alterações. Você pode atualizar seus dados no perfil.",
           },
           {
             q: "Como acompanho meu pedido?",
-            a: "Entre no perfil de demonstração e acesse Meus pedidos. Você também pode alterar o andamento de um pedido no painel administrativo para testar a experiência.",
+            a: "Acesse seu perfil e entre em Meus pedidos para consultar os detalhes e o andamento de cada pedido.",
           },
           {
             q: "Como falo com a loja?",
@@ -302,10 +295,6 @@ export function About() {
                 .
               </>
             ),
-          },
-          {
-            q: "Como recomeço a demonstração?",
-            a: "Acesse o painel administrativo e use Restaurar demonstração. Após a confirmação, o catálogo, o estoque e os pedidos iniciais serão recuperados e as alterações locais serão removidas.",
           },
         ].map(({ q, a }) => (
           <details className="group border-b border-line py-5" key={q}>

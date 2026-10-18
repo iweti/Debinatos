@@ -17,8 +17,7 @@ export function LoginPanel({ next = "/perfil" }: { next?: string }) {
         Que bom ter você por aqui.
       </h1>
       <p className="text-xs text-muted">
-        Entre no perfil de demonstração para acompanhar pedidos, editar seus
-        dados e experimentar a loja.
+        Acesse seu perfil para acompanhar pedidos e editar seus dados.
       </p>
       <div className="my-6 flex items-center gap-3 rounded-lg border border-[#eadccf] bg-white p-4 text-left">
         <span className="grid size-10 place-items-center rounded-full bg-[#f5e5d5] font-serif text-xl text-brand">
@@ -27,7 +26,7 @@ export function LoginPanel({ next = "/perfil" }: { next?: string }) {
         <div>
           <strong className="block text-xs">Marina Oliveira</strong>
           <span className="mt-1 block text-[10px] text-muted">
-            Perfil fictício para explorar a loja
+            Seu perfil neste navegador
           </span>
         </div>
       </div>
@@ -36,11 +35,11 @@ export function LoginPanel({ next = "/perfil" }: { next?: string }) {
         disabled={!ready}
         onClick={login}
       >
-        Usar perfil de demonstração <ArrowRight size={17} />
+        Acessar meu perfil <ArrowRight size={17} />
       </button>
       <p className="my-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]  text-left">
-        <ShieldCheck className="mt-px text-brand" size={17} /> Não há senha ou
-        conta real. Seus itens salvos e carrinho serão preservados.
+        <ShieldCheck className="mt-px text-brand" size={17} /> Seus dados ficam
+        neste navegador. Seus itens salvos e carrinho serão preservados.
       </p>
       <Link
         className="inline-flex items-center gap-2 p-0 leading-relaxed font-semibold text-brand hover:underline hover:underline-offset-4 text-[11px]"

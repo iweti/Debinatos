@@ -2,6 +2,7 @@ import { initialState } from "../data/demo";
 import type { DemoState } from "../types/store";
 import { isDemoState } from "./validate-state";
 import { migrateCatalog } from "./migrate-catalog";
+import { migrateCopy } from "./migrate-copy";
 
 export const STORAGE_KEY = "debinatos-demo-v1";
 
@@ -11,12 +12,12 @@ export function readState(): { state: DemoState; warning?: string } {
     if (!raw) return { state: initialState() };
     const state = JSON.parse(raw) as DemoState;
     if (!isDemoState(state)) throw new Error("Formato inválido");
-    return { state: migrateCatalog(state) };
+    return { state: migrateCopy(migrateCatalog(state)) };
   } catch {
     return {
       state: initialState(),
       warning:
-        "Não foi possível recuperar os dados locais. Você pode explorar a demonstração ou restaurá-la no painel.",
+        "Não foi possível recuperar os dados locais. Você pode continuar navegando ou restaurar os dados no painel.",
     };
   }
 }

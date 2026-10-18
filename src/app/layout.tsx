@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: "Debinatos | %s",
   },
   description:
-    "Artesanatos, bijuterias e itens personalizados feitos com amor, qualidade e exclusividade. Envios para todo o Brasil. Explore a loja de demonstração Debinatos.",
+    "Artesanatos, bijuterias e itens personalizados feitos com amor, qualidade e exclusividade. Envios para todo o Brasil.",
   icons: { icon: "/favicon.svg" },
   robots: { index: false, follow: false },
 };

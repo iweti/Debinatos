@@ -44,7 +44,7 @@ const items: Array<[string, string, string, number, string, string, string]> = [
     "Papelaria",
     1490,
     "lapis-patinha",
-    "Lápis personalizados com pingentes de patinha e detalhes coloridos para levar um toque de fofura aos estudos. Valor fictício por unidade.",
+    "Lápis personalizados com pingentes de patinha e detalhes coloridos para levar um toque de fofura aos estudos.",
     "Lápis de grafite e pingente decorativo",
   ],
   [
@@ -89,7 +89,7 @@ const items: Array<[string, string, string, number, string, string, string]> = [
     "Papelaria",
     1290,
     "lapis-monstros",
-    "Os monstrinhos Mike e Sulivan deixam a escrita muito mais divertida nestes lápis personalizados. Valor fictício por unidade.",
+    "Os monstrinhos Mike e Sulivan deixam a escrita muito mais divertida nestes lápis personalizados.",
     "Lápis de grafite e ponteira decorativa",
   ],
   [
@@ -98,7 +98,7 @@ const items: Array<[string, string, string, number, string, string, string]> = [
     "Papelaria",
     1490,
     "lapis-sereia",
-    "Lápis de grafite com pingentes coloridos de cauda de sereia para dar um toque de magia ao seu material escolar. Valor fictício por unidade.",
+    "Lápis de grafite com pingentes coloridos de cauda de sereia para dar um toque de magia ao seu material escolar.",
     "Lápis de grafite e pingente decorativo",
   ],
   [
@@ -139,7 +139,7 @@ export function initialState(): DemoState {
   );
   const address = {
     cep: "01001-000",
-    street: "Rua das Flores (fictícia)",
+    street: "Rua das Flores",
     number: "123",
     complement: "",
     district: "Centro",

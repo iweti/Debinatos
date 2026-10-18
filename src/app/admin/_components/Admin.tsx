@@ -58,9 +58,7 @@ export function Admin() {
             <h1 className="mt-3 mb-2.5 text-[28px] md:text-[34px]">
               Olá, vamos cuidar da loja?
             </h1>
-            <p className="text-xs text-muted">
-              Seu painel de administração demonstrativo.
-            </p>
+            <p className="text-xs text-muted">Seu painel de administração.</p>
           </div>
           <Link
             className="inline-flex items-center justify-center gap-3 rounded-lg border leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-10 px-4 py-2.5 text-[11px]"
@@ -72,11 +70,8 @@ export function Admin() {
         <div className="mb-7 flex items-start gap-3 rounded-lg border border-[#edddcb] bg-[#f5ebdf] px-4 py-3.5 text-[#77563e] md:items-center">
           <ShieldCheck size={21} />
           <p className="text-[10px] leading-relaxed md:text-[11px]">
-            <strong className="font-medium">
-              Painel aberto para demonstração.
-            </strong>{" "}
-            Produtos, fotos e pedidos ficam apenas neste navegador. Não há
-            autenticação administrativa real.
+            <strong className="font-medium">Armazenamento local.</strong>{" "}
+            Produtos, fotos e pedidos ficam salvos neste navegador.
           </p>
         </div>
         <div
@@ -109,7 +104,7 @@ export function Admin() {
             className="flex items-center gap-2 border-b-2 border-transparent py-3.5 text-muted md:text-xs ml-auto px-0 text-[10px] md:text-[10px] max-md:basis-full max-md:justify-end max-md:[border-top:1px_solid_var(--color-line)]"
             onClick={() => setResetOpen(true)}
           >
-            <RotateCcw size={16} /> Restaurar demonstração
+            <RotateCcw size={16} /> Restaurar dados iniciais
           </button>
         </div>
         {tab === "visao" ? (
@@ -123,15 +118,15 @@ export function Admin() {
               />
               <StatsCard
                 icon={<Package size={22} />}
-                label="Pedidos simulados"
+                label="Pedidos"
                 value={stats.totalOrders}
                 hint={<>{stats.pendingOrders} aguardando conclusão</>}
               />
               <StatsCard
                 icon={<Sparkles size={22} />}
-                label="Total de vendas simuladas"
+                label="Total dos pedidos"
                 value={money(stats.revenue)}
-                hint="Valores fictícios, sem cobranças"
+                hint="Soma dos valores dos pedidos"
               />
               <StatsCard
                 icon={<ShieldCheck size={22} />}
@@ -373,12 +368,12 @@ export function Admin() {
                       <span className="text-muted">
                         {order.address
                           ? `${order.address.street}, ${order.address.number} • ${order.address.city}/${order.address.state} • ${order.address.cep}`
-                          : "Endereço fictício da demonstração"}
+                          : "Local de retirada a combinar com a Debinatos"}
                       </span>
                     </div>
                     <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line pt-5 text-[10px]">
                       <span>
-                        Total simulado{" "}
+                        Total{" "}
                         <strong className="mt-1 block text-[17px] text-brand">
                           {money(order.total)}
                         </strong>
@@ -433,7 +428,7 @@ export function Admin() {
         <ProductEditor product={editor} close={() => setEditor(undefined)} />
       )}
       {resetOpen && (
-        <Modal title="Restaurar a demonstração?" close={closeReset}>
+        <Modal title="Restaurar os dados iniciais?" close={closeReset}>
           <div className="p-6 md:p-8">
             <div className="mx-auto mb-5 grid size-16 place-items-center rounded-full bg-cream text-brand">
               <RotateCcw size={28} />
@@ -459,7 +454,7 @@ export function Admin() {
                 disabled={resetting}
                 onClick={restoreDemo}
               >
-                {resetting ? "Restaurando…" : "Restaurar demonstração"}
+                {resetting ? "Restaurando…" : "Restaurar dados iniciais"}
               </button>
             </div>
           </div>

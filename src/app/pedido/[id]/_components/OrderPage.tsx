@@ -58,12 +58,9 @@ export function OrderPage() {
             <span className="inline-flex items-center gap-2 leading-relaxed font-semibold tracking-[.18em] uppercase text-[8px] text-leaf">
               UM ENCANTO DE EXPERIÊNCIA
             </span>
-            <h2 className="mt-2 mb-3 text-2xl">
-              Seu pedido de demonstração foi criado!
-            </h2>
+            <h2 className="mt-2 mb-3 text-2xl">Seu pedido foi criado!</h2>
             <p className="text-[11px] text-muted">
-              Obrigada por explorar a Debinatos. Nenhuma cobrança ou entrega
-              será realizada.
+              Confira abaixo os detalhes do seu pedido.
             </p>
           </div>
         </div>
@@ -109,7 +106,7 @@ export function OrderPage() {
               <Photo
                 className="h-18 w-15 rounded object-cover md:h-20 md:w-18"
                 source={item.image}
-                alt={`Imagem ilustrativa de ${item.name}`}
+                alt={`Foto de ${item.name}`}
               />
               <div>
                 <strong className="text-xs">{item.name}</strong>
@@ -130,8 +127,8 @@ export function OrderPage() {
                 <MapPin size={20} />
               )}
               {order.delivery === "shipping"
-                ? "Endereço de entrega fictício"
-                : "Retirada na loja fictícia"}
+                ? "Endereço de entrega"
+                : "Retirada na loja"}
             </h3>
             {order.address ? (
               <p className="text-xs text-muted">
@@ -158,25 +155,25 @@ export function OrderPage() {
           </div>
           <div className="my-4 flex justify-between gap-4 text-xs text-muted">
             <span className="last:text-ink">
-              {order.delivery === "shipping" ? "Envio simulado" : "Retirada"}
+              {order.delivery === "shipping" ? "Envio" : "Retirada"}
             </span>
             <span className="last:text-ink">
               {order.shipping ? money(order.shipping) : "Grátis"}
             </span>
           </div>
           <div className="mt-5 mb-1 flex items-center justify-between gap-4 border-t border-[#e3d6c8] py-5 text-[13px] font-medium">
-            <span>Total simulado</span>
+            <span>Total</span>
             <strong className="text-2xl font-semibold text-brand">
               {money(order.total)}
             </strong>
           </div>
           <p className="flex items-center gap-2.5 text-[11px] text-muted">
             <CreditCard size={18} />
-            {order.payment === "pix" ? "Pix" : "Cartão"} • pagamento ilustrativo
+            {order.payment === "pix" ? "Pix" : "Cartão"}
           </p>
           <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
-            <ShieldCheck className="mt-px text-brand" size={18} /> Pedido de
-            demonstração salvo apenas neste navegador.
+            <ShieldCheck className="mt-px text-brand" size={18} /> Pedido salvo
+            neste navegador.
           </p>
           <Link
             className="min-h-12 items-center justify-center gap-3 rounded-lg border p-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] flex w-full  text-[11px] mt-6"

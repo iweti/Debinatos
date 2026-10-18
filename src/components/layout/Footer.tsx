@@ -59,7 +59,7 @@ export function Footer() {
             className="my-3 block text-[11px] text-muted hover:text-brand"
             href="/admin"
           >
-            Painel de demonstração
+            Painel administrativo
           </Link>
         </div>
         <div className="max-md:last:col-[span_2]">
@@ -100,9 +100,7 @@ export function Footer() {
           <div className="flex items-center gap-2 pt-3 text-brand">
             <Sparkles size={17} />
             <span className="text-[9px] leading-relaxed">
-              Explore à vontade.
-              <br />
-              Esta é uma loja demonstrativa.
+              Pequenos detalhes, grandes sentimentos.
             </span>
           </div>
         </div>

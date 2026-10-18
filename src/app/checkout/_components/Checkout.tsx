@@ -46,7 +46,7 @@ export function Checkout() {
           icon={<ShoppingBag size={32} />}
           title="Primeiro, escolha seus encantos."
         >
-          Adicione produtos ao carrinho para experimentar uma compra.
+          Adicione produtos ao carrinho para criar seu pedido.
         </EmptyState>
       </div>
     );
@@ -56,7 +56,7 @@ export function Checkout() {
         <Breadcrumb
           items={[
             { label: "Carrinho", to: "/carrinho" },
-            { label: "Compra simulada" },
+            { label: "Finalizar pedido" },
           ]}
         />
         <LoginPanel next={`/checkout?entrega=${delivery}`} />
@@ -67,14 +67,14 @@ export function Checkout() {
       <Breadcrumb
         items={[
           { label: "Carrinho", to: "/carrinho" },
-          { label: "Compra simulada" },
+          { label: "Finalizar pedido" },
         ]}
       />
       <PageHeading
         eyebrow="SÓ MAIS ALGUNS DETALHES"
-        title="Finalize seu pedido de demonstração"
+        title="Finalize seu pedido"
       >
-        Use informações fictícias. Esta experiência não gera uma compra real.
+        Confira seus dados e escolha como deseja receber seus encantos.
       </PageHeading>
       <form
         className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_330px] lg:gap-8"
@@ -139,7 +139,7 @@ export function Checkout() {
                     Retirada gratuita
                   </strong>
                   <small className="mt-1 block text-[9px] leading-normal text-muted">
-                    Em nossa loja fictícia
+                    Local a combinar
                   </small>
                 </span>
               </label>
@@ -147,8 +147,7 @@ export function Checkout() {
             {delivery === "shipping" ? (
               <>
                 <p className="mb-6 text-[11px] text-muted">
-                  Endereço de demonstração • campos obrigatórios, exceto
-                  complemento.
+                  Endereço de entrega • campos obrigatórios, exceto complemento.
                 </p>
                 <AddressFields
                   address={address}
@@ -167,7 +166,7 @@ export function Checkout() {
                     {PICKUP_ADDRESS}
                   </p>
                   <small className="text-[10px] text-muted">
-                    Retirada simulada em até 2 dias úteis após a preparação.
+                    Combine os detalhes da retirada com a Debinatos.
                   </small>
                 </div>
               </div>
@@ -178,7 +177,7 @@ export function Checkout() {
               <span className="grid size-7 place-items-center rounded-full border border-[#e9cfc0] bg-[#fbf1e6] font-sans text-[11px] text-brand">
                 3
               </span>{" "}
-              Pagamento ilustrativo
+              Forma de pagamento
             </h2>
             <div className="mb-5 flex flex-col gap-3 xl:flex-row">
               <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-lg border border-[#ded3c8] px-3 py-3.5 font-normal has-checked:border-brand has-checked:bg-[#fdf5ed]">
@@ -195,7 +194,7 @@ export function Checkout() {
                     Pix
                   </strong>
                   <small className="mt-1 block text-[9px] leading-normal text-muted">
-                    Sem QR code ou cobrança
+                    Preferência por Pix
                   </small>
                 </span>
               </label>
@@ -213,14 +212,14 @@ export function Checkout() {
                     Cartão
                   </strong>
                   <small className="mt-1 block text-[9px] leading-normal text-muted">
-                    Sem dados bancários
+                    Preferência por cartão
                   </small>
                 </span>
               </label>
             </div>
             <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
               <ShieldCheck className="mt-px text-brand" size={18} /> A escolha
-              registra apenas a forma de pagamento na simulação.
+              registra sua preferência de pagamento no pedido.
             </p>
           </section>
         </div>
@@ -262,14 +261,14 @@ export function Checkout() {
           </div>
           <div className="my-4 flex justify-between gap-4 text-xs text-muted">
             <span className="last:text-ink">
-              {delivery === "shipping" ? "Envio demonstrativo" : "Retirada"}
+              {delivery === "shipping" ? "Envio" : "Retirada"}
             </span>
             <span className="last:text-ink">
               {delivery === "shipping" ? money(SHIPPING_FEE) : "Grátis"}
             </span>
           </div>
           <div className="mt-5 mb-1 flex items-center justify-between gap-4 border-t border-[#e3d6c8] py-5 text-[13px] font-medium">
-            <span>Total simulado</span>
+            <span>Total</span>
             <strong className="text-2xl font-semibold text-brand">
               {money(subtotal + (delivery === "shipping" ? SHIPPING_FEE : 0))}
             </strong>
@@ -287,12 +286,12 @@ export function Checkout() {
             type="submit"
             disabled={submitting}
           >
-            {submitting ? "Criando pedido…" : "Criar pedido de demonstração"}
+            {submitting ? "Criando pedido…" : "Criar pedido"}
             <ArrowRight size={16} />
           </button>
           <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
-            <ShieldCheck className="mt-px text-brand" size={18} /> Nenhuma
-            cobrança. Nenhuma entrega real.
+            <ShieldCheck className="mt-px text-brand" size={18} /> Confira os
+            dados do pedido antes de continuar.
           </p>
         </aside>
       </form>

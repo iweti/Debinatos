@@ -49,9 +49,6 @@ export function ProductCard({ product }: { product: Product }) {
             fill={saved ? "currentColor" : "none"}
           />
         </button>
-        <span className="absolute bottom-2 left-2 rounded-sm bg-[#fffdf4de] px-1.5 py-0.5 text-[6px] text-[#594236] md:text-[7px]">
-          Preço fictício
-        </span>
       </div>
       <div className="pt-3 md:pt-4">
         <span className="text-[8px] text-muted md:text-[9px]">

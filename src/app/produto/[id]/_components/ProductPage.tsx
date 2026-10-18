@@ -54,9 +54,6 @@ export function ProductPage() {
               source={product.images[photoIndex] ?? product.images[0]}
               alt={`Foto de ${product.name}`}
             />
-            <span className="absolute rounded-sm bg-[#fffdf4de] text-[#594236] bottom-3 left-3 px-2 py-1 text-[8px]">
-              Preço fictício • compra de demonstração
-            </span>
           </div>
           {product.images.length > 1 && (
             <div className="mt-4 flex gap-3">
@@ -102,8 +99,7 @@ export function ProductPage() {
           >
             {product.stock ? (
               <>
-                <Check size={14} /> {product.stock} unidades disponíveis na
-                demonstração
+                <Check size={14} /> {product.stock} unidades disponíveis
               </>
             ) : (
               "Esgotado no momento"
@@ -166,8 +162,8 @@ export function ProductPage() {
             </dl>
           </div>
           <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
-            <ShieldCheck className="mt-px text-brand" size={17} /> Você está em
-            uma demonstração. Nenhuma compra ou cobrança é real.
+            <ShieldCheck className="mt-px text-brand" size={17} /> Feito com
+            carinho em cada detalhe.
           </p>
         </div>
       </div>

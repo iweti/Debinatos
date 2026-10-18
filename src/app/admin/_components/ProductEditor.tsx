@@ -150,7 +150,7 @@ export function ProductEditor({
               type="button"
               onClick={() => setImages(["/images/placeholder.svg"])}
             >
-              Usar imagem de demonstração
+              Usar imagem padrão
             </button>
           )}
           <div className="mt-4 flex flex-wrap gap-2.5">

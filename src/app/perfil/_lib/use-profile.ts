@@ -20,13 +20,13 @@ export function useProfile() {
   function save(event: FormEvent) {
     event.preventDefault();
     if (!name.trim() || !validAddress(address)) {
-      setError("Informe seu nome e um endereço fictício completo.");
+      setError("Informe seu nome e um endereço completo.");
       return;
     }
     setError("");
     update(
       (s) => ({ ...s, profile: { name: name.trim(), address } }),
-      "Seu perfil de demonstração foi atualizado.",
+      "Seu perfil foi atualizado.",
     );
   }
   const loggedIn = state.loggedIn;
