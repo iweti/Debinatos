@@ -10,7 +10,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: {
     default: "Debinatos • Pequenos detalhes, grandes encantos",
-    template: "%s | Debinatos",
+    template: "Debinatos | %s",
   },
   description:
     "Artesanatos, bijuterias e itens personalizados feitos com amor, qualidade e exclusividade. Envios para todo o Brasil. Explore a loja de demonstração Debinatos.",
