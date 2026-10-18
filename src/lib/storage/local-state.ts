@@ -1,33 +1,30 @@
-import { initialState } from "../data/demo";
-import type { DemoState } from "../types/store";
-import { isDemoState } from "./validate-state";
-import { migrateCatalog } from "./migrate-catalog";
-import { migrateCopy } from "./migrate-copy";
+import { initialState } from '../data/demo'
+import type { DemoState } from '../types/store'
+import { isDemoState } from './validate-state'
+import { migrateCatalog } from './migrate-catalog'
+import { migrateCopy } from './migrate-copy'
 
-export const STORAGE_KEY = "debinatos-demo-v1";
+export const STORAGE_KEY = 'debinatos-demo-v1'
 
 export function readState(): { state: DemoState; warning?: string } {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { state: initialState() };
-    const state = JSON.parse(raw) as DemoState;
-    if (!isDemoState(state)) throw new Error("Formato inválido");
-    return { state: migrateCopy(migrateCatalog(state)) };
-  } catch {
-    return {
-      state: initialState(),
-      warning:
-        "Não foi possível recuperar os dados locais. Você pode continuar navegando ou restaurar os dados no painel.",
-    };
-  }
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY)
+        if (!raw) return { state: initialState() }
+        const state = JSON.parse(raw) as DemoState
+        if (!isDemoState(state)) throw new Error('Formato inválido')
+        return { state: migrateCopy(migrateCatalog(state)) }
+    } catch {
+        return {
+            state: initialState(),
+            warning: 'Não foi possível recuperar os dados locais. Você pode continuar navegando ou restaurar os dados no painel.',
+        }
+    }
 }
 
 export function writeState(state: DemoState) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    throw new Error(
-      "Não foi possível salvar no navegador. Verifique o espaço disponível e permita o armazenamento local.",
-    );
-  }
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    } catch {
+        throw new Error('Não foi possível salvar no navegador. Verifique o espaço disponível e permita o armazenamento local.')
+    }
 }

@@ -18,6 +18,7 @@ dev:
 lint:
 	npx --no-install prettier --check src next.config.ts postcss.config.mjs tsconfig.json vitest.config.ts
 	npm run typecheck
+	npm run format
 
 test:
 	npm test
