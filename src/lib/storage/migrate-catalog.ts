@@ -1,5 +1,5 @@
 import { initialState } from '../data/demo'
-import type { DemoState } from '../types/store'
+import type { LegacyState } from './legacy-state'
 
 // Match the previous demo records conservatively so admin-created products stay intact.
 const legacyProducts: Array<[string, string, string, number]> = [
@@ -17,7 +17,7 @@ const legacyProducts: Array<[string, string, string, number]> = [
     ['anel-flor', 'Anel Flor', 'rings', 3490],
 ]
 
-export function migrateCatalog(state: DemoState): DemoState {
+export function migrateCatalog(state: LegacyState): LegacyState {
     const catalog = initialState().products
     const changedIds = new Map<string, string>()
     const products = state.products.map((product) => {
@@ -35,6 +35,7 @@ export function migrateCatalog(state: DemoState): DemoState {
         changedIds.set(product.id, replacement.id)
         return {
             ...replacement,
+            price: product.price,
             stock: product.stock,
             active: product.active,
             featured: product.featured,

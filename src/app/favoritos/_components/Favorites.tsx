@@ -1,9 +1,11 @@
 'use client'
 import { Heart } from 'lucide-react'
+
+import { ProductCard } from '@/components/product/ProductCard'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { PageHeading } from '@/components/ui/PageHeading'
-import { ProductCard } from '@/components/product/ProductCard'
+
 import { useFavorites } from '../_lib/use-favorites'
 
 export function Favorites() {

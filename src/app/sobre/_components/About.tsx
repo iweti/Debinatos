@@ -1,10 +1,11 @@
 'use client'
-import Link from 'next/link'
 import { ArrowRight, MapPin, Truck } from 'lucide-react'
+import Link from 'next/link'
+
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { PageHeading } from '@/components/ui/PageHeading'
-import { PICKUP_ADDRESS } from '@/lib/constants/store'
 import { INSTAGRAM_URL } from '@/lib/constants/brand'
+import { PICKUP_ADDRESS } from '@/lib/constants/store'
 
 export function About() {
     return (
@@ -189,14 +190,12 @@ export function About() {
                     <article className="rounded-xl border border-line p-6 md:p-8">
                         <Truck className="mb-5 text-brand" size={25} />
                         <h3 className="mb-4 font-serif text-xl font-medium">Envios para todo o Brasil</h3>
-                        <p className="mt-3 text-xs text-muted">
-                            O frete tem valor fixo de R$ 14,90, com prazo estimado de 5 a 8 dias úteis. Informe um CEP de 8 dígitos ao criar seu pedido.
-                        </p>
+                        <p className="mt-3 text-xs text-muted">Entre em contato pelo WhatsApp para combinar as opções de envio e os prazos para sua região.</p>
                     </article>
                     <article className="rounded-xl border border-line p-6 md:p-8">
                         <MapPin className="mb-5 text-brand" size={25} />
                         <h3 className="mb-4 font-serif text-xl font-medium">Retire na loja</h3>
-                        <p className="mt-3 text-xs text-muted">A retirada é gratuita.</p>
+                        <p className="mt-3 text-xs text-muted">Combine a retirada diretamente com a Debinatos pelo WhatsApp.</p>
                         <p className="mt-3 text-xs text-muted">{PICKUP_ADDRESS}.</p>
                     </article>
                 </div>
@@ -208,12 +207,12 @@ export function About() {
                 <h2 className="mt-3 mb-7">Dúvidas frequentes</h2>
                 {[
                     {
-                        q: 'Onde meus favoritos e pedidos ficam salvos?',
+                        q: 'Onde meus favoritos e carrinho ficam salvos?',
                         a: 'Apenas neste navegador e dispositivo. Limpar os dados do navegador remove suas alterações. Você pode atualizar seus dados no perfil.',
                     },
                     {
-                        q: 'Como acompanho meu pedido?',
-                        a: 'Acesse seu perfil e entre em Meus pedidos para consultar os detalhes e o andamento de cada pedido.',
+                        q: 'Como consulto os produtos que escolhi?',
+                        a: 'Adicione os produtos ao carrinho e toque em Consultar pelo WhatsApp. A mensagem incluirá os nomes e as quantidades para combinar os detalhes com a Debinatos.',
                     },
                     {
                         q: 'Como falo com a loja?',

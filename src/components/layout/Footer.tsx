@@ -1,5 +1,6 @@
-import Link from 'next/link'
 import { Heart, Sparkles } from 'lucide-react'
+import Link from 'next/link'
+
 import { INSTAGRAM_URL } from '@/lib/constants/brand'
 
 export function Footer() {
@@ -37,8 +38,8 @@ export function Footer() {
                     <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/perfil">
                         Minha conta
                     </Link>
-                    <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/perfil?aba=pedidos">
-                        Meus pedidos
+                    <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/carrinho">
+                        Meu carrinho
                     </Link>
                     <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/favoritos">
                         Itens salvos

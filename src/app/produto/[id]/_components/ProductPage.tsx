@@ -1,11 +1,12 @@
 'use client'
 import { Check, Gift, Heart, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
-import { Breadcrumb } from '@/components/ui/Breadcrumb'
-import { EmptyState } from '@/components/ui/EmptyState'
+
 import { Photo } from '@/components/product/Photo'
 import { ProductCard } from '@/components/product/ProductCard'
+import { Breadcrumb } from '@/components/ui/Breadcrumb'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { Quantity } from '@/components/ui/Quantity'
-import { money } from '@/lib/utils/format'
+
 import { useProduct } from '../_lib/use-product'
 
 export function ProductPage() {
@@ -47,12 +48,6 @@ export function ProductPage() {
                         {product.category}
                     </span>
                     <h1 className="mb-5 text-[33px] lg:text-[39px]">{product.name}</h1>
-                    <div className="mb-5 flex items-center gap-4">
-                        <strong className="text-[26px] font-medium text-brand">{money(product.price)}</strong>
-                        {product.originalPrice && product.originalPrice > product.price && (
-                            <del className="text-xs text-muted">{money(product.originalPrice)}</del>
-                        )}
-                    </div>
                     <p className="mb-5 text-xs leading-[1.9] text-muted lg:text-[13px]">{product.description}</p>
                     <span
                         className="inline-flex items-center gap-1.5 text-[10px] text-leaf data-[unavailable=true]:text-brand"

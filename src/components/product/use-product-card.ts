@@ -1,5 +1,5 @@
 'use client'
-import { useStore } from '../state/store-context'
+import { useStore } from '@/lib/state/store-context'
 
 export function useProductCard(id: string) {
     const { state, favorite, add } = useStore()

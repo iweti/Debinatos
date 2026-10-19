@@ -1,15 +1,12 @@
 'use client'
-import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useStore } from '@/lib/state/store-context'
+import { useEffect, useState } from 'react'
+
 import { validAddress } from '@/lib/domain/address'
+import { useStore } from '@/lib/state/store-context'
 
 export function useProfile() {
     const { state, update, ready } = useStore()
-    const params = useSearchParams()
-    const router = useRouter()
-    const tab = params.get('aba') ?? 'pedidos'
     const [name, setName] = useState(state.profile.name)
     const [address, setAddress] = useState(state.profile.address)
     const [error, setError] = useState('')
@@ -28,11 +25,7 @@ export function useProfile() {
     }
     const loggedIn = state.loggedIn
     const profile = state.profile
-    const orders = state.orders
     const favoriteCount = state.favorites.length
-    function changeTab(value: string) {
-        router.replace(`/perfil?aba=${value}`, { scroll: false })
-    }
     function logout() {
         update((s) => ({ ...s, loggedIn: false }), 'Você saiu do perfil. Seu carrinho e favoritos continuam salvos.')
     }
@@ -40,16 +33,13 @@ export function useProfile() {
         ready,
         loggedIn,
         profile,
-        orders,
         favoriteCount,
-        tab,
         name,
         setName,
         address,
         setAddress,
         error,
         save,
-        changeTab,
         logout,
     }
 }

@@ -1,9 +1,11 @@
 'use client'
 import { Check, ImagePlus, X } from 'lucide-react'
+
 import { Photo } from '@/components/product/Photo'
 import type { Product } from '@/lib/types/store'
-import { Modal } from './Modal'
+
 import { useProductEditor } from '../_lib/use-product-editor'
+import { Modal } from './Modal'
 
 export function ProductEditor({ product, close }: { product: Product | null; close: () => void }) {
     const {
@@ -11,8 +13,6 @@ export function ProductEditor({ product, close }: { product: Product | null; clo
         setName,
         category,
         setCategory,
-        price,
-        setPrice,
         stock,
         setStock,
         description,
@@ -65,19 +65,6 @@ export function ProductEditor({ product, close }: { product: Product | null; clo
                                 <option key={c} value={c} />
                             ))}
                         </datalist>
-                    </label>
-                    <label className="text-[11px]">
-                        Preço (R$)
-                        <input
-                            className="text-xs"
-                            required
-                            type="number"
-                            min="0.01"
-                            step="0.01"
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            placeholder="39,90"
-                        />
                     </label>
                     <label className="text-[11px]">
                         Estoque

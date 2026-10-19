@@ -1,5 +1,7 @@
 import 'fake-indexeddb/auto'
+
 import { afterEach, describe, expect, it } from 'vitest'
+
 import { clearPhotos, loadPhoto, savePhoto } from '../storage/photos'
 
 afterEach(async () => {

@@ -2,8 +2,6 @@ export type Product = {
     id: string
     name: string
     category: string
-    price: number
-    originalPrice?: number
     description: string
     material: string
     dimensions: string
@@ -25,38 +23,11 @@ export type Address = {
     state: string
 }
 export type Profile = { name: string; address: Address }
-export type OrderStatus = 'received' | 'preparing' | 'sent' | 'ready' | 'completed'
-export type OrderItem = {
-    productId: string
-    name: string
-    image: string
-    price: number
-    quantity: number
-}
-export type Order = {
-    id: string
-    createdAt: string
-    items: OrderItem[]
-    subtotal: number
-    shipping: number
-    total: number
-    delivery: 'shipping' | 'pickup'
-    payment: 'pix' | 'card'
-    status: OrderStatus
-    customerName: string
-    address: Address | null
-}
 export type DemoState = {
-    version: 1
+    version: 2
     products: Product[]
     cart: CartItem[]
     favorites: string[]
     profile: Profile
     loggedIn: boolean
-    orders: Order[]
-}
-export type CheckoutInput = {
-    delivery: Order['delivery']
-    payment: Order['payment']
-    address: Address
 }

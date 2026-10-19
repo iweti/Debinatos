@@ -1,6 +1,6 @@
 'use client'
-import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
+import Link from 'next/link'
 
 export function Breadcrumb({ items }: { items: Array<{ label: string; to?: string }> }) {
     return (

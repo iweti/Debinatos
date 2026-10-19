@@ -1,6 +1,7 @@
 'use client'
-import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
 import { useStore } from '@/lib/state/store-context'
 
 export function useProduct() {

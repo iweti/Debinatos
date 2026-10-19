@@ -1,18 +1,31 @@
 import { initialState } from '../data/demo'
 import type { DemoState } from '../types/store'
-import { isDemoState } from './validate-state'
-import { migrateCatalog } from './migrate-catalog'
-import { migrateCopy } from './migrate-copy'
+import { migrateInterest } from './migrate-interest'
+import { isDemoState, isLegacyState } from './validate-state'
 
-export const STORAGE_KEY = 'debinatos-demo-v1'
+export const STORAGE_KEY = 'debinatos-demo-v2'
+export const LEGACY_STORAGE_KEY = 'debinatos-demo-v1'
 
 export function readState(): { state: DemoState; warning?: string } {
     try {
         const raw = localStorage.getItem(STORAGE_KEY)
-        if (!raw) return { state: initialState() }
-        const state = JSON.parse(raw) as DemoState
-        if (!isDemoState(state)) throw new Error('Formato inválido')
-        return { state: migrateCopy(migrateCatalog(state)) }
+        if (raw !== null) {
+            const state: unknown = JSON.parse(raw)
+            if (!isDemoState(state)) throw new Error('Formato inválido')
+            return { state }
+        }
+        const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY)
+        if (legacyRaw === null) return { state: initialState() }
+        const legacy: unknown = JSON.parse(legacyRaw)
+        if (!isLegacyState(legacy)) throw new Error('Formato antigo inválido')
+        const state = migrateInterest(legacy)
+        if (!isDemoState(state)) throw new Error('Migração inválida')
+        try {
+            writeState(state)
+            return { state }
+        } catch {
+            return { state, warning: 'Seus dados foram recuperados, mas não foi possível salvar a atualização neste navegador.' }
+        }
     } catch {
         return {
             state: initialState(),

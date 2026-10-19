@@ -1,5 +1,6 @@
 'use client'
 import { Check, Sparkles, X } from 'lucide-react'
+
 import { useStore } from '@/lib/state/store-context'
 
 export function Toast() {

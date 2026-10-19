@@ -1,7 +1,8 @@
 'use client'
-import Link from 'next/link'
 import { ArrowRight, ShieldCheck, UserRound } from 'lucide-react'
-import { useDemoLogin } from '@/lib/hooks/use-demo-login'
+import Link from 'next/link'
+
+import { useDemoLogin } from './use-demo-login'
 
 export function LoginPanel({ next = '/perfil' }: { next?: string }) {
     const { ready, login } = useDemoLogin(next)
@@ -14,7 +15,7 @@ export function LoginPanel({ next = '/perfil' }: { next?: string }) {
                 UM CANTINHO SÓ SEU
             </span>
             <h1 className="my-3 text-[28px] md:text-[30px]">Que bom ter você por aqui.</h1>
-            <p className="text-xs text-muted">Acesse seu perfil para acompanhar pedidos e editar seus dados.</p>
+            <p className="text-xs text-muted">Acesse seu perfil para editar seus dados. Para consultar produtos pelo WhatsApp, basta usar o carrinho.</p>
             <div className="my-6 flex items-center gap-3 rounded-lg border border-[#eadccf] bg-white p-4 text-left">
                 <span className="grid size-10 place-items-center rounded-full bg-[#f5e5d5] font-serif text-xl text-brand">M</span>
                 <div>

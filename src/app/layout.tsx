@@ -1,11 +1,13 @@
+import './globals.css'
+
 import type { Metadata, Viewport } from 'next'
 import type { ReactNode } from 'react'
-import { StoreProvider } from '@/components/providers/StoreProvider'
+
 import { DemoBanner } from '@/components/layout/DemoBanner'
-import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { Header } from '@/components/layout/Header'
+import { StoreProvider } from '@/components/providers/StoreProvider'
 import { Toast } from '@/components/ui/Toast'
-import './globals.css'
 
 export const metadata: Metadata = {
     title: {

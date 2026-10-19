@@ -1,9 +1,9 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { addToCart, setQuantity } from '../domain/cart'
-import { createOrder } from '../domain/checkout'
-import { readState, writeState, STORAGE_KEY } from '../storage/local-state'
+
 import { initialState } from '../data/demo'
+import { addToCart, setQuantity } from '../domain/cart'
+import { LEGACY_STORAGE_KEY, readState, STORAGE_KEY, writeState } from '../storage/local-state'
 import { clearPhotos } from '../storage/photos'
 import type { Store } from './store-context'
 
@@ -29,7 +29,7 @@ export function useStoreState(): Store {
     }, [toast])
     useEffect(() => {
         const sync = (event: StorageEvent) => {
-            if (event.key !== STORAGE_KEY) return
+            if (event.key !== STORAGE_KEY && event.key !== LEGACY_STORAGE_KEY && event.key !== null) return
             const value = readState()
             current.current = value.state
             setState(value.state)
@@ -66,15 +66,6 @@ export function useStoreState(): Store {
                 ...s,
                 favorites: s.favorites.includes(id) ? s.favorites.filter((f) => f !== id) : [...s.favorites, id],
             })),
-        checkout: (input) => {
-            let id: string | undefined
-            const saved = update((s) => {
-                const result = createOrder(s, input)
-                id = result.order.id
-                return result.state
-            })
-            return saved ? id : undefined
-        },
         reset: async () => {
             if (update(() => initialState(), 'Dados restaurados. Tudo pronto para recomeçar!')) {
                 try {

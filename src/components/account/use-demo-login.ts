@@ -1,6 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { useStore } from '../state/store-context'
+
+import { useStore } from '@/lib/state/store-context'
 
 export function useDemoLogin(next: string) {
     const { update, ready } = useStore()

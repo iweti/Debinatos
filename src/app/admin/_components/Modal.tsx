@@ -1,6 +1,7 @@
 'use client'
-import type { ReactNode } from 'react'
 import { X } from 'lucide-react'
+import type { ReactNode } from 'react'
+
 import { useModal } from '../_lib/use-modal'
 
 export function Modal({ title, children, close }: { title: string; children: ReactNode; close: () => void }) {

@@ -1,8 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { useStore } from '../state/store-context'
 import type { FormEvent } from 'react'
+import { useEffect, useState } from 'react'
+
+import { useStore } from '@/lib/state/store-context'
 
 export function useHeader() {
     const { state } = useStore()

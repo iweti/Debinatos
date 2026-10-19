@@ -1,6 +1,7 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
+
 import { useStore } from '@/lib/state/store-context'
 
 export function useCatalog() {
@@ -15,8 +16,7 @@ export function useCatalog() {
         if (document.activeElement !== searchInput.current) setQuery(urlQuery)
     }, [urlQuery])
     const category = params.get('categoria') ?? ''
-    const sort = params.get('ordem') ?? 'destaques'
-    const maximum = params.get('preco') ?? ''
+    const sort = params.get('ordem') === 'novidades' ? 'novidades' : 'destaques'
     const categories = [...new Set(state.products.filter((p) => p.active).map((p) => p.category))]
     const updateFilter = (key: string, value: string) => {
         const next = new URLSearchParams(window.location.search)
@@ -34,22 +34,8 @@ export function useCatalog() {
             .replace(/[\u0300-\u036f]/g, '')
             .toLowerCase()
     const products = state.products
-        .filter(
-            (p) =>
-                p.active &&
-                (!category || p.category === category) &&
-                normalize(p.name).includes(normalize(query)) &&
-                (!maximum || p.price <= Number(maximum) * 100)
-        )
-        .sort((a, b) =>
-            sort === 'menor'
-                ? a.price - b.price
-                : sort === 'maior'
-                  ? b.price - a.price
-                  : sort === 'novidades'
-                    ? b.createdAt.localeCompare(a.createdAt)
-                    : Number(b.featured) - Number(a.featured)
-        )
+        .filter((p) => p.active && (!category || p.category === category) && normalize(p.name).includes(normalize(query)))
+        .sort((a, b) => (sort === 'novidades' ? b.createdAt.localeCompare(a.createdAt) : Number(b.featured) - Number(a.featured)))
     const categoryCounts = Object.fromEntries(['', ...categories].map((c) => [c, state.products.filter((p) => p.active && (!c || p.category === c)).length]))
     function changeSearch(value: string) {
         setQuery(value)
@@ -62,7 +48,6 @@ export function useCatalog() {
         searchInput,
         category,
         sort,
-        maximum,
         categories,
         categoryCounts,
         updateFilter,

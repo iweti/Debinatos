@@ -1,0 +1,13 @@
+# JSON continua fora da formatação, como no exemplo do Biome.
+**/*.json
+**/*.jsonc
+**/*.json5
+
+**/dist/**
+**/*.generated.js
+**/node_modules/**
+**/.github/**
+**/.next/**
+**/public/**
+**/.tailwind.*
+**/styles/*

@@ -1,9 +1,10 @@
 'use client'
-import Link from 'next/link'
 import { ArrowRight, ArrowUpRight, Flower2, Gem, Gift, Heart, Sparkles, Truck } from 'lucide-react'
-import { ProductCard } from '@/components/product/ProductCard'
-import { useHome } from '../_lib/use-home'
+import Link from 'next/link'
 
+import { ProductCard } from '@/components/product/ProductCard'
+
+import { useHome } from '../_lib/use-home'
 import { Hero } from './Hero'
 
 export function Home() {

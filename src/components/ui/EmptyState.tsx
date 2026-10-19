@@ -1,7 +1,7 @@
 'use client'
-import type { ReactNode } from 'react'
-import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import Link from 'next/link'
+import type { ReactNode } from 'react'
 
 export function EmptyState({ icon, title, children, action }: { icon: ReactNode; title: string; children: ReactNode; action?: ReactNode }) {
     return (

@@ -1,7 +1,8 @@
 'use client'
-import Link from 'next/link'
 import { Heart, Menu, Search, ShoppingBag, UserRound, X } from 'lucide-react'
-import { useHeader } from '@/lib/hooks/use-header'
+import Link from 'next/link'
+
+import { useHeader } from './use-header'
 
 export function Header() {
     const { pathname, mobileMenu, setMobileMenu, searchOpen, setSearchOpen, query, setQuery, count, favoriteCount, search } = useHeader()

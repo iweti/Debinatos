@@ -1,5 +1,6 @@
-import Link from 'next/link'
 import { ArrowRight, ArrowUpRight, Flower2, Heart, Truck } from 'lucide-react'
+import Link from 'next/link'
+
 import { Photo } from '@/components/product/Photo'
 
 export function Hero() {

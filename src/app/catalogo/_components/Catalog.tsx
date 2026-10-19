@@ -1,27 +1,16 @@
 'use client'
 import { Flower2, Search, SlidersHorizontal } from 'lucide-react'
+
+import { ProductCard } from '@/components/product/ProductCard'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { PageHeading } from '@/components/ui/PageHeading'
-import { ProductCard } from '@/components/product/ProductCard'
+
 import { useCatalog } from '../_lib/use-catalog'
 
 export function Catalog() {
-    const {
-        filtersOpen,
-        setFiltersOpen,
-        query,
-        searchInput,
-        category,
-        sort,
-        maximum,
-        categories,
-        categoryCounts,
-        updateFilter,
-        clearFilters,
-        changeSearch,
-        products,
-    } = useCatalog()
+    const { filtersOpen, setFiltersOpen, query, searchInput, category, sort, categories, categoryCounts, updateFilter, clearFilters, changeSearch, products } =
+        useCatalog()
     return (
         <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
             <Breadcrumb items={[{ label: 'Todos os produtos' }]} />
@@ -67,19 +56,7 @@ export function Catalog() {
                             </label>
                         ))}
                     </fieldset>
-                    <fieldset className="mb-6 border-b border-line pb-6">
-                        <legend className="mb-4 text-xs font-semibold">Faixa de preço</legend>
-                        <label className="mb-2 block text-[10px] text-muted" htmlFor="max-price">
-                            Preço máximo
-                        </label>
-                        <select className="w-full p-2.5 text-[11px]" id="max-price" value={maximum} onChange={(e) => updateFilter('preco', e.target.value)}>
-                            <option value="">Todos os preços</option>
-                            <option value="40">Até R$ 40</option>
-                            <option value="60">Até R$ 60</option>
-                            <option value="80">Até R$ 80</option>
-                        </select>
-                    </fieldset>
-                    {(category || maximum || query) && (
+                    {(category || query) && (
                         <button
                             className="inline-flex items-center gap-2 p-0 text-xs/relaxed  font-semibold text-brand hover:underline hover:underline-offset-4"
                             onClick={clearFilters}
@@ -109,8 +86,6 @@ export function Catalog() {
                             >
                                 <option value="destaques">Destaques</option>
                                 <option value="novidades">Novidades</option>
-                                <option value="menor">Menor preço</option>
-                                <option value="maior">Maior preço</option>
                             </select>
                         </label>
                     </div>

@@ -1,6 +1,7 @@
 'use client'
-import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { useState } from 'react'
+
 import { useStore } from '@/lib/state/store-context'
 import { savePhoto } from '@/lib/storage/photos'
 import type { Product } from '@/lib/types/store'
@@ -9,7 +10,6 @@ export function useProductEditor(product: Product | null, close: () => void) {
     const { state, update, notify } = useStore()
     const [name, setName] = useState(product?.name ?? '')
     const [category, setCategory] = useState(product?.category ?? 'Bijuterias')
-    const [price, setPrice] = useState(product ? (product.price / 100).toFixed(2) : '')
     const [stock, setStock] = useState(product?.stock.toString() ?? '1')
     const [description, setDescription] = useState(product?.description ?? '')
     const [material, setMaterial] = useState(product?.material ?? '')
@@ -40,7 +40,6 @@ export function useProductEditor(product: Product | null, close: () => void) {
     }
     function submit(event: FormEvent) {
         event.preventDefault()
-        const cents = Math.round(Number(price) * 100)
         const quantity = Number(stock)
         if (
             !name.trim() ||
@@ -48,12 +47,10 @@ export function useProductEditor(product: Product | null, close: () => void) {
             !description.trim() ||
             !material.trim() ||
             !dimensions.trim() ||
-            !Number.isFinite(cents) ||
-            cents < 1 ||
-            !Number.isInteger(quantity) ||
+            !Number.isSafeInteger(quantity) ||
             quantity < 0
         ) {
-            setError('Preencha os campos. Use preço positivo e estoque inteiro a partir de zero.')
+            setError('Preencha os campos. Use estoque inteiro a partir de zero.')
             return
         }
         if (!images.length) {
@@ -65,7 +62,6 @@ export function useProductEditor(product: Product | null, close: () => void) {
             id: product?.id ?? `produto-${crypto.randomUUID().slice(0, 8)}`,
             name: name.trim(),
             category: category.trim(),
-            price: cents,
             stock: quantity,
             description: description.trim(),
             material: material.trim(),
@@ -92,8 +88,6 @@ export function useProductEditor(product: Product | null, close: () => void) {
         setName,
         category,
         setCategory,
-        price,
-        setPrice,
         stock,
         setStock,
         description,

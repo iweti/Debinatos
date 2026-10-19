@@ -1,12 +1,13 @@
-import { describe, expect, it, vi, afterEach } from 'vitest'
-import { initialState } from '../data/demo'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
+import { LEGACY_STORAGE_KEY, readState } from '../storage/local-state'
 import { migrateCatalog } from '../storage/migrate-catalog'
-import { readState } from '../storage/local-state'
+import { initialLegacyState } from './fixtures/legacy'
 
 afterEach(() => vi.unstubAllGlobals())
 
 function legacyState() {
-    const state = initialState()
+    const state = initialLegacyState()
     state.products[0] = {
         ...state.products[0],
         id: 'argolas-aurora',
@@ -22,9 +23,9 @@ function legacyState() {
 }
 
 describe('Atualização do catálogo salvo', () => {
-    it('carrega as fotos novas preservando favoritos, carrinho, estoque e histórico', () => {
+    it('carrega as fotos novas preservando favoritos, carrinho, estoque e perfil', () => {
         const state = legacyState()
-        vi.stubGlobal('localStorage', { getItem: () => JSON.stringify(state) })
+        vi.stubGlobal('localStorage', { getItem: (key: string) => (key === LEGACY_STORAGE_KEY ? JSON.stringify(state) : null), setItem: vi.fn() })
         const loaded = readState().state
         expect(loaded.products[0]).toMatchObject({
             id: 'terrario-ursos-polares',
@@ -35,9 +36,10 @@ describe('Atualização do catálogo salvo', () => {
         expect(loaded.favorites).toEqual(['terrario-ursos-polares'])
         expect(loaded.cart).toEqual([{ productId: 'terrario-ursos-polares', quantity: 2 }])
         expect(loaded.profile).toEqual(state.profile)
-        expect(loaded.orders).toEqual(state.orders)
+        expect(loaded).not.toHaveProperty('orders')
         expect(state.favorites).toEqual(['argolas-aurora'])
-        expect(migrateCatalog(loaded)).toBe(loaded)
+        const migrated = migrateCatalog(state)
+        expect(migrateCatalog(migrated)).toBe(migrated)
     })
 
     it('preserva produtos com nome, preço ou fotos personalizados no painel', () => {
@@ -50,7 +52,7 @@ describe('Atualização do catálogo salvo', () => {
 
     it('não duplica um produto do novo catálogo que já existe', () => {
         const state = legacyState()
-        state.products.push(initialState().products[0])
+        state.products.push(initialLegacyState().products[0])
         expect(migrateCatalog(state)).toBe(state)
     })
 })

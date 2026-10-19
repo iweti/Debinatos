@@ -1,6 +1,8 @@
 import { Suspense } from 'react'
+
+import { Loading } from '@/components/ui/Loading'
+
 import { Home } from './_components/Home'
-import Loading from '@/components/ui/Loading'
 
 export default function Page() {
     return (

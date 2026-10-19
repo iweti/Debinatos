@@ -1,5 +1,6 @@
 'use client'
 import { Package } from 'lucide-react'
+
 import { EmptyState } from '@/components/ui/EmptyState'
 
 export default function NotFound() {

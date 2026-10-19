@@ -1,6 +1,7 @@
 'use client'
 import type { ImgHTMLAttributes } from 'react'
-import { usePhoto } from '@/lib/hooks/use-photo'
+
+import { usePhoto } from './use-photo'
 
 export function Photo({ source, alt, ...props }: Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & { source: string }) {
     const { src } = usePhoto(source)

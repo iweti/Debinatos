@@ -1,7 +1,8 @@
 import { initialState } from '../data/demo'
-import type { Address, DemoState } from '../types/store'
+import type { Address } from '../types/store'
+import type { LegacyState } from './legacy-state'
 
-export function migrateCopy(state: DemoState): DemoState {
+export function migrateCopy(state: LegacyState): LegacyState {
     const catalog = initialState().products
     const products = state.products.map((product) => {
         const original = catalog.find((entry) => entry.id === product.id)

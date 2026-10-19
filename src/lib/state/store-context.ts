@@ -1,6 +1,7 @@
 'use client'
 import { createContext, useContext } from 'react'
-import type { CheckoutInput, DemoState } from '../types/store'
+
+import type { DemoState } from '../types/store'
 
 export type Store = {
     state: DemoState
@@ -10,7 +11,6 @@ export type Store = {
     add: (id: string, quantity?: number) => boolean
     quantity: (id: string, count: number) => boolean
     favorite: (id: string) => void
-    checkout: (input: CheckoutInput) => string | undefined
     reset: () => Promise<void>
     toast: { message: string; error: boolean } | null
     dismissToast: () => void

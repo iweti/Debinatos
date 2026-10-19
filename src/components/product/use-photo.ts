@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { loadPhoto } from '../storage/photos'
+
+import { loadPhoto } from '@/lib/storage/photos'
 
 export function usePhoto(source: string) {
     const [src, setSrc] = useState(source.startsWith('idb:') ? '/images/placeholder.svg' : source)
