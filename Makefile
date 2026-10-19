@@ -7,7 +7,7 @@ help:
 	  'Comandos disponíveis:' \
 	  '  make help      Exibe esta ajuda' \
 	  '  make dev       Inicia o servidor de desenvolvimento' \
-	  '  make lint      Verifica formatação (Prettier) e tipos (TypeScript)' \
+	  '  make lint      Formata (Prettier), analisa (ESLint) e verifica tipos' \
 	  '  make test      Executa os testes' \
 	  '  make validate  Executa lint e, se passar, os testes' \
 	  '  make update    Atualiza todas as dependências para latest e valida'
@@ -16,7 +16,8 @@ dev:
 	npm run dev
 
 lint:
-	npx --no-install prettier --check src next.config.ts postcss.config.mjs tsconfig.json vitest.config.ts
+	npm run format
+	npm run lint
 	npm run typecheck
 
 test:

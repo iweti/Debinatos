@@ -1,14 +1,16 @@
-import { Suspense } from "react";
-import { About } from "./_components/About";
-import Loading from "@/components/ui/Loading";
-import type { Metadata } from "next";
+import type { Metadata } from 'next'
+import { Suspense } from 'react'
 
-export const metadata: Metadata = { title: "Nossa história" };
+import { Loading } from '@/components/ui/Loading'
+
+import { About } from './_components/About'
+
+export const metadata: Metadata = { title: 'Nossa história' }
 
 export default function Page() {
-  return (
-    <Suspense fallback={<Loading />}>
-      <About />
-    </Suspense>
-  );
+    return (
+        <Suspense fallback={<Loading />}>
+            <About />
+        </Suspense>
+    )
 }

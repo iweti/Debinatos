@@ -1,139 +1,139 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @font-face {
-  font-family: "DM Sans";
-  src: url("/fonts/dm-sans-regular.ttf") format("truetype");
-  font-weight: 400;
-  font-display: swap;
+    font-family: 'DM Sans';
+    src: url('/fonts/dm-sans-regular.ttf') format('truetype');
+    font-weight: 400;
+    font-display: swap;
 }
 @font-face {
-  font-family: "DM Sans";
-  src: url("/fonts/dm-sans-semibold.ttf") format("truetype");
-  font-weight: 500 800;
-  font-display: swap;
+    font-family: 'DM Sans';
+    src: url('/fonts/dm-sans-semibold.ttf') format('truetype');
+    font-weight: 500 800;
+    font-display: swap;
 }
 @font-face {
-  font-family: Lora;
-  src: url("/fonts/lora-medium.ttf") format("truetype");
-  font-weight: 400 700;
-  font-display: swap;
+    font-family: Lora;
+    src: url('/fonts/lora-medium.ttf') format('truetype');
+    font-weight: 400 700;
+    font-display: swap;
 }
 @font-face {
-  font-family: Lora;
-  src: url("/fonts/lora-italic.ttf") format("truetype");
-  font-style: italic;
-  font-weight: 400 700;
-  font-display: swap;
+    font-family: Lora;
+    src: url('/fonts/lora-italic.ttf') format('truetype');
+    font-style: italic;
+    font-weight: 400 700;
+    font-display: swap;
 }
 
 @theme {
-  --font-sans: "DM Sans", sans-serif;
-  --font-serif: Lora, Georgia, serif;
-  --color-brand: #b42a1d;
-  --color-brand-dark: #8d2015;
-  --color-ink: #350f0c;
-  --color-muted: #7d6b61;
-  --color-cream: #f9f1e4;
-  --color-gold: #f7a852;
-  --color-leaf: #4c7616;
-  --color-line: #ebe3da;
-  --color-surface: #fcf9f5;
+    --font-sans: 'DM Sans', sans-serif;
+    --font-serif: Lora, Georgia, serif;
+    --color-brand: #b42a1d;
+    --color-brand-dark: #8d2015;
+    --color-ink: #350f0c;
+    --color-muted: #7d6b61;
+    --color-cream: #f9f1e4;
+    --color-gold: #f7a852;
+    --color-leaf: #4c7616;
+    --color-line: #ebe3da;
+    --color-surface: #fcf9f5;
 }
 
 @layer base {
-  body {
-    @apply m-0 bg-white font-sans text-ink antialiased;
-  }
-  h1,
-  h2 {
-    @apply font-serif font-medium tracking-[-.035em];
-  }
-  h1 {
-    @apply text-[32px] leading-tight md:text-[42px];
-  }
-  h2 {
-    @apply text-2xl leading-snug md:text-[30px];
-  }
-  h3 {
-    @apply text-base font-semibold;
-  }
-  p {
-    @apply leading-[1.8];
-  }
-  em {
-    @apply font-normal text-brand;
-  }
-  button {
-    @apply cursor-pointer;
-  }
-  button:disabled {
-    @apply cursor-not-allowed opacity-45;
-  }
-  a,
-  button,
-  input,
-  select,
-  textarea {
-    -webkit-tap-highlight-color: transparent;
-  }
-  svg {
-    @apply shrink-0;
-    stroke-width: 1.6;
-  }
-  input:not([type="radio"]):not([type="checkbox"]):not([type="file"]),
-  select,
-  textarea {
-    @apply min-w-0 rounded-lg border border-[#dcd1c6] bg-white px-3.5 py-3 text-ink outline-none transition focus:border-brand focus:ring-3 focus:ring-brand/10;
-  }
-  input::placeholder,
-  textarea::placeholder {
-    @apply text-[#918076];
-  }
-  input[type="radio"],
-  input[type="checkbox"] {
-    @apply size-4 shrink-0 accent-brand;
-  }
-  textarea {
-    @apply resize-y;
-  }
-  select {
-    @apply cursor-pointer;
-  }
-  label {
-    @apply text-xs font-medium;
-  }
-  label > input:not([type="radio"]):not([type="checkbox"]):not([type="file"]),
-  label > textarea {
-    @apply mt-2 block w-full;
-  }
-  button:focus-visible,
-  a:focus-visible,
-  summary:focus-visible {
-    @apply outline-2 outline-offset-4 outline-brand;
-  }
-  main:focus {
-    @apply outline-none;
-  }
-  ::selection {
-    @apply bg-gold/40;
-  }
+    body {
+        @apply m-0 bg-white font-sans text-ink antialiased;
+    }
+    h1,
+    h2 {
+        @apply font-serif font-medium tracking-[-.035em];
+    }
+    h1 {
+        @apply text-[32px] leading-tight md:text-[42px];
+    }
+    h2 {
+        @apply text-2xl leading-snug md:text-[30px];
+    }
+    h3 {
+        @apply text-base font-semibold;
+    }
+    p {
+        @apply leading-[1.8];
+    }
+    em {
+        @apply font-normal text-brand;
+    }
+    button {
+        @apply cursor-pointer;
+    }
+    button:disabled {
+        @apply cursor-not-allowed opacity-45;
+    }
+    a,
+    button,
+    input,
+    select,
+    textarea {
+        -webkit-tap-highlight-color: transparent;
+    }
+    svg {
+        @apply shrink-0;
+        stroke-width: 1.6;
+    }
+    input:not([type='radio']):not([type='checkbox']):not([type='file']),
+    select,
+    textarea {
+        @apply min-w-0 rounded-lg border border-[#dcd1c6] bg-white px-3.5 py-3 text-ink outline-none transition focus:border-brand focus:ring-3 focus:ring-brand/10;
+    }
+    input::placeholder,
+    textarea::placeholder {
+        @apply text-[#918076];
+    }
+    input[type='radio'],
+    input[type='checkbox'] {
+        @apply size-4 shrink-0 accent-brand;
+    }
+    textarea {
+        @apply resize-y;
+    }
+    select {
+        @apply cursor-pointer;
+    }
+    label {
+        @apply text-xs font-medium;
+    }
+    label > input:not([type='radio']):not([type='checkbox']):not([type='file']),
+    label > textarea {
+        @apply mt-2 block w-full;
+    }
+    button:focus-visible,
+    a:focus-visible,
+    summary:focus-visible {
+        @apply outline-2 outline-offset-4 outline-brand;
+    }
+    main:focus {
+        @apply outline-none;
+    }
+    ::selection {
+        @apply bg-gold/40;
+    }
 }
 @keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *:before,
-  *:after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+    *,
+    *:before,
+    *:after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
