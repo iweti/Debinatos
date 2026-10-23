@@ -2,7 +2,6 @@
 import { ArrowLeft, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 
-import { ContactAction } from '@/components/contact/ContactAction'
 import { Photo } from '@/components/product/Photo'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -11,6 +10,7 @@ import { PageHeading } from '@/components/ui/PageHeading'
 import { Quantity } from '@/components/ui/Quantity'
 
 import { useCart } from '../_lib/use-cart'
+import { CartContactAction } from './CartContactAction'
 
 export function Cart({ phone }: { phone?: string }) {
     const { quantity, ready, rows, itemCount } = useCart()
@@ -91,7 +91,7 @@ export function Cart({ phone }: { phone?: string }) {
                             A mensagem incluirá os nomes e as quantidades dos produtos. Disponibilidade, entrega e demais detalhes serão combinados diretamente
                             com a Debinatos.
                         </p>
-                        <ContactAction phone={phone} />
+                        <CartContactAction phone={phone} />
                     </aside>
                 </div>
             )}
