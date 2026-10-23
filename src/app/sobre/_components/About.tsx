@@ -208,7 +208,7 @@ export function About() {
                 {[
                     {
                         q: 'Onde meus favoritos e carrinho ficam salvos?',
-                        a: 'Apenas neste navegador e dispositivo. Limpar os dados do navegador remove suas alterações. Você pode atualizar seus dados no perfil.',
+                        a: 'Apenas neste navegador e dispositivo. Limpar os dados do navegador remove seus favoritos e carrinho.',
                     },
                     {
                         q: 'Como consulto os produtos que escolhi?',

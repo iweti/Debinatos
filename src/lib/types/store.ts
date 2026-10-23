@@ -13,21 +13,5 @@ export type Product = {
     badge?: string
 }
 export type CartItem = { productId: string; quantity: number }
-export type Address = {
-    cep: string
-    street: string
-    number: string
-    complement: string
-    district: string
-    city: string
-    state: string
-}
-export type Profile = { name: string; address: Address }
-export type DemoState = {
-    version: 2
-    products: Product[]
-    cart: CartItem[]
-    favorites: string[]
-    profile: Profile
-    loggedIn: boolean
-}
+export type VisitorState = { cart: CartItem[]; favorites: string[] }
+export type StoreState = VisitorState & { products: Product[] }

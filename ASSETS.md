@@ -2,27 +2,19 @@
 
 ## Marca
 
-Logo, mascote, paleta e ícones fornecidos no arquivo `WhatsApp Unknown 2026-10-10 at 17.43.03.zip`. Os originais foram preservados em `public/images`.
+O logo transparente e a imagem da mascote em `public/images` foram fornecidos no arquivo `WhatsApp Unknown 2026-10-10 at 17.43.03.zip`. São usados no cabeçalho, na página inicial, na página Sobre e no painel administrativo.
 
-## Fotos ilustrativas
+## Fotos da página inicial
 
-As fotos são arquivos locais do Unsplash e representam o universo dos produtos; não são fotos de mercadorias reais da Debinatos. Os nomes, preços e características do catálogo são fictícios.
+As duas fotos locais usadas na composição da página inicial são da Debinatos. As origens estão registradas em `public/images/products/sources.json`.
 
 | Arquivo | Origem |
 | --- | --- |
-| earrings.jpg | https://images.unsplash.com/photo-1617038220319-276d3cfab638 |
-| necklace.jpg | https://images.unsplash.com/photo-1599643477877-530eb83abc8e |
-| rings.jpg | https://images.unsplash.com/photo-1605100804763-247f67b3557e |
-| bracelet.jpg | https://images.unsplash.com/photo-1611591437281-460bfbe1220a |
-| jewels.jpg | https://images.unsplash.com/photo-1535632066927-ab7c9ab60908 |
-| vase.jpg | https://images.unsplash.com/photo-1578500494198-246f612d3b3d |
-| ceramic.jpg | https://images.unsplash.com/photo-1578749556568-bc2c40e68b61 |
-| accessories.jpg | https://images.unsplash.com/photo-1602173574767-37ac01994b2a |
-| pearl.jpg | https://images.unsplash.com/photo-1611652022419-a9419f74343d |
-| home.jpg | https://images.unsplash.com/photo-1603006905003-be475563bc59 |
+| terrario-ursos-polares.webp | https://www.instagram.com/debinatos/p/DdHYJZdRvhL/ |
+| mini-aquario-axolote.webp | https://www.instagram.com/debinatos/p/DdRaIX0DtLk/ |
+
+As fotos dos produtos cadastrados no painel são armazenadas no Cloudinary e referenciadas por URL no banco. `public/images/placeholder.svg` é usado quando uma imagem não está disponível.
 
 ## Fontes
 
 DM Sans e Lora são servidas localmente. As licenças SIL Open Font License acompanham os arquivos em `public/fonts`. Origem: Google Fonts, repositório `google/fonts`.
-
-O site não depende de serviços externos para carregar fotos ou fontes durante o uso.

@@ -1,32 +1,17 @@
 'use client'
-import { ArrowLeft, LayoutDashboard, Pencil, Plus, RotateCcw, Search, ShieldCheck, ShoppingBag, Sparkles } from 'lucide-react'
+import { ArrowLeft, LayoutDashboard, LogOut, Pencil, Plus, Search, ShieldCheck, ShoppingBag, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 import { Photo } from '@/components/product/Photo'
+import type { Product } from '@/lib/types/store'
 
+import { logout } from '../_lib/actions'
 import { useAdmin } from '../_lib/use-admin'
-import { Modal } from './Modal'
 import { ProductEditor } from './ProductEditor'
 import { StatsCard } from './StatsCard'
 
-export function Admin() {
-    const {
-        tab,
-        editor,
-        setEditor,
-        resetOpen,
-        setResetOpen,
-        resetting,
-        search,
-        setSearch,
-        products,
-        stats,
-        totalProducts,
-        changeTab,
-        toggleProduct,
-        closeReset,
-        restoreDemo,
-    } = useAdmin()
+export function Admin({ initialProducts }: { initialProducts: Product[] }) {
+    const { tab, editor, setEditor, search, setSearch, products, stats, totalProducts, changeTab, toggleProduct, pending } = useAdmin(initialProducts)
     return (
         <div className="bg-surface">
             <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
@@ -35,8 +20,8 @@ export function Admin() {
                         <span className="inline-flex items-center gap-2 text-[9px] leading-relaxed font-semibold tracking-[.18em] text-brand uppercase">
                             <Sparkles size={14} /> ESPAÇO DA DEBINATOS
                         </span>
-                        <h1 className="mt-3 mb-2.5 text-[28px] md:text-[34px]">Olá, vamos cuidar da loja?</h1>
-                        <p className="text-xs text-muted">Seu painel de administração.</p>
+                        <h1 className="mt-3 mb-2.5 text-[28px] md:text-[34px]">Painel administrativo</h1>
+                        <p className="text-xs text-muted">Gerencie os produtos e a vitrine da loja.</p>
                     </div>
                     <Link
                         className="inline-flex items-center justify-center gap-3 rounded-lg border leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-10 px-4 py-2.5 text-[11px]"
@@ -44,12 +29,6 @@ export function Admin() {
                     >
                         <ArrowLeft size={16} /> Ver a loja
                     </Link>
-                </div>
-                <div className="mb-7 flex items-start gap-3 rounded-lg border border-[#edddcb] bg-[#f5ebdf] px-4 py-3.5 text-[#77563e] md:items-center">
-                    <ShieldCheck size={21} />
-                    <p className="text-[10px] leading-relaxed md:text-[11px]">
-                        <strong className="font-medium">Armazenamento local.</strong> Produtos e fotos ficam salvos neste navegador.
-                    </p>
                 </div>
                 <nav className="mb-7 flex flex-wrap items-center gap-1 border-b border-[#e3d6c8] md:gap-2" aria-label="Painel administrativo">
                     <button
@@ -66,12 +45,11 @@ export function Admin() {
                     >
                         <ShoppingBag size={18} /> Produtos
                     </button>
-                    <button
-                        className="flex items-center gap-2 border-b-2 border-transparent py-3.5 text-muted md:text-xs ml-auto px-0 text-[10px] md:text-[10px] max-md:basis-full max-md:justify-end max-md:[border-top:1px_solid_var(--color-line)]"
-                        onClick={() => setResetOpen(true)}
-                    >
-                        <RotateCcw size={16} /> Restaurar dados iniciais
-                    </button>
+                    <form action={logout} className="ml-auto">
+                        <button type="submit" className="flex items-center gap-2 px-3 py-3.5 text-xs text-muted hover:text-brand">
+                            <LogOut size={16} /> Sair
+                        </button>
+                    </form>
                 </nav>
                 {tab === 'visao' ? (
                     <>
@@ -103,7 +81,7 @@ export function Admin() {
                         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
                             <div>
                                 <h2 className="mb-2 text-[27px]">Seus produtos</h2>
-                                <span className="text-xs text-muted text-[11px]">{totalProducts} produtos no catálogo local</span>
+                                <span className="text-xs text-muted text-[11px]">{totalProducts} produtos no catálogo</span>
                             </div>
                             <button
                                 className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug  font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
@@ -153,6 +131,7 @@ export function Admin() {
                                                     className="group/status-toggle inline-flex items-center gap-2 rounded-full bg-[#f3efea] px-2.5 py-1.5 text-[10px] text-muted aria-pressed:bg-[#edf2e6] aria-pressed:text-leaf"
                                                     aria-label={`${p.active ? 'Desativar' : 'Ativar'} ${p.name}`}
                                                     aria-pressed={p.active}
+                                                    disabled={pending}
                                                     onClick={() => toggleProduct(p)}
                                                 >
                                                     <span className="size-1 rounded-full bg-muted group-aria-pressed/status-toggle:bg-leaf" />
@@ -172,40 +151,17 @@ export function Admin() {
                                     ))}
                                 </tbody>
                             </table>
-                            {!products.length && <p className="p-8 text-center text-xs text-muted">Nenhum produto encontrado.</p>}
+                            {!products.length && (
+                                <p className="p-8 text-center text-xs text-muted">
+                                    {search ? 'Nenhum produto encontrado.' : 'Seu catálogo está vazio. Cadastre o primeiro produto.'}
+                                </p>
+                            )}
                         </div>
                     </>
                 )}
             </div>
-            {editor !== undefined && <ProductEditor product={editor} close={() => setEditor(undefined)} />}
-            {resetOpen && (
-                <Modal title="Restaurar os dados iniciais?" close={closeReset}>
-                    <div className="p-6 md:p-8">
-                        <div className="mx-auto mb-5 grid size-16 place-items-center rounded-full bg-cream text-brand">
-                            <RotateCcw size={28} />
-                        </div>
-                        <p className="mb-4 text-xs text-muted">
-                            Isso remove suas alterações de produtos, fotos, estoque, perfil, favoritos e carrinho deste navegador.
-                        </p>
-                        <p className="mb-4 text-xs text-muted">O catálogo inicial será recuperado. Esta ação não pode ser desfeita.</p>
-                        <div className="mt-6 flex justify-end gap-3 border-t border-line pt-5">
-                            <button
-                                className="inline-flex items-center justify-center gap-3 rounded-lg border p-3 leading-snug font-semibold transition hover:-translate-y-px disabled:translate-y-0 border-[#d7bbb0] bg-transparent text-brand hover:border-brand hover:bg-[#fff4ec] min-h-11  text-[10px] md:px-4 md:text-[11px]"
-                                disabled={resetting}
-                                onClick={() => setResetOpen(false)}
-                            >
-                                Manter meus dados
-                            </button>
-                            <button
-                                className="inline-flex items-center justify-center gap-3 rounded-lg border border-brand bg-brand p-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 min-h-11  text-[10px] md:px-4 md:text-[11px]"
-                                disabled={resetting}
-                                onClick={restoreDemo}
-                            >
-                                {resetting ? 'Restaurando…' : 'Restaurar dados iniciais'}
-                            </button>
-                        </div>
-                    </div>
-                </Modal>
+            {editor !== undefined && (
+                <ProductEditor product={editor} categories={[...new Set(initialProducts.map((p) => p.category))]} close={() => setEditor(undefined)} />
             )}
         </div>
     )

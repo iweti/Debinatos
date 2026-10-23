@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
-import { initialState } from '../data/demo'
 import { addToCart, setQuantity } from '../domain/cart'
 import { getContactSelection, PERSONALIZED_MESSAGE, whatsappUrl } from '../domain/contact'
+import { createStoreState } from './fixtures/store'
 
 const phone = '5511999999999'
 
 describe('Consulta pelo WhatsApp', () => {
     it('inclui nomes, quantidades e caracteres especiais sem preços', () => {
-        const state = initialState()
+        const state = createStoreState()
         state.products[0].name = 'Terrário Ursos Polares & Cia #1'
         state.products[1].name = 'Mini Aquário de Urso'
         const cart = [
@@ -29,7 +29,7 @@ describe('Consulta pelo WhatsApp', () => {
     })
 
     it('usa a mensagem de personalizados quando a seleção está vazia', () => {
-        expect(getContactSelection(initialState().products, [])).toMatchObject({ invalid: false, message: PERSONALIZED_MESSAGE, itemCount: 0 })
+        expect(getContactSelection(createStoreState().products, [])).toMatchObject({ invalid: false, message: PERSONALIZED_MESSAGE, itemCount: 0 })
     })
 
     it.each([undefined, '', ' ', '+5511999999999', '5511abc', '1'])('não cria link com número ausente ou inválido: %s', (number) => {
@@ -37,7 +37,7 @@ describe('Consulta pelo WhatsApp', () => {
     })
 
     it.each(['removed', 'inactive', 'stock', 'zero', 'fraction', 'negative'] as const)('exige revisão para seleção inválida: %s', (scenario) => {
-        const state = initialState()
+        const state = createStoreState()
         const product = state.products[0]
         const item = { productId: product.id, quantity: 2 }
         if (scenario === 'removed') item.productId = 'removido'
@@ -52,13 +52,12 @@ describe('Consulta pelo WhatsApp', () => {
         expect(whatsappUrl(phone, selection.message)).toBeUndefined()
     })
 
-    it('atualiza a mensagem ao mudar a seleção e não altera carrinho, estoque ou perfil', () => {
-        const state = addToCart(initialState(), 'terrario-ursos-polares', 2)
+    it('atualiza a mensagem ao mudar a seleção e não altera carrinho ou estoque', () => {
+        const state = addToCart(createStoreState(), 'produto-1', 2)
         const before = structuredClone(state)
         const first = getContactSelection(state.products, state.cart)
         expect(whatsappUrl(phone, first.message)).toBeTruthy()
         expect(state).toEqual(before)
-        expect(state.loggedIn).toBe(false)
         const changed = setQuantity(state, state.products[0].id, 1)
         expect(getContactSelection(changed.products, changed.cart).message).toContain('— 1 unidade\n')
         expect(getContactSelection(changed.products, setQuantity(changed, changed.products[0].id, 0).cart).message).toBe(PERSONALIZED_MESSAGE)

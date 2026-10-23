@@ -1,5 +1,5 @@
 'use client'
-import { Heart, Menu, Search, ShoppingBag, UserRound, X } from 'lucide-react'
+import { Heart, Menu, Search, ShoppingBag, X } from 'lucide-react'
 import Link from 'next/link'
 
 import { useHeader } from './use-header'
@@ -64,13 +64,6 @@ export function Header() {
                     >
                         <Heart size={20} />
                         {favoriteCount > 0 && <span className="absolute top-1 right-1 size-1.5 rounded-full bg-brand" />}
-                    </Link>
-                    <Link
-                        className="relative shrink-0 items-center justify-center rounded-full transition hover:bg-cream h-9 w-8 hidden sm:inline-flex"
-                        href="/perfil"
-                        aria-label="Meu perfil"
-                    >
-                        <UserRound size={20} />
                     </Link>
                     <Link
                         className="relative inline-flex shrink-0 items-center justify-center rounded-full transition hover:bg-cream h-9 w-8"
@@ -141,9 +134,6 @@ export function Header() {
                     </Link>
                     <Link className="px-2 py-3 text-xs" href="/favoritos">
                         Meus favoritos
-                    </Link>
-                    <Link className="px-2 py-3 text-xs" href="/perfil">
-                        Meu perfil
                     </Link>
                     <Link className="px-2 py-3 text-xs" href="/sobre">
                         Sobre a Debinatos
