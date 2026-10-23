@@ -1,24 +1,21 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { initialState } from '../data/demo'
 import { addToCart, setQuantity } from '../domain/cart'
-import { LEGACY_STORAGE_KEY, readState, STORAGE_KEY, writeState } from '../storage/local-state'
-import { clearPhotos } from '../storage/photos'
+import { emptyVisitor, readVisitor, VISITOR_LEGACY_KEYS, VISITOR_STORAGE_KEY, writeVisitor } from '../storage/visitor-state'
+import type { Product, StoreState } from '../types/store'
 import type { Store } from './store-context'
 
-export function useStoreState(): Store {
-    const [state, setState] = useState(initialState)
+export function useStoreState(products: Product[], catalogError: boolean): Store {
+    const [visitor, setVisitor] = useState(emptyVisitor)
     const [ready, setReady] = useState(false)
-    const hydrated = useRef(false)
-    const current = useRef(state)
+    const current = useRef(visitor)
     const [toast, setToast] = useState<Store['toast']>(null)
     const notify = useCallback((message: string, error = false) => setToast({ message, error }), [])
     useEffect(() => {
-        const loaded = readState()
+        const loaded = readVisitor()
         current.current = loaded.state
-        setState(loaded.state)
-        hydrated.current = true
+        setVisitor(loaded.state)
         setReady(true)
         if (loaded.warning) notify(loaded.warning, true)
     }, [notify])
@@ -29,22 +26,23 @@ export function useStoreState(): Store {
     }, [toast])
     useEffect(() => {
         const sync = (event: StorageEvent) => {
-            if (event.key !== STORAGE_KEY && event.key !== LEGACY_STORAGE_KEY && event.key !== null) return
-            const value = readState()
-            current.current = value.state
-            setState(value.state)
-            if (value.warning) notify(value.warning, true)
+            if (event.key !== VISITOR_STORAGE_KEY && !VISITOR_LEGACY_KEYS.includes(event.key ?? '') && event.key !== null) return
+            const loaded = readVisitor()
+            current.current = loaded.state
+            setVisitor(loaded.state)
+            if (loaded.warning) notify(loaded.warning, true)
         }
         window.addEventListener('storage', sync)
         return () => window.removeEventListener('storage', sync)
     }, [notify])
-    const update: Store['update'] = (fn, message) => {
+    const update = (fn: (previous: StoreState) => StoreState, message?: string): boolean => {
         try {
-            if (!hydrated.current) throw new Error('Aguarde o carregamento dos seus dados locais.')
-            const next = fn(current.current)
-            writeState(next)
-            current.current = next
-            setState(next)
+            if (!ready) throw new Error('Aguarde o carregamento dos seus dados locais.')
+            const next = fn({ ...current.current, products })
+            const local = { cart: next.cart, favorites: next.favorites }
+            writeVisitor(local)
+            current.current = local
+            setVisitor(local)
             if (message) notify(message)
             return true
         } catch (error) {
@@ -52,29 +50,15 @@ export function useStoreState(): Store {
             return false
         }
     }
-    const value: Store = {
-        state,
+    return {
+        state: { ...visitor, products },
         ready,
-        update,
+        catalogError,
         notify,
         toast,
         dismissToast: () => setToast(null),
         add: (id, quantity = 1) => update((s) => addToCart(s, id, quantity), 'Um encanto a mais no seu carrinho!'),
         quantity: (id, count) => update((s) => setQuantity(s, id, count)),
-        favorite: (id) =>
-            update((s) => ({
-                ...s,
-                favorites: s.favorites.includes(id) ? s.favorites.filter((f) => f !== id) : [...s.favorites, id],
-            })),
-        reset: async () => {
-            if (update(() => initialState(), 'Dados restaurados. Tudo pronto para recomeçar!')) {
-                try {
-                    await clearPhotos()
-                } catch {
-                    notify('Os dados foram restaurados, mas não foi possível limpar as fotos antigas.', true)
-                }
-            }
-        },
+        favorite: (id) => update((s) => ({ ...s, favorites: s.favorites.includes(id) ? s.favorites.filter((f) => f !== id) : [...s.favorites, id] })),
     }
-    return value
 }

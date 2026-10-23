@@ -29,7 +29,7 @@ export function Favorites() {
                 </>
             ) : (
                 <EmptyState icon={<Heart size={32} />} title="Seu próximo favorito está por aí.">
-                    Toque no coração dos produtos para guardar seus encantos aqui. Você pode começar sem entrar no perfil.
+                    Toque no coração dos produtos para guardar seus encantos aqui.
                 </EmptyState>
             )}
             {hasUnavailable && (

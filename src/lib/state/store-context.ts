@@ -1,17 +1,16 @@
 'use client'
 import { createContext, useContext } from 'react'
 
-import type { DemoState } from '../types/store'
+import type { StoreState } from '../types/store'
 
 export type Store = {
-    state: DemoState
+    state: StoreState
     ready: boolean
-    update: (fn: (previous: DemoState) => DemoState, message?: string) => boolean
+    catalogError: boolean
     notify: (message: string, error?: boolean) => void
     add: (id: string, quantity?: number) => boolean
     quantity: (id: string, count: number) => boolean
     favorite: (id: string) => void
-    reset: () => Promise<void>
     toast: { message: string; error: boolean } | null
     dismissToast: () => void
 }

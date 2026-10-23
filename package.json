@@ -14,12 +14,14 @@
     "format": "prettier --write src next.config.ts postcss.config.mjs tsconfig.json vitest.config.ts"
   },
   "dependencies": {
-    "@neon/config": "1.8.6",
-    "@neon/env": "1.5.3",
+    "@neondatabase/serverless": "1.2.0",
+    "cloudinary": "2.11.0",
+    "jose": "6.2.13",
     "lucide-react": "0.468.0",
-    "next": "16.4.0",
+    "next": "16.4.2",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "server-only": "0.0.1"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -30,11 +32,9 @@
     "@types/react-dom": "19.3.0",
     "@typescript-eslint/eslint-plugin": "8.71.2",
     "@typescript-eslint/parser": "8.71.2",
-    "autoprefixer": "10.6.1",
     "eslint": "10.13.0",
     "eslint-plugin-better-tailwindcss": "4.9.1",
     "eslint-plugin-simple-import-sort": "14.0.0",
-    "fake-indexeddb": "6.2.5",
     "postcss": "8.5.29",
     "prettier": "3.9.10",
     "tailwindcss": "4.3.3",

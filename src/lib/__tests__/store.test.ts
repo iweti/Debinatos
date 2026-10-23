@@ -1,65 +1,64 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { initialState } from '../data/demo'
 import { addToCart, setQuantity } from '../domain/cart'
-import { readState, STORAGE_KEY, writeState } from '../storage/local-state'
+import { emptyVisitor, readVisitor, VISITOR_STORAGE_KEY, writeVisitor } from '../storage/visitor-state'
+import { createStoreState } from './fixtures/store'
 
 afterEach(() => vi.unstubAllGlobals())
 
-describe('Carrinho e estoque', () => {
-    it('acumula quantidades sem ultrapassar estoque e permite remover um item', () => {
-        const original = initialState()
+describe('Carrinho de interesse', () => {
+    it('acumula e altera quantidades acima do estoque cadastrado e permite remover um item', () => {
+        const original = createStoreState()
         const first = original.products[0]
-        const state = addToCart(addToCart(original, first.id, 2), first.id, 1)
-        expect(state.cart).toEqual([{ productId: first.id, quantity: 3 }])
+        const state = addToCart(addToCart(original, first.id, 2), first.id, first.stock + 1)
+        expect(state.cart).toEqual([{ productId: first.id, quantity: first.stock + 3 }])
         expect(original.cart).toEqual([])
-        expect(() => addToCart(state, first.id, first.stock)).toThrow('estoque')
+        expect(setQuantity(state, first.id, first.stock + 10).cart).toEqual([{ productId: first.id, quantity: first.stock + 10 }])
         expect(() => setQuantity(state, first.id, 1.5)).toThrow('Quantidade')
         expect(setQuantity(state, first.id, 0).cart).toEqual([])
     })
-    it('bloqueia produto esgotado, desativado e quantidade negativa', () => {
-        const state = initialState()
-        expect(() => addToCart(state, 'axolote-acrilico')).toThrow('estoque')
+    it('permite produto sem estoque e bloqueia produto desativado e quantidades inválidas', () => {
+        const state = createStoreState()
+        expect(addToCart(state, 'produto-3', 10).cart).toEqual([{ productId: 'produto-3', quantity: 10 }])
         state.products[0].active = false
         expect(() => addToCart(state, state.products[0].id)).toThrow('disponível')
-        expect(() => addToCart(state, state.products[1].id, -1)).toThrow('estoque')
+        expect(() => addToCart(state, state.products[1].id, -1)).toThrow('Quantidade')
+        expect(() => addToCart(state, state.products[1].id, Infinity)).toThrow('Quantidade')
     })
 })
 
 describe('Persistência local', () => {
-    it('recupera favoritos, carrinho e perfil salvos', () => {
+    it('persiste apenas favoritos e carrinho', () => {
         const state = {
-            ...addToCart(initialState(), 'terrario-ursos-polares'),
-            favorites: ['terrario-ursos-polares'],
-            loggedIn: true,
+            ...addToCart(createStoreState(), 'produto-1'),
+            favorites: ['produto-1'],
         }
         const data = new Map<string, string>()
         vi.stubGlobal('localStorage', {
             getItem: (key: string) => data.get(key),
             setItem: (key: string, value: string) => data.set(key, value),
         })
-        writeState(state)
-        expect(readState().state).toEqual(state)
-        expect(data.has(STORAGE_KEY)).toBe(true)
+        writeVisitor(state)
+        expect(readVisitor().state).toEqual({ cart: state.cart, favorites: state.favorites })
+        expect(data.has(VISITOR_STORAGE_KEY)).toBe(true)
     })
-    it.each([
-        '{invalid',
-        JSON.stringify({ ...initialState(), products: [null] }),
-        JSON.stringify({ ...initialState(), products: [{ ...initialState().products[0], stock: -1 }] }),
-    ])('recupera o catálogo inicial se os dados estiverem corrompidos', (raw) => {
-        vi.stubGlobal('localStorage', { getItem: () => raw })
-        expect(readState().warning).toBeTruthy()
-        expect(readState().state.products).toHaveLength(12)
-    })
+    it.each(['{invalid', JSON.stringify({ cart: null, favorites: [] }), JSON.stringify({ cart: [], favorites: null })])(
+        'recupera carrinho e favoritos vazios se os dados estiverem corrompidos',
+        (raw) => {
+            vi.stubGlobal('localStorage', { getItem: () => raw })
+            expect(readVisitor().warning).toBeTruthy()
+            expect(readVisitor().state).toEqual(emptyVisitor())
+        }
+    )
     it('explica falha ao gravar e não altera os dados anteriores', () => {
-        const state = initialState()
+        const state = createStoreState()
         vi.stubGlobal('localStorage', {
             getItem: () => null,
             setItem: () => {
                 throw new Error('QuotaExceededError')
             },
         })
-        expect(() => writeState(state)).toThrow('Não foi possível salvar')
-        expect(state).toEqual(initialState())
+        expect(() => writeVisitor(state)).toThrow('Não foi possível salvar')
+        expect(state).toEqual(createStoreState())
     })
 })

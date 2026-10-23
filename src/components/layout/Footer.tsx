@@ -35,9 +35,6 @@ export function Footer() {
                 </div>
                 <div className="max-md:last:col-[span_2]">
                     <h3 className="mt-1 mb-5 text-xs">Seu espaço</h3>
-                    <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/perfil">
-                        Minha conta
-                    </Link>
                     <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/carrinho">
                         Meu carrinho
                     </Link>

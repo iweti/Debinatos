@@ -2,7 +2,6 @@
 import { ArrowLeft, ShoppingBag } from 'lucide-react'
 import Link from 'next/link'
 
-import { ContactAction } from '@/components/contact/ContactAction'
 import { Photo } from '@/components/product/Photo'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -11,6 +10,7 @@ import { PageHeading } from '@/components/ui/PageHeading'
 import { Quantity } from '@/components/ui/Quantity'
 
 import { useCart } from '../_lib/use-cart'
+import { CartContactAction } from './CartContactAction'
 
 export function Cart({ phone }: { phone?: string }) {
     const { quantity, ready, rows, itemCount } = useCart()
@@ -37,7 +37,7 @@ export function Cart({ phone }: { phone?: string }) {
                                     <Link className="h-24 w-19 shrink-0 md:h-28 md:w-24" href={`/produto/${item.productId}`}>
                                         <Photo
                                             className="size-full rounded-lg object-cover"
-                                            source={product?.images[0] ?? ''}
+                                            source={product?.images[0]?.url ?? ''}
                                             alt={`Foto de ${product?.name ?? 'Produto indisponível'}`}
                                         />
                                     </Link>
@@ -48,9 +48,9 @@ export function Cart({ phone }: { phone?: string }) {
                                         <Link href={`/produto/${item.productId}`}>
                                             <h3 className="my-1.5 font-serif text-[15px] font-medium md:text-[17px]">{product?.name ?? 'Produto removido'}</h3>
                                         </Link>
-                                        {(!product?.active || item.quantity > product.stock) && (
+                                        {!product?.active && (
                                             <span className="my-3 leading-relaxed block text-[11px] text-muted">
-                                                Indisponível ou estoque insuficiente. Remova ou ajuste o item.
+                                                Produto fora do catálogo. Remova o item do carrinho.
                                             </span>
                                         )}
                                         <button
@@ -64,7 +64,7 @@ export function Cart({ phone }: { phone?: string }) {
                                         <Quantity
                                             compact
                                             value={item.quantity}
-                                            max={product?.active ? product.stock : 0}
+                                            disabled={!product?.active}
                                             onChange={(count) => quantity(item.productId, count)}
                                             name={product?.name ?? 'produto'}
                                         />
@@ -91,7 +91,7 @@ export function Cart({ phone }: { phone?: string }) {
                             A mensagem incluirá os nomes e as quantidades dos produtos. Disponibilidade, entrega e demais detalhes serão combinados diretamente
                             com a Debinatos.
                         </p>
-                        <ContactAction phone={phone} />
+                        <CartContactAction phone={phone} />
                     </aside>
                 </div>
             )}

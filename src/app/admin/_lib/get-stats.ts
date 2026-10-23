@@ -1,8 +1,8 @@
-import type { DemoState } from '@/lib/types/store'
+import type { Product } from '@/lib/types/store'
 
-export function getStats(state: DemoState) {
+export function getStats(products: Product[]) {
     return {
-        activeProducts: state.products.filter((p) => p.active).length,
-        lowStock: state.products.filter((p) => p.active && p.stock <= 3).length,
+        activeProducts: products.filter((p) => p.active).length,
+        lowStock: products.filter((p) => p.active && p.stock <= 3).length,
     }
 }

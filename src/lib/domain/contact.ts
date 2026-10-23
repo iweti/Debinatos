@@ -4,9 +4,7 @@ export const PERSONALIZED_MESSAGE = 'Olá! Gostaria de saber mais sobre pedidos 
 
 export function getContactSelection(products: Product[], cart: CartItem[]) {
     const rows = cart.map((item) => ({ item, product: products.find((product) => product.id === item.productId) }))
-    const invalid = rows.some(
-        ({ item, product }) => !product?.active || !Number.isSafeInteger(item.quantity) || item.quantity < 1 || item.quantity > product.stock
-    )
+    const invalid = rows.some(({ item, product }) => !product?.active || !Number.isSafeInteger(item.quantity) || item.quantity < 1)
     const message = !cart.length
         ? PERSONALIZED_MESSAGE
         : invalid
