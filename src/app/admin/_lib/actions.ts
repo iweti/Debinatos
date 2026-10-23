@@ -5,12 +5,11 @@ import { randomUUID } from 'node:crypto'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
+import { parseHighlightsInput, parseProductInput, validId } from '@/lib/domain/admin-input'
 import { createSession, deleteSession, requireAdmin } from '@/lib/server/auth'
 import { imageService, validImageUrl } from '@/lib/server/cloudinary'
 import { database } from '@/lib/server/db'
-import type { ActionResult, ProductInput } from '@/lib/types/admin'
-
-const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+import type { ActionResult, HighlightsInput, ProductInput } from '@/lib/types/admin'
 
 export async function login(_previous: ActionResult, form: FormData): Promise<ActionResult> {
     const email = form.get('email')
@@ -44,56 +43,14 @@ export async function logout() {
     redirect('/admin/login')
 }
 
-function productInput(value: ProductInput): ProductInput | undefined {
-    if (!value || typeof value !== 'object') return
-    const limits = { name: 100, category: 40, description: 2000, material: 150, dimensions: 150 } as const
-    for (const [key, max] of Object.entries(limits)) {
-        const text = value[key as keyof typeof limits]
-        if (typeof text !== 'string' || !text.trim() || text.trim().length > max || text.includes('\0')) return
-    }
-    if (value.id !== undefined && (typeof value.id !== 'string' || !uuid.test(value.id))) return
-    if (
-        !Number.isInteger(value.stock) ||
-        value.stock < 0 ||
-        value.stock > 2147483647 ||
-        typeof value.active !== 'boolean' ||
-        typeof value.featured !== 'boolean'
-    )
-        return
-    if (!Array.isArray(value.images) || value.images.length < 1 || value.images.length > 5 || !value.images.every(validImageUrl)) return
-    if (value.badge !== undefined && (typeof value.badge !== 'string' || value.badge.trim().length > 40 || value.badge.includes('\0'))) return
-    return {
-        ...value,
-        name: value.name.trim(),
-        category: value.category.trim(),
-        description: value.description.trim(),
-        material: value.material.trim(),
-        dimensions: value.dimensions.trim(),
-        badge: value.badge?.trim() || undefined,
-    }
-}
-
 export async function saveProduct(value: ProductInput): Promise<ActionResult> {
     await requireAdmin()
-    const input = productInput(value)
+    const input = parseProductInput(value, validImageUrl)
     if (!input) return { error: 'Confira os campos, o estoque inteiro e as fotos do Cloudinary.' }
     try {
         const sql = database()
-        if (input.id) {
-            const rows = await sql`
-                UPDATE products SET name = ${input.name}, description = ${input.description}, stock = ${input.stock},
-                    category = ${input.category}, material = ${input.material}, dimensions = ${input.dimensions},
-                    active = ${input.active}, featured = ${input.featured}, badge = ${input.badge ?? null}, img = ${input.images}::text[]
-                WHERE id = ${input.id}::uuid RETURNING id
-            `
-            if (!rows.length) return { error: 'Este produto não existe mais. Atualize o painel.' }
-        } else {
-            await sql`
-                INSERT INTO products (name, description, stock, category, material, dimensions, active, featured, badge, img)
-                VALUES (${input.name}, ${input.description}, ${input.stock}, ${input.category}, ${input.material}, ${input.dimensions},
-                    ${input.active}, ${input.featured}, ${input.badge ?? null}, ${input.images}::text[])
-            `
-        }
+        const { id, images, ...data } = input
+        await sql.transaction([sql`SELECT save_store_product(${id ?? null}::uuid, ${JSON.stringify(data)}::jsonb, ${JSON.stringify(images)}::jsonb)`])
     } catch {
         return { error: 'Não foi possível salvar o produto. Tente novamente.' }
     }
@@ -101,11 +58,29 @@ export async function saveProduct(value: ProductInput): Promise<ActionResult> {
     return { success: true }
 }
 
+export async function saveHighlights(value: HighlightsInput): Promise<ActionResult> {
+    await requireAdmin()
+    const input = parseHighlightsInput(value)
+    if (!input) return { error: 'Confira os favoritos e as fotos selecionadas.' }
+    try {
+        const sql = database()
+        await sql.transaction([sql`SELECT save_store_highlights(${input.favorites}::uuid[], ${JSON.stringify(input.hero)}::jsonb)`])
+    } catch {
+        return { error: 'Não foi possível salvar. Confira se os produtos e as fotos continuam disponíveis e tente novamente.' }
+    }
+    revalidatePath('/', 'layout')
+    return { success: true }
+}
+
 export async function setProductActive(id: string, active: boolean): Promise<ActionResult> {
     await requireAdmin()
-    if (typeof id !== 'string' || !uuid.test(id) || typeof active !== 'boolean') return { error: 'Produto inválido.' }
+    if (!validId(id) || typeof active !== 'boolean') return { error: 'Produto inválido.' }
     try {
-        const rows = await database()`UPDATE products SET active = ${active} WHERE id = ${id}::uuid RETURNING id`
+        const sql = database()
+        const [, rows] = await sql.transaction([
+            sql`SELECT pg_advisory_xact_lock(77120001)`,
+            sql`UPDATE products SET active = ${active} WHERE id = ${id}::uuid RETURNING id`,
+        ])
         if (!rows.length) return { error: 'Este produto não existe mais. Atualize o painel.' }
     } catch {
         return { error: 'Não foi possível alterar a visibilidade. Tente novamente.' }

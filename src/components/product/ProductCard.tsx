@@ -15,7 +15,7 @@ export function ProductCard({ product }: { product: Product }) {
                 <Link className="block h-full" href={`/produto/${product.id}`} aria-label={`Ver ${product.name}`}>
                     <Photo
                         className="size-full object-cover transition-transform duration-500 group-hover/product-card:scale-[1.035]"
-                        source={product.images[0]}
+                        source={product.images[0]?.url ?? ''}
                         alt={`Foto de ${product.name}`}
                         loading="lazy"
                     />

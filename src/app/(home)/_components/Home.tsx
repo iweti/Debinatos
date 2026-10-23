@@ -3,15 +3,16 @@ import { ArrowRight, ArrowUpRight, Flower2, Gem, Gift, Heart, Sparkles, Truck } 
 import Link from 'next/link'
 
 import { ProductCard } from '@/components/product/ProductCard'
+import type { HeroPhotos } from '@/lib/types/store'
 
 import { useHome } from '../_lib/use-home'
 import { Hero } from './Hero'
 
-export function Home() {
+export function Home({ heroPhotos }: { heroPhotos: HeroPhotos }) {
     const { featured } = useHome()
     return (
         <>
-            <Hero />
+            <Hero photos={heroPhotos} />
             <div className="border-b border-line">
                 <div className="mx-auto w-[calc(100%-36px)] max-w-310 md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] grid grid-cols-2 items-center py-1 md:min-h-21.5 md:grid-cols-4 md:py-0">
                     <div className="flex min-h-16 items-center gap-2 border-line pl-3 odd:border-r md:min-h-0 md:justify-center md:border-r md:px-1 nth-[-n+2]:border-b nth-[-n+2]:md:border-b-0 last:border-r-0">

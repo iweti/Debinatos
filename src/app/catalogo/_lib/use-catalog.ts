@@ -2,6 +2,7 @@
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
+import { compareFeatured, compareNewest } from '@/lib/domain/highlights'
 import { useStore } from '@/lib/state/store-context'
 
 export function useCatalog() {
@@ -35,7 +36,7 @@ export function useCatalog() {
             .toLowerCase()
     const products = state.products
         .filter((p) => p.active && (!category || p.category === category) && normalize(p.name).includes(normalize(query)))
-        .sort((a, b) => (sort === 'novidades' ? b.createdAt.localeCompare(a.createdAt) : Number(b.featured) - Number(a.featured)))
+        .sort(sort === 'novidades' ? compareNewest : compareFeatured)
     const categoryCounts = Object.fromEntries(['', ...categories].map((c) => [c, state.products.filter((p) => p.active && (!c || p.category === c)).length]))
     function changeSearch(value: string) {
         setQuery(value)

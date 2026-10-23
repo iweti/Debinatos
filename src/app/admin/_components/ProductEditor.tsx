@@ -25,8 +25,6 @@ export function ProductEditor({ product, close, categories }: { product: Product
         setImages,
         active,
         setActive,
-        featured,
-        setFeatured,
         uploading,
         saving,
         uploadFailed,
@@ -120,9 +118,9 @@ export function ProductEditor({ product, close, categories }: { product: Product
                             JPG, PNG ou WebP • até 5 MB por foto • máximo de 5 fotos. A primeira é a capa.
                         </small>
                         <div className="mt-4 flex flex-wrap gap-2.5">
-                            {images.map((source, i) => (
-                                <div className="relative h-23 w-20.75" key={source}>
-                                    <Photo className="size-full rounded object-cover" source={source} alt={`Foto ${i + 1} do produto`} />
+                            {images.map((image, i) => (
+                                <div className="relative w-26" key={image.id ?? `${image.url}-${i}`}>
+                                    <Photo className="h-23 w-full rounded object-cover" source={image.url} alt={`Foto ${i + 1} do produto`} />
                                     <button
                                         className="inline-flex shrink-0 items-center justify-center rounded-full transition absolute top-1 right-1 size-6 bg-white"
                                         type="button"
@@ -132,7 +130,26 @@ export function ProductEditor({ product, close, categories }: { product: Product
                                     >
                                         <X size={14} />
                                     </button>
-                                    {i === 0 && <span className="absolute bottom-1 left-1 rounded-sm bg-[#fffaf4] px-1 py-0.5 text-[8px]">Capa</span>}
+                                    <label className="mt-1 flex items-center gap-1 text-[9px]">
+                                        {i === 0 ? 'Capa' : 'Posição'}
+                                        <select
+                                            className="min-w-0 py-1 text-[10px]"
+                                            aria-label={`Posição da foto ${i + 1}`}
+                                            value={i + 1}
+                                            onChange={(event) => {
+                                                const reordered = [...images]
+                                                reordered.splice(i, 1)
+                                                reordered.splice(Number(event.target.value) - 1, 0, image)
+                                                setImages(reordered)
+                                            }}
+                                        >
+                                            {images.map((imageAtPosition, position) => (
+                                                <option key={imageAtPosition.id ?? `${imageAtPosition.url}-${position}`} value={position + 1}>
+                                                    {position + 1}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </label>
                                 </div>
                             ))}
                             <label className="relative flex h-23 w-26.25 cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded border border-dashed border-[#cdb7a3] bg-[#fcf8f1] text-brand focus-within:outline-2 focus-within:outline-brand text-[11px]">
@@ -165,10 +182,6 @@ export function ProductEditor({ product, close, categories }: { product: Product
                     <div className="mt-6 flex flex-wrap gap-4">
                         <label className="flex items-center gap-2 text-[11px]">
                             <input className="text-xs" type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} /> Visível na loja
-                        </label>
-                        <label className="flex items-center gap-2 text-[11px]">
-                            <input className="text-xs" type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} /> Destaque na página
-                            inicial
                         </label>
                     </div>
                     {error && (

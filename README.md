@@ -35,16 +35,40 @@ Aplique uma única vez, na ordem, os arquivos SQL versionados:
 
 1. `migrations/001_admin_users.sql`: extensão `pgcrypto`, tabela de administradores e índice único de e-mail sem diferenciar maiúsculas/minúsculas.
 2. `migrations/002_products.sql`: tabela de produtos, validação de quantidade e lista de imagens.
+3. `migrations/003_product_images_highlights.sql`: converte as URLs para `product_images`, preserva a ordem dos destaques e vincula o hero aos IDs das fotos. Reconcilia também o schema parcialmente implementado no `dev`.
+4. `migrations/004_remove_legacy_images.sql`: remove `products.img` e `hero_products.image_url`, somente após publicar e validar a aplicação que usa `product_images`.
 
 As migrações não criam usuários nem produtos e não são executadas automaticamente no build ou na inicialização. O catálogo começa vazio. Aplique e valide primeiro em uma branch de desenvolvimento, usando conexão direta; depois aplique os mesmos arquivos na branch de produção antes de publicar a aplicação.
 
-Nesta implementação, `.neon` e as conexões locais apontam para a branch `dev` do projeto existente. Ela foi configurada no Neon para expirar em **23/10/2026 às 20h23, horário de Brasília**. A branch `production` não recebeu as migrações. `.neon` e `.env.local` não são versionados. Antes de usar um ambiente depois dessa data, configure uma branch existente e confira seu esquema.
+Nesta implementação, `.neon` e as conexões locais apontam para a branch `dev` do projeto existente. A branch é temporária: confira sua expiração no Neon antes de reutilizá-la. A branch `production` não foi alterada por esta implementação. `.neon` e `.env.local` não são versionados.
 
-A tabela `products` contém ID UUID, nome, descrição, quantidade, data de adição, categoria, material, medidas, visibilidade, destaque, selo opcional e `img` (`text[]`). ID e data são gerados pelo banco e preservados nas edições. `img` é convertido em `Product.images` na leitura pelo servidor. Quantidades são inteiras e não negativas.
+A tabela `products` contém os dados do produto e `featured`/`featured_order`, que devem permanecer sincronizados. As fotos ficam em `product_images` (`id`, `product_id`, `url`, `position`), com posição única por produto. `Product.images` contém objetos `{ id, url, position }` ordenados; a primeira foto é a capa. Quantidades são inteiras e não negativas.
+
+`hero_products` contém as posições `primary` e `secondary`, com `product_id` e `image_id`. A chave estrangeira composta impede escolher uma foto de outro produto. Remover uma foto limpa apenas `image_id`, mantendo o produto para usar sua primeira foto disponível. Limpar a seleção remove ambas as referências; produto desativado usa a foto padrão. As duas posições podem usar fotos do mesmo produto.
+
+Para aplicar uma migração pela conexão direta configurada:
+
+```sh
+node --env-file=.env.local scripts/migrate.mjs 003_product_images_highlights.sql
+```
+
+Não reaplique arquivos já executados. Em produção, confirme as migrações de base, aplique `003`, publique a aplicação compatível e valide antes de aplicar `004`. Durante a troca, evite gravações administrativas pela versão antiga. As funções de salvamento não usam as colunas legadas; elas podem ser removidas sem outra publicação de código.
+
+Para validar os schemas original e atual com uma cópia dos produtos e configurações do `dev`, defina `VALIDATION_DATABASE_URL` com a conexão direta de uma branch temporária separada e execute:
+
+```sh
+node --env-file=.env.local --env-file=/caminho/validation.env scripts/validate-highlights.mjs
+```
+
+O script cria schemas isolados nessa branch, sem copiar administradores, e testa migração, preservação, IDs estáveis, vínculos, reordenação, remoção, desativação, concorrência e rollback. Use expiração na branch temporária. Branches Neon com expiração não aceitam filhas; nesse caso, crie a branch de validação a partir de um ancestral sem expiração.
 
 ## Acesso administrativo
 
-O acesso pela navegação da loja fica exclusivamente no link **Painel administrativo** do rodapé, que abre `/admin`. Sem sessão válida, a navegação segue para `/admin/login`, que pede e-mail e senha. Após entrar, o painel permite cadastrar e editar produtos, ativá-los ou desativá-los e sair.
+O acesso pela navegação da loja fica exclusivamente no link **Painel administrativo** do rodapé, que abre `/admin`. Sem sessão válida, a navegação segue para `/admin/login`, que pede e-mail e senha. Após entrar, o painel permite cadastrar e editar produtos, ativá-los ou desativá-los e configurar **Produtos em destaque** em `/admin?aba=destaques`.
+
+A aba de destaques reúne a galeria com todas as fotos dos produtos ativos e a lista ordenada de Favoritos da Debinatos. As seleções do hero são independentes dos favoritos. Alterações ficam em rascunho entre as abas e são publicadas juntas por **Salvar alterações**, com autenticação e validação no servidor. Falhas preservam o rascunho para nova tentativa. Produtos desativados continuam configurados e sinalizados no painel.
+
+Produto e suas fotos são salvos em uma transação separada da configuração dos destaques. IDs de fotos existentes são preservados; novas fotos recebem IDs do banco. O cadastro comum não altera `featured` nem `featured_order`. As gravações administrativas usam um advisory lock transacional compartilhado para serializar alterações relacionadas.
 
 **As credenciais devem ser criadas e alteradas exclusivamente pelo proprietário, diretamente no banco**, por exemplo pelo SQL Editor do Neon. A tabela é `admin_users`:
 
@@ -64,11 +88,13 @@ Preencha `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` 
 
 O administrador seleciona de uma a cinco fotos JPG, PNG ou WebP, de até 5 MB cada. A primeira é a capa. O servidor valida a sessão e assina os parâmetros de upload com o SDK oficial; o navegador envia os arquivos diretamente ao Cloudinary, sem passar o conteúdo das fotos pelas Server Actions. O segredo da API permanece no servidor.
 
-O produto salva apenas URLs HTTPS de imagens da conta configurada. O formulário bloqueia o salvamento durante uploads e em caso de falha, até o envio ser refeito com sucesso. Durante o salvamento, os campos ficam desativados. Remover uma foto do produto retira apenas sua URL: a exclusão física de fotos, inclusive de envios cancelados ou parcialmente concluídos, é manual no Cloudinary nesta etapa.
+O produto salva apenas URLs HTTPS de imagens da conta configurada. O formulário bloqueia o salvamento durante uploads e em caso de falha, até o envio ser refeito com sucesso. Durante o salvamento, os campos ficam desativados. O seletor de posição permite reorganizar as fotos mantendo seus IDs. Remover uma foto exclui somente seu registro no banco: a exclusão física dos arquivos, inclusive de envios cancelados ou parcialmente concluídos, é manual no Cloudinary nesta etapa.
 
 ## Catálogo e dados do visitante
 
 Início, catálogo, detalhes, favoritos e carrinho usam os produtos ativos do banco. O painel também mostra os desativados. Busca, categorias, destaques e ordenação por novidades continuam disponíveis. Mudanças no admin atualizam o painel e invalidam a vitrine; outras visitas ou recarregamentos recebem o catálogo atualizado.
+
+A home exibe até quatro favoritos ativos por `featured_order`. Em **Destaques**, o catálogo mostra todos os favoritos nessa sequência e depois os demais por data decrescente; busca e categorias preservam essa ordem. **Novidades** considera exclusivamente a data. ID desempata datas iguais. Favoritos pessoais do visitante permanecem independentes dessa configuração.
 
 Somente carrinho e favoritos ficam no `localStorage`, na chave `debinatos-visitor-v1`, com sincronização entre abas. Na primeira leitura, são recuperados os campos correspondentes de `debinatos-demo-v2` ou `debinatos-demo-v1`, sem importar catálogo, perfil ou login antigo. As chaves antigas são preservadas; a recuperação lê somente carrinho e favoritos, sem os utilitários antigos de demonstração.
 

@@ -12,7 +12,8 @@ export function useAdmin(initialProducts: Product[]) {
     const { notify } = useStore()
     const params = useSearchParams()
     const router = useRouter()
-    const tab = params.get('aba') === 'produtos' ? 'produtos' : 'visao'
+    const selected = params.get('aba')
+    const tab = selected === 'produtos' || selected === 'destaques' ? selected : 'visao'
     const [editor, setEditor] = useState<Product | null | undefined>(undefined)
     const [search, setSearch] = useState('')
     const [pending, startTransition] = useTransition()

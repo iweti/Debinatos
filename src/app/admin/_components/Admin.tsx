@@ -3,15 +3,18 @@ import { ArrowLeft, LayoutDashboard, LogOut, Pencil, Plus, Search, ShieldCheck, 
 import Link from 'next/link'
 
 import { Photo } from '@/components/product/Photo'
-import type { Product } from '@/lib/types/store'
+import type { HeroSelections, Product } from '@/lib/types/store'
 
 import { logout } from '../_lib/actions'
 import { useAdmin } from '../_lib/use-admin'
+import { useHighlights } from '../_lib/use-highlights'
+import { HighlightsEditor } from './HighlightsEditor'
 import { ProductEditor } from './ProductEditor'
 import { StatsCard } from './StatsCard'
 
-export function Admin({ initialProducts }: { initialProducts: Product[] }) {
+export function Admin({ initialProducts, initialHero }: { initialProducts: Product[]; initialHero: HeroSelections }) {
     const { tab, editor, setEditor, search, setSearch, products, stats, totalProducts, changeTab, toggleProduct, pending } = useAdmin(initialProducts)
+    const highlights = useHighlights(initialProducts, initialHero)
     return (
         <div className="bg-surface">
             <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
@@ -45,6 +48,13 @@ export function Admin({ initialProducts }: { initialProducts: Product[] }) {
                     >
                         <ShoppingBag size={18} /> Produtos
                     </button>
+                    <button
+                        className="flex items-center gap-2 border-b-2 border-transparent px-3 py-3.5 text-[11px] text-muted md:px-4 md:text-xs data-[selected=true]:border-brand data-[selected=true]:text-brand"
+                        data-selected={tab === 'destaques'}
+                        onClick={() => changeTab('destaques')}
+                    >
+                        <Sparkles size={18} /> Produtos em destaque
+                    </button>
                     <form action={logout} className="ml-auto">
                         <button type="submit" className="flex items-center gap-2 px-3 py-3.5 text-xs text-muted hover:text-brand">
                             <LogOut size={16} /> Sair
@@ -76,6 +86,8 @@ export function Admin({ initialProducts }: { initialProducts: Product[] }) {
                             </section>
                         </div>
                     </>
+                ) : tab === 'destaques' ? (
+                    <HighlightsEditor products={initialProducts} editor={highlights} />
                 ) : (
                     <>
                         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -118,7 +130,7 @@ export function Admin({ initialProducts }: { initialProducts: Product[] }) {
                                         <tr className="group/tr" key={p.id}>
                                             <td className="border-b border-[#f0e8de] px-5 py-4 last:px-2.5 group-last/tr:border-0">
                                                 <div className="flex items-center gap-3">
-                                                    <Photo className="h-12 w-10 rounded object-cover" source={p.images[0]} alt="" />
+                                                    <Photo className="h-12 w-10 rounded object-cover" source={p.images[0]?.url ?? ''} alt="" />
                                                     <strong className="text-[11px] font-medium">{p.name}</strong>
                                                 </div>
                                             </td>

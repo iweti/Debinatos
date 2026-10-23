@@ -25,19 +25,23 @@ export function ProductPage() {
             <div className="grid items-start gap-7 md:grid-cols-2 lg:gap-14">
                 <div>
                     <div className="relative aspect-[.97] overflow-hidden rounded-xl bg-cream">
-                        <Photo className="size-full object-cover" source={product.images[photoIndex] ?? product.images[0]} alt={`Foto de ${product.name}`} />
+                        <Photo
+                            className="size-full object-cover"
+                            source={product.images[photoIndex]?.url ?? product.images[0]?.url ?? ''}
+                            alt={`Foto de ${product.name}`}
+                        />
                     </div>
                     {product.images.length > 1 && (
                         <div className="mt-4 flex gap-3">
-                            {product.images.map((source, i) => (
+                            {product.images.map((image, i) => (
                                 <button
-                                    key={source}
+                                    key={image.id}
                                     className="size-18 overflow-hidden rounded-lg border border-transparent p-1 aria-pressed:border-brand"
                                     onClick={() => setPhotoIndex(i)}
                                     aria-label={`Ver foto ${i + 1}`}
                                     aria-pressed={i === photoIndex}
                                 >
-                                    <Photo className="size-full rounded object-cover" source={source} alt="" />
+                                    <Photo className="size-full rounded object-cover" source={image.url} alt="" />
                                 </button>
                             ))}
                         </div>

@@ -37,7 +37,7 @@ export function Cart({ phone }: { phone?: string }) {
                                     <Link className="h-24 w-19 shrink-0 md:h-28 md:w-24" href={`/produto/${item.productId}`}>
                                         <Photo
                                             className="size-full rounded-lg object-cover"
-                                            source={product?.images[0] ?? ''}
+                                            source={product?.images[0]?.url ?? ''}
                                             alt={`Foto de ${product?.name ?? 'Produto indisponível'}`}
                                         />
                                     </Link>

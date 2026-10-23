@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { useRef, useState, useTransition } from 'react'
 
 import { useStore } from '@/lib/state/store-context'
+import type { ProductImageInput } from '@/lib/types/admin'
 import type { Product } from '@/lib/types/store'
 
 import { authorizeImageUpload, saveProduct } from './actions'
@@ -15,9 +16,8 @@ export function useProductEditor(product: Product | null, close: () => void) {
     const [description, setDescription] = useState(product?.description ?? '')
     const [material, setMaterial] = useState(product?.material ?? '')
     const [dimensions, setDimensions] = useState(product?.dimensions ?? '')
-    const [images, setImages] = useState(product?.images ?? [])
+    const [images, setImages] = useState<ProductImageInput[]>(product?.images ?? [])
     const [active, setActive] = useState(product?.active ?? true)
-    const [featured, setFeatured] = useState(product?.featured ?? false)
     const [badge, setBadge] = useState(product?.badge ?? '')
     const [uploading, startUpload] = useTransition()
     const [saving, startSave] = useTransition()
@@ -59,7 +59,7 @@ export function useProductEditor(product: Product | null, close: () => void) {
                         throw new Error('Não foi possível enviar a foto. Tente adicionar as fotos novamente.')
                     sources.push(result.secure_url)
                 }
-                setImages((previous) => [...previous, ...sources])
+                setImages((previous) => [...previous, ...sources.map((url) => ({ url }))])
                 setUploadFailed(false)
             } catch (error) {
                 setUploadFailed(true)
@@ -104,7 +104,6 @@ export function useProductEditor(product: Product | null, close: () => void) {
                     dimensions,
                     images,
                     active,
-                    featured,
                     badge,
                 })
                 if (result.error) setError(result.error)
@@ -136,8 +135,6 @@ export function useProductEditor(product: Product | null, close: () => void) {
         setImages,
         active,
         setActive,
-        featured,
-        setFeatured,
         badge,
         setBadge,
         uploading,
