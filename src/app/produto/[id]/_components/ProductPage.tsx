@@ -1,5 +1,5 @@
 'use client'
-import { Check, Gift, Heart, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
+import { Gift, Heart, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
 
 import { Photo } from '@/components/product/Photo'
 import { ProductCard } from '@/components/product/ProductCard'
@@ -49,23 +49,11 @@ export function ProductPage() {
                     </span>
                     <h1 className="mb-5 text-[33px] lg:text-[39px]">{product.name}</h1>
                     <p className="mb-5 text-xs leading-[1.9] text-muted lg:text-[13px]">{product.description}</p>
-                    <span
-                        className="inline-flex items-center gap-1.5 text-[10px] text-leaf data-[unavailable=true]:text-brand"
-                        data-unavailable={!product.stock}
-                    >
-                        {product.stock ? (
-                            <>
-                                <Check size={14} /> {product.stock} unidades disponíveis
-                            </>
-                        ) : (
-                            'Esgotado no momento'
-                        )}
-                    </span>
+                    <p className="text-[10px] text-muted">Disponibilidade a confirmar pelo WhatsApp.</p>
                     <div className="my-6 flex flex-wrap items-center gap-2 lg:flex-nowrap">
-                        <Quantity value={count} max={product.stock} onChange={setCount} name={product.name} />
+                        <Quantity value={count} onChange={setCount} name={product.name} />
                         <button
                             className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand p-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 flex-1 basis-full  text-[11px] sm:basis-auto md:basis-full lg:basis-auto"
-                            disabled={!product.stock || count > product.stock}
                             onClick={() => add(product.id, count)}
                         >
                             <ShoppingBag size={18} /> Adicionar ao carrinho

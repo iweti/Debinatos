@@ -80,7 +80,7 @@ O catálogo vazio é exibido sem produtos fictícios. Falhas de conexão apresen
 
 Configure `WHATSAPP_PHONE` com código do país, DDD e número, apenas dígitos. Sem configuração válida, o botão fica desativado com o aviso “WhatsApp em breve”. Reinicie o desenvolvimento ou publique novamente após alterar a variável, que é lida no servidor.
 
-Os botões de contato abrem uma nova aba com nomes e quantidades do carrinho. Produtos indisponíveis ou quantidades acima do estoque exigem revisão. O contato não exige login, não envia a mensagem automaticamente, não esvazia o carrinho e não baixa estoque. Disponibilidade, envio, retirada e demais detalhes são combinados pelo WhatsApp.
+Os botões de contato abrem uma nova aba com nomes e quantidades do carrinho. A quantidade cadastrada no banco permanece como informação interna: não limita o carrinho, mesmo quando é zero. Produtos removidos ou desativados e quantidades inválidas exigem revisão. O contato não exige login, não envia a mensagem automaticamente, não esvazia o carrinho e não baixa estoque. Disponibilidade, envio, retirada e demais detalhes são confirmados na conversa pelo WhatsApp.
 
 ## Organização e validação
 

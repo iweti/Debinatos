@@ -45,7 +45,7 @@ export function ContactAction({ phone, showSelection = false }: { phone?: string
                         {!whatsappUrl(phone, 'contato') && <p>WhatsApp em breve</p>}
                         {invalid && (
                             <p>
-                                Há produtos indisponíveis ou quantidades acima do estoque.{' '}
+                                Há produtos fora do catálogo ou quantidades inválidas.{' '}
                                 <Link className="text-brand underline underline-offset-4" href="/carrinho">
                                     Revise o carrinho
                                 </Link>{' '}

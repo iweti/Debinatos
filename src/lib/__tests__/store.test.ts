@@ -6,23 +6,24 @@ import { createStoreState } from './fixtures/store'
 
 afterEach(() => vi.unstubAllGlobals())
 
-describe('Carrinho e estoque', () => {
-    it('acumula quantidades sem ultrapassar estoque e permite remover um item', () => {
+describe('Carrinho de interesse', () => {
+    it('acumula e altera quantidades acima do estoque cadastrado e permite remover um item', () => {
         const original = createStoreState()
         const first = original.products[0]
-        const state = addToCart(addToCart(original, first.id, 2), first.id, 1)
-        expect(state.cart).toEqual([{ productId: first.id, quantity: 3 }])
+        const state = addToCart(addToCart(original, first.id, 2), first.id, first.stock + 1)
+        expect(state.cart).toEqual([{ productId: first.id, quantity: first.stock + 3 }])
         expect(original.cart).toEqual([])
-        expect(() => addToCart(state, first.id, first.stock)).toThrow('estoque')
+        expect(setQuantity(state, first.id, first.stock + 10).cart).toEqual([{ productId: first.id, quantity: first.stock + 10 }])
         expect(() => setQuantity(state, first.id, 1.5)).toThrow('Quantidade')
         expect(setQuantity(state, first.id, 0).cart).toEqual([])
     })
-    it('bloqueia produto esgotado, desativado e quantidade negativa', () => {
+    it('permite produto sem estoque e bloqueia produto desativado e quantidades inválidas', () => {
         const state = createStoreState()
-        expect(() => addToCart(state, 'produto-3')).toThrow('estoque')
+        expect(addToCart(state, 'produto-3', 10).cart).toEqual([{ productId: 'produto-3', quantity: 10 }])
         state.products[0].active = false
         expect(() => addToCart(state, state.products[0].id)).toThrow('disponível')
-        expect(() => addToCart(state, state.products[1].id, -1)).toThrow('estoque')
+        expect(() => addToCart(state, state.products[1].id, -1)).toThrow('Quantidade')
+        expect(() => addToCart(state, state.products[1].id, Infinity)).toThrow('Quantidade')
     })
 })
 

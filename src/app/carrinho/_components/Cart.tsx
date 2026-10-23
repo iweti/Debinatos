@@ -48,9 +48,9 @@ export function Cart({ phone }: { phone?: string }) {
                                         <Link href={`/produto/${item.productId}`}>
                                             <h3 className="my-1.5 font-serif text-[15px] font-medium md:text-[17px]">{product?.name ?? 'Produto removido'}</h3>
                                         </Link>
-                                        {(!product?.active || item.quantity > product.stock) && (
+                                        {!product?.active && (
                                             <span className="my-3 leading-relaxed block text-[11px] text-muted">
-                                                Indisponível ou estoque insuficiente. Remova ou ajuste o item.
+                                                Produto fora do catálogo. Remova o item do carrinho.
                                             </span>
                                         )}
                                         <button
@@ -64,7 +64,7 @@ export function Cart({ phone }: { phone?: string }) {
                                         <Quantity
                                             compact
                                             value={item.quantity}
-                                            max={product?.active ? product.stock : 0}
+                                            disabled={!product?.active}
                                             onChange={(count) => quantity(item.productId, count)}
                                             name={product?.name ?? 'produto'}
                                         />

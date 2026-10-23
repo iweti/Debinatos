@@ -7,8 +7,9 @@ import { createStoreState } from './fixtures/store'
 const phone = '5511999999999'
 
 describe('Consulta pelo WhatsApp', () => {
-    it('inclui nomes, quantidades e caracteres especiais sem preços', () => {
+    it.each([0, 1])('inclui nomes e quantidades acima do estoque cadastrado (%i) na consulta', (stock) => {
         const state = createStoreState()
+        state.products[0].stock = stock
         state.products[0].name = 'Terrário Ursos Polares & Cia #1'
         state.products[1].name = 'Mini Aquário de Urso'
         const cart = [
@@ -36,13 +37,12 @@ describe('Consulta pelo WhatsApp', () => {
         expect(whatsappUrl(number, PERSONALIZED_MESSAGE)).toBeUndefined()
     })
 
-    it.each(['removed', 'inactive', 'stock', 'zero', 'fraction', 'negative'] as const)('exige revisão para seleção inválida: %s', (scenario) => {
+    it.each(['removed', 'inactive', 'zero', 'fraction', 'negative'] as const)('exige revisão para seleção inválida: %s', (scenario) => {
         const state = createStoreState()
         const product = state.products[0]
         const item = { productId: product.id, quantity: 2 }
         if (scenario === 'removed') item.productId = 'removido'
         if (scenario === 'inactive') product.active = false
-        if (scenario === 'stock') product.stock = 1
         if (scenario === 'zero') item.quantity = 0
         if (scenario === 'fraction') item.quantity = 1.5
         if (scenario === 'negative') item.quantity = -1

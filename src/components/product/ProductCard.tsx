@@ -28,7 +28,6 @@ export function ProductCard({ product }: { product: Product }) {
                         {product.badge === 'Queridinho' && <Sparkles size={12} />} {product.badge}
                     </span>
                 )}
-                {!product.stock && <span className="absolute inset-x-[20%] top-[45%] grid h-9 place-items-center bg-[#fffaf3ee] text-xs">Esgotado</span>}
                 <button
                     className="absolute top-2 right-2 grid size-7 place-items-center rounded-full border border-white/50 bg-[#fffef9ef] transition hover:scale-110 md:size-8 aria-pressed:text-brand"
                     onClick={() => favorite(product.id)}
@@ -46,7 +45,6 @@ export function ProductCard({ product }: { product: Product }) {
                 <div className="flex items-center justify-end gap-2">
                     <button
                         className="grid size-7 place-items-center rounded-full border border-[#e8d8cc] text-brand transition hover:border-brand hover:bg-brand hover:text-white md:size-7.5"
-                        disabled={!product.stock}
                         onClick={() => add(product.id)}
                         aria-label={`Adicionar ${product.name} ao carrinho`}
                     >

@@ -3,13 +3,13 @@ import { Minus, Plus } from 'lucide-react'
 
 export function Quantity({
     value,
-    max,
+    disabled = false,
     onChange,
     name,
     compact = false,
 }: {
     value: number
-    max: number
+    disabled?: boolean
     onChange: (quantity: number) => void
     name: string
     compact?: boolean
@@ -20,8 +20,8 @@ export function Quantity({
                 className="grid h-full w-7 place-items-center p-0 hover:bg-cream md:w-8"
                 type="button"
                 aria-label={`Diminuir quantidade de ${name}`}
-                disabled={value <= 1}
-                onClick={() => onChange(Math.min(value - 1, Math.max(1, max)))}
+                disabled={disabled || value <= 1}
+                onClick={() => onChange(value - 1)}
             >
                 <Minus size={14} />
             </button>
@@ -32,7 +32,7 @@ export function Quantity({
                 className="grid h-full w-7 place-items-center p-0 hover:bg-cream md:w-8"
                 type="button"
                 aria-label={`Aumentar quantidade de ${name}`}
-                disabled={value >= max}
+                disabled={disabled || value >= Number.MAX_SAFE_INTEGER}
                 onClick={() => onChange(value + 1)}
             >
                 <Plus size={14} />
