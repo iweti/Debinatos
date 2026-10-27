@@ -31,7 +31,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     let catalogError = false
     try {
         products = await getProducts()
-    } catch {
+    } catch (error) {
+        // Log only the message: driver error objects can contain connection credentials.
+        const message = error instanceof Error ? error.message : 'Erro desconhecido ao consultar os produtos.'
+        console.error('error: ', message)
         catalogError = true
     }
     return (
