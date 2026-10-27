@@ -9,6 +9,16 @@
 .viewport {
     overflow: hidden;
     touch-action: pan-y pinch-zoom;
+    cursor: grab;
+}
+
+.viewport[data-dragging='true'],
+.viewport[data-dragging='true'] * {
+    cursor: grabbing;
+}
+
+.viewport img {
+    user-select: none;
 }
 
 .track {
@@ -33,7 +43,7 @@
     display: block;
     width: var(--slide-width);
     /* Match ProductCard's photo ratio so controls ignore the text below it. */
-    aspect-ratio: .91;
+    aspect-ratio: 0.91;
 }
 
 .imageOverlay::after {
