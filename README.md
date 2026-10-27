@@ -94,7 +94,7 @@ O produto salva apenas URLs HTTPS de imagens da conta configurada. O formulário
 
 Início, catálogo, detalhes, favoritos e carrinho usam os produtos ativos do banco. O painel também mostra os desativados. Busca, categorias, destaques e ordenação por novidades continuam disponíveis. Mudanças no admin atualizam o painel e invalidam a vitrine; outras visitas ou recarregamentos recebem o catálogo atualizado.
 
-A home exibe até quatro favoritos ativos por `featured_order`. Em **Destaques**, o catálogo mostra todos os favoritos nessa sequência e depois os demais por data decrescente; busca e categorias preservam essa ordem. **Novidades** considera exclusivamente a data. ID desempata datas iguais. Favoritos pessoais do visitante permanecem independentes dessa configuração.
+A home exibe todos os favoritos ativos por `featured_order`: até quatro em grade e, a partir de cinco, em um carrossel contínuo sem reprodução automática. Em **Destaques**, o catálogo mostra todos os favoritos nessa sequência e depois os demais por data decrescente; busca e categorias preservam essa ordem. **Novidades** considera exclusivamente a data. ID desempata datas iguais. Favoritos pessoais do visitante permanecem independentes dessa configuração.
 
 Somente carrinho e favoritos ficam no `localStorage`, na chave `debinatos-visitor-v1`, com sincronização entre abas. Na primeira leitura, são recuperados os campos correspondentes de `debinatos-demo-v2` ou `debinatos-demo-v1`, sem importar catálogo, perfil ou login antigo. As chaves antigas são preservadas; a recuperação lê somente carrinho e favoritos, sem os utilitários antigos de demonstração.
 
