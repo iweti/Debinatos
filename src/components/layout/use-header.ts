@@ -7,14 +7,12 @@ import { useStore } from '@/lib/state/store-context'
 
 export function useHeader() {
     const { state } = useStore()
-    const [mobileMenu, setMobileMenu] = useState(false)
     const [searchOpen, setSearchOpen] = useState(false)
     const [query, setQuery] = useState('')
     const pathname = usePathname()
     const router = useRouter()
     const count = state.cart.reduce((sum, item) => sum + item.quantity, 0)
     useEffect(() => {
-        setMobileMenu(false)
         setSearchOpen(false)
     }, [pathname])
     const favoriteCount = state.favorites.length
@@ -25,8 +23,6 @@ export function useHeader() {
     }
     return {
         pathname,
-        mobileMenu,
-        setMobileMenu,
         searchOpen,
         setSearchOpen,
         query,

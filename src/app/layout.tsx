@@ -7,6 +7,7 @@ import type { ReactNode } from 'react'
 import { DemoBanner } from '@/components/layout/DemoBanner'
 import { Footer } from '@/components/layout/Footer'
 import { Header } from '@/components/layout/Header'
+import { MobileNavigation } from '@/components/layout/MobileNavigation'
 import { CatalogContent } from '@/components/providers/CatalogContent'
 import { StoreProvider } from '@/components/providers/StoreProvider'
 import { Toast } from '@/components/ui/Toast'
@@ -39,7 +40,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     }
     return (
         <html lang="pt-BR">
-            <body>
+            <body className="pb-[calc(6rem+env(safe-area-inset-bottom))] lg:pb-0">
                 <StoreProvider products={products} catalogError={catalogError}>
                     <a className="fixed -top-24 left-4 z-100 bg-white p-4 focus:top-3" href="#conteudo">
                         Pular para o conteúdo
@@ -50,6 +51,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                         <CatalogContent>{children}</CatalogContent>
                     </main>
                     <Footer />
+                    <MobileNavigation />
                     <Toast />
                 </StoreProvider>
             </body>
