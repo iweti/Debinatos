@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: 'Todos os produtos' }
 export default function Page() {
     return (
         <Suspense fallback={<Loading />}>
-            <Catalog />
+            <Catalog phone={process.env.WHATSAPP_PHONE?.trim()} />
         </Suspense>
     )
 }
