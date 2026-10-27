@@ -27,16 +27,16 @@ export default function Page() {
                         <p>Tem uma dúvida ou uma ideia de presente? Vamos conversar e criar algo especial para você.</p>
                         <p>Pelo WhatsApp, você pode fazer seu pedido e combinar os detalhes, a entrega e os prazos diretamente com a Debinatos.</p>
                     </div>
-                    <div className="mt-7 max-w-md">
+                    <div className="mx-auto mt-7 max-w-md">
                         <ContactAction phone={process.env.WHATSAPP_PHONE?.trim()} />
                     </div>
                 </div>
                 <img
-                    className="mx-auto aspect-4/3 w-full max-w-64 object-cover md:max-w-96"
-                    src="/images/logo-debinatos-transparente.png"
+                    className="mx-auto h-auto w-full max-w-72 rounded-2xl object-contain md:max-w-96"
+                    src="/images/marca-debinatos.jpg"
                     alt="Debinatos — detalhes que encantam"
-                    width={340}
-                    height={120}
+                    width={1280}
+                    height={1280}
                 />
             </section>
         </div>
