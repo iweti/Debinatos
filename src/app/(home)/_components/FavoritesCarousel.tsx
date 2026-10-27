@@ -64,12 +64,12 @@ function LoopingFavorites({ products }: { products: Product[] }) {
     }, [api])
 
     return (
-        <section aria-label="Favoritos da Debinatos" aria-roledescription="carrossel">
-            <div className="mb-4 flex justify-end gap-2">
-                <button type="button" className={styles.arrow} aria-label="Ver produto anterior" onClick={() => api?.scrollPrev(reducedMotion.current)}>
+        <section className={styles.carousel} aria-label="Favoritos da Debinatos" aria-roledescription="carrossel">
+            <div className={styles.imageOverlay}>
+                <button type="button" className={`${styles.arrow} ${styles.previous}`} aria-label="Ver produto anterior" onClick={() => api?.scrollPrev(reducedMotion.current)}>
                     <ArrowLeft size={18} aria-hidden="true" />
                 </button>
-                <button type="button" className={styles.arrow} aria-label="Ver próximo produto" onClick={() => api?.scrollNext(reducedMotion.current)}>
+                <button type="button" className={`${styles.arrow} ${styles.next}`} aria-label="Ver próximo produto" onClick={() => api?.scrollNext(reducedMotion.current)}>
                     <ArrowRight size={18} aria-hidden="true" />
                 </button>
             </div>

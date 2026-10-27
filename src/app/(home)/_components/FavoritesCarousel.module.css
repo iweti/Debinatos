@@ -1,33 +1,78 @@
+.carousel {
+    --gap: 14px;
+    /* 2.5 card widths + two full gaps fill the viewport. */
+    --slide-width: calc((100% - 2 * var(--gap)) / 2.5);
+    position: relative;
+    isolation: isolate;
+}
+
 .viewport {
     overflow: hidden;
     touch-action: pan-y pinch-zoom;
 }
 
 .track {
-    --gap: 14px;
     display: flex;
 }
 
 .slide {
-    /* 2.5 card widths + two full gaps fill the viewport. */
-    flex: 0 0 calc((100% - 2 * var(--gap)) / 2.5);
+    flex: 0 0 var(--slide-width);
     min-width: 0;
     margin-right: var(--gap);
 }
 
+.imageOverlay {
+    position: absolute;
+    z-index: 1;
+    inset: 0 0 auto;
+    pointer-events: none;
+}
+
+.imageOverlay::before {
+    content: '';
+    display: block;
+    width: var(--slide-width);
+    /* Match ProductCard's photo ratio so controls ignore the text below it. */
+    aspect-ratio: .91;
+}
+
+.imageOverlay::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: calc(var(--slide-width) / 2);
+    background: linear-gradient(to right, transparent, white);
+}
+
 .arrow {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
     display: grid;
     width: 40px;
     height: 40px;
     place-items: center;
-    border: 1px solid var(--color-brand);
+    border: 1px solid color-mix(in srgb, var(--color-brand) 40%, transparent);
     border-radius: 50%;
     color: var(--color-brand);
+    background: rgb(255 255 255 / 65%);
+    pointer-events: auto;
     cursor: pointer;
 }
 
-.arrow:hover {
-    background: var(--color-cream);
+.previous {
+    left: 8px;
+}
+
+.next {
+    right: 8px;
+}
+
+.arrow:hover,
+.arrow:focus-visible {
+    border-color: var(--color-brand);
+    background: rgb(255 255 255 / 95%);
 }
 
 .arrow:focus-visible,
@@ -37,12 +82,10 @@
 }
 
 @media (min-width: 768px) {
-    .track {
+    .carousel {
         --gap: 24px;
-    }
-    .slide {
         /* 4.5 card widths + four full gaps fill the viewport. */
-        flex-basis: calc((100% - 4 * var(--gap)) / 4.5);
+        --slide-width: calc((100% - 4 * var(--gap)) / 4.5);
     }
 }
 
