@@ -1,5 +1,5 @@
 'use client'
-import { ArrowRight, MapPin, Truck } from 'lucide-react'
+import { ArrowRight, Eye, Heart, MapPin, Target, Truck } from 'lucide-react'
 import Link from 'next/link'
 
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
@@ -11,17 +11,27 @@ export function About() {
     return (
         <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
             <Breadcrumb items={[{ label: 'Sobre a Debinatos' }]} />
-            <div className="grid items-center gap-8 rounded-xl bg-[#fcf8f2] p-6 md:grid-cols-[220px_1fr] md:gap-10 md:p-10 lg:grid-cols-[260px_1fr] lg:gap-14">
+            <div className="grid items-center gap-8 rounded-2xl border border-brand/15 bg-cream p-6 md:grid-cols-[220px_1fr] md:gap-10 md:p-10 lg:grid-cols-[260px_1fr] lg:gap-14">
                 <img className="mx-auto w-52 rounded-t-[140px] rounded-b-xl md:w-full" src="/images/marca-debinatos.jpg" alt="Logo e mascote da Debinatos" />
                 <div>
                     <PageHeading eyebrow="DEBINATOS" title="Nossa história, nossa essência e nosso futuro">
                         Pequenos detalhes, grandes sentimentos.
                     </PageHeading>
+                    <div className="mt-6 space-y-4 text-sm text-muted md:text-[15px]">
+                        <p>
+                            A Debinatos representa a união entre o conhecimento de um filho e a criatividade de uma mãe. Nossa essência está nessa história
+                            verdadeira, com pessoas reais por trás de cada produto.
+                        </p>
+                        <blockquote className="border-l-2 border-brand pl-5 font-serif text-xl text-brand md:text-2xl">
+                            <p>“De um projeto universitário a um sonho em família.”</p>
+                        </blockquote>
+                        <p>Essa frase traduz nossa origem e os laços familiares que inspiram cada criação.</p>
+                    </div>
                 </div>
             </div>
-            <article className="mx-auto max-w-3xl space-y-10 pt-10 text-sm text-muted md:space-y-14 md:pt-14 md:text-[15px]">
-                <section>
-                    <h2 className="mb-5 text-ink">1. Nossa história</h2>
+            <article className="space-y-10 pt-10 text-sm text-muted md:space-y-14 md:pt-14 md:text-[15px]">
+                <section className="mx-auto max-w-3xl">
+                    <h2 className="mb-5 text-ink">Nossa história</h2>
                     <div className="space-y-4">
                         <p className="font-medium text-ink">Uma ideia que nasceu na universidade e ganhou vida em família.</p>
                         <p>Toda grande história tem um começo. A nossa começou de uma maneira especial: por meio de um projeto de extensão universitária.</p>
@@ -65,89 +75,119 @@ export function About() {
                         <p>Somos a Debinatos. Uma história de família, criatividade e sonhos que ganham forma.</p>
                     </div>
                 </section>
-                <section>
-                    <h2 className="mb-5 text-ink">2. Nossa missão</h2>
-                    <div className="space-y-4">
-                        <p className="font-medium text-ink">Transformar criatividade e dedicação em produtos que encantam e aproximam pessoas.</p>
-                        <p>
-                            Desenvolver e oferecer produtos artesanais, personalizados e criativos, valorizando o cuidado em cada detalhe, a originalidade e o
-                            carinho presente em cada criação.
-                        </p>
-                        <p>
-                            Buscamos proporcionar experiências que ultrapassem o ato de comprar, fazendo parte de momentos especiais e construindo relações de
-                            confiança com nossos clientes.
-                        </p>
-                    </div>
-                </section>
-                <section>
-                    <h2 className="mb-5 text-ink">3. Nossa visão</h2>
-                    <div className="space-y-4">
-                        <p className="font-medium text-ink">
-                            Ser uma marca reconhecida pela criatividade, autenticidade e pelo cuidado que transforma cada produto em algo especial.
-                        </p>
-                        <p>
-                            Expandir nossa presença no mercado de produtos artesanais, criativos e personalizados, alcançando novos públicos e oportunidades,
-                            sem perder nossas raízes familiares e o compromisso com a qualidade.
-                        </p>
-                        <p>
-                            Queremos construir uma marca duradoura, capaz de inspirar pessoas e demonstrar que grandes realizações podem nascer de pequenas
-                            iniciativas.
-                        </p>
-                    </div>
-                </section>
-                <section>
-                    <h2 className="mb-5 text-ink">4. Nossos valores</h2>
-                    <div className="space-y-6">
-                        <div>
-                            <h3 className="mb-2 text-ink">Família e união</h3>
+                {/* ponytail: CSS grid and hover cover presentation; no interaction state needed. */}
+                <div className="grid items-start gap-6 lg:grid-cols-3">
+                    <section className="rounded-2xl border border-line bg-surface p-6 transition-shadow duration-200 hover:border-brand/30 hover:shadow-xl motion-safe:transition-[transform,box-shadow,border-color] motion-safe:hover:-translate-y-2 md:p-7">
+                        <h2 className="mb-6 flex items-center gap-3 text-xl text-ink md:text-2xl">
+                            <span
+                                className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand font-sans text-lg font-semibold tracking-normal text-white"
+                                aria-hidden="true"
+                            >
+                                <Target size={22} />
+                            </span>
+                            Nossa missão
+                        </h2>
+                        <div className="space-y-4">
+                            <p className="font-medium text-ink">Transformar criatividade e dedicação em produtos que encantam e aproximam pessoas.</p>
                             <p>
-                                Nossa história nasceu da colaboração familiar. Acreditamos que o respeito, o apoio mútuo e a união são fundamentais para
-                                construir relações verdadeiras e duradouras.
+                                Desenvolver e oferecer produtos artesanais, personalizados e criativos, valorizando o cuidado em cada detalhe, a originalidade e
+                                o carinho presente em cada criação.
+                            </p>
+                            <p>
+                                Buscamos proporcionar experiências que ultrapassem o ato de comprar, fazendo parte de momentos especiais e construindo relações
+                                de confiança com nossos clientes.
                             </p>
                         </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Criatividade e originalidade</h3>
+                    </section>
+                    <section className="rounded-2xl border border-line bg-surface p-6 transition-shadow duration-200 hover:border-brand/30 hover:shadow-xl motion-safe:transition-[transform,box-shadow,border-color] motion-safe:hover:-translate-y-2 md:p-7">
+                        <h2 className="mb-6 flex items-center gap-3 text-xl text-ink md:text-2xl">
+                            <span
+                                className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand font-sans text-lg font-semibold tracking-normal text-white"
+                                aria-hidden="true"
+                            >
+                                <Eye size={22} />
+                            </span>
+                            Nossa visão
+                        </h2>
+                        <div className="space-y-4">
+                            <p className="font-medium text-ink">
+                                Ser uma marca reconhecida pela criatividade, autenticidade e pelo cuidado que transforma cada produto em algo especial.
+                            </p>
                             <p>
-                                Valorizamos a liberdade de imaginar, desenvolver e transformar ideias em produtos que expressem personalidade e despertem
-                                sentimentos.
+                                Expandir nossa presença no mercado de produtos artesanais, criativos e personalizados, alcançando novos públicos e
+                                oportunidades, sem perder nossas raízes familiares e o compromisso com a qualidade.
+                            </p>
+                            <p>
+                                Queremos construir uma marca duradoura, capaz de inspirar pessoas e demonstrar que grandes realizações podem nascer de pequenas
+                                iniciativas.
                             </p>
                         </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Carinho em cada detalhe</h3>
-                            <p>
-                                Reconhecemos que cada produto representa uma oportunidade de proporcionar alegria. Por isso, buscamos colocar dedicação e
-                                atenção em tudo o que fazemos.
-                            </p>
+                    </section>
+                    <section className="rounded-2xl border border-line bg-surface p-6 transition-shadow duration-200 hover:border-brand/30 hover:shadow-xl motion-safe:transition-[transform,box-shadow,border-color] motion-safe:hover:-translate-y-2 md:p-7">
+                        <h2 className="mb-6 flex items-center gap-3 text-xl text-ink md:text-2xl">
+                            <span
+                                className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand font-sans text-lg font-semibold tracking-normal text-white"
+                                aria-hidden="true"
+                            >
+                                <Heart size={22} />
+                            </span>
+                            Nossos valores
+                        </h2>
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="mb-2 text-ink">Família e união</h3>
+                                <p>
+                                    Nossa história nasceu da colaboração familiar. Acreditamos que o respeito, o apoio mútuo e a união são fundamentais para
+                                    construir relações verdadeiras e duradouras.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 className="mb-2 text-ink">Criatividade e originalidade</h3>
+                                <p>
+                                    Valorizamos a liberdade de imaginar, desenvolver e transformar ideias em produtos que expressem personalidade e despertem
+                                    sentimentos.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 className="mb-2 text-ink">Carinho em cada detalhe</h3>
+                                <p>
+                                    Reconhecemos que cada produto representa uma oportunidade de proporcionar alegria. Por isso, buscamos colocar dedicação e
+                                    atenção em tudo o que fazemos.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 className="mb-2 text-ink">Ética e transparência</h3>
+                                <p>
+                                    Conduzimos nossas atividades com honestidade, responsabilidade e respeito, valorizando a confiança de nossos clientes e
+                                    parceiros.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 className="mb-2 text-ink">Empreendedorismo e aprendizado</h3>
+                                <p>
+                                    Nascemos de uma iniciativa acadêmica e acreditamos no conhecimento como ferramenta de transformação. Buscamos aprender
+                                    continuamente, superar desafios e encontrar novas oportunidades.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 className="mb-2 text-ink">Qualidade e compromisso</h3>
+                                <p>
+                                    Trabalhamos para oferecer produtos que atendam às expectativas de nossos clientes, respeitando nossos compromissos e
+                                    buscando a melhoria contínua.
+                                </p>
+                            </div>
+                            <div>
+                                <h3 className="mb-2 text-ink">Valorização das pessoas</h3>
+                                <p>
+                                    Acreditamos que cada pessoa possui uma história única. Por isso, buscamos construir relações próximas, acolhedoras e
+                                    humanas.
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Ética e transparência</h3>
-                            <p>
-                                Conduzimos nossas atividades com honestidade, responsabilidade e respeito, valorizando a confiança de nossos clientes e
-                                parceiros.
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Empreendedorismo e aprendizado</h3>
-                            <p>
-                                Nascemos de uma iniciativa acadêmica e acreditamos no conhecimento como ferramenta de transformação. Buscamos aprender
-                                continuamente, superar desafios e encontrar novas oportunidades.
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Qualidade e compromisso</h3>
-                            <p>
-                                Trabalhamos para oferecer produtos que atendam às expectativas de nossos clientes, respeitando nossos compromissos e buscando a
-                                melhoria contínua.
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Valorização das pessoas</h3>
-                            <p>Acreditamos que cada pessoa possui uma história única. Por isso, buscamos construir relações próximas, acolhedoras e humanas.</p>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <h2 className="mb-5 text-ink">5. Nosso propósito</h2>
+                    </section>
+                </div>
+                <section className="mx-auto max-w-3xl">
+                    <h2 className="mb-5 text-ink">Nosso propósito</h2>
                     <div className="space-y-4">
                         <p className="font-medium text-ink">
                             Transformar ideias em criações que carregam sentimentos, valorizando a criatividade, os laços familiares e a beleza dos pequenos
@@ -159,19 +199,6 @@ export function About() {
                             outras pessoas.
                         </p>
                         <p>Porque, para nós, cada criação representa mais do que aquilo que se vê: representa dedicação, afeto e a realização de um sonho.</p>
-                    </div>
-                </section>
-                <section className="rounded-xl bg-[#fcf8f2] p-6 md:p-8">
-                    <h2 className="mb-5 text-ink">6. O significado da Debinatos</h2>
-                    <div className="space-y-4">
-                        <p>
-                            A Debinatos representa a união entre o conhecimento de um filho e a criatividade de uma mãe. Nossa essência está nessa história
-                            verdadeira, com pessoas reais por trás de cada produto.
-                        </p>
-                        <blockquote className="border-l-2 border-brand pl-5 font-serif text-xl text-brand md:text-2xl">
-                            <p>“De um projeto universitário a um sonho em família.”</p>
-                        </blockquote>
-                        <p>Essa frase traduz nossa origem e os laços familiares que inspiram cada criação.</p>
                     </div>
                 </section>
                 <Link
