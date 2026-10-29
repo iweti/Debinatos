@@ -5,7 +5,7 @@ import { getAdmin } from '@/lib/server/auth'
 
 import { LoginForm } from './_components/LoginForm'
 
-export const metadata: Metadata = { title: 'Login administrativo', robots: { index: false, follow: false } }
+export const metadata: Metadata = { robots: { index: false, follow: false } }
 
 export default async function Page() {
     let admin = null
