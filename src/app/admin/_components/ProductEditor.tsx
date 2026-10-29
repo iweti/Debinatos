@@ -49,7 +49,6 @@ export function ProductEditor({ product, close, categories }: { product: Product
                             Nome do produto
                             <input
                                 className="text-xs"
-                                autoFocus
                                 required
                                 maxLength={100}
                                 value={name}
@@ -125,7 +124,7 @@ export function ProductEditor({ product, close, categories }: { product: Product
                                         className="inline-flex shrink-0 items-center justify-center rounded-full transition absolute top-1 right-1 size-6 bg-white"
                                         type="button"
                                         disabled={uploading || saving}
-                                        onClick={() => setImages(images.filter((_, index) => i !== index))}
+                                        onClick={() => setImages([...images.slice(0, i), ...images.slice(i + 1)])}
                                         aria-label={`Remover foto ${i + 1}`}
                                     >
                                         <X size={14} />

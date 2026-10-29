@@ -1,5 +1,4 @@
 'use client'
-import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
@@ -93,8 +92,8 @@ export function About() {
             <section className="mt-16 bg-[#f5efe6] py-12 md:mt-20 md:py-20">
                 <div className="mx-auto flex w-[calc(100%-36px)] max-w-310 flex-col items-center gap-10 text-center md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)]">
                     <h2 className="max-w-4xl text-3xl/tight text-ink md:text-4xl/tight lg:text-5xl/tight">
-                        Cada criação carrega 
-                        <br /> 
+                        Cada criação carrega
+                        <br />
                         um pouco da nossa história
                     </h2>
                     <p className="max-w-3xl text-ink md:text-lg/relaxed">

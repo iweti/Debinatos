@@ -91,7 +91,6 @@ export function Header() {
                     <input
                         className="min-w-0 flex-1 border-0 bg-surface text-xs"
                         id="header-search"
-                        autoFocus
                         placeholder="Encontre seu próximo encanto…"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}

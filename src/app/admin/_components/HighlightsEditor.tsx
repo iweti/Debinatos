@@ -79,7 +79,8 @@ export function HighlightsEditor({ products, editor }: { products: Product[]; ed
                         Favoritos da Debinatos
                     </h3>
                     <p className="mt-2 text-xs/relaxed  text-muted">
-                        Até quatro produtos ativos aparecem em grade na página inicial. Favoritos adicionais aparecem no carrossel. Todos seguem esta ordem no catálogo.
+                        Até quatro produtos ativos aparecem em grade na página inicial. Favoritos adicionais aparecem no carrossel. Todos seguem esta ordem no
+                        catálogo.
                     </p>
                     <label className="mt-5 block max-w-lg text-xs">
                         Adicionar produto ativo
