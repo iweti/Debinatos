@@ -12,11 +12,21 @@ const input = {
     material: 'Vidro',
     dimensions: '10 cm',
     stock: 1,
+    priceCents: 1990,
     active: true,
     images: [{ id: imageId, url: imageUrl }],
 }
 
 describe('Contrato do cadastro comum', () => {
+    it.each([undefined, null, '1990', 0, -1, 19.9, NaN, Infinity, 2147483648])('rejeita preço inválido: %s', (priceCents) => {
+        expect(parseProductInput({ ...input, priceCents }, () => true)).toBeUndefined()
+    })
+
+    it('aceita e preserva o preço obrigatório em centavos', () => {
+        expect(parseProductInput(input, () => true)?.priceCents).toBe(1990)
+        expect(parseProductInput({ ...input, priceCents: 1 }, () => true)?.priceCents).toBe(1)
+    })
+
     it('preserva referências de fotos, aceita novas URLs e ignora configurações de destaque recebidas', () => {
         const parsed = parseProductInput({ ...input, featured: true, featuredOrder: 1 }, () => true)
         expect(parsed?.name).toBe('Produto')

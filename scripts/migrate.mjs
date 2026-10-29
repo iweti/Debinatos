@@ -76,7 +76,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
     const connection = process.env.MIGRATION_DATABASE_URL || process.env.DATABASE_URL_UNPOOLED
     if (!connection || new URL(connection).hostname.includes('-pooler'))
         throw new Error('Use uma conexão direta em DATABASE_URL_UNPOOLED ou MIGRATION_DATABASE_URL.')
-    if (!/^00[1-4]_[\w]+\.sql$/.test(filename ?? '')) throw new Error('Informe o nome de uma migração versionada.')
+    if (!/^00[1-6]_[\w]+\.sql$/.test(filename ?? '')) throw new Error('Informe o nome de uma migração versionada.')
     const sql = neon(connection)
     const statements = await migrationStatements(filename)
     await sql.transaction(statements.map((statement) => sql.query(statement)))

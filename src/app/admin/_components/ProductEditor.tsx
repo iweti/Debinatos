@@ -15,6 +15,8 @@ export function ProductEditor({ product, close, categories }: { product: Product
         setCategory,
         stock,
         setStock,
+        price,
+        setPrice,
         description,
         setDescription,
         material,
@@ -75,6 +77,19 @@ export function ProductEditor({ product, close, categories }: { product: Product
                         <label className="text-[11px]">
                             Estoque
                             <input className="text-xs" required type="number" min="0" step="1" value={stock} onChange={(e) => setStock(e.target.value)} />
+                        </label>
+                        <label className="col-span-2 text-[11px]">
+                            Preço (R$)
+                            <input
+                                className="text-xs"
+                                name="price"
+                                required
+                                inputMode="decimal"
+                                maxLength={12}
+                                value={price}
+                                onChange={(event) => setPrice(event.target.value)}
+                                placeholder="Ex.: 19,90"
+                            />
                         </label>
                         <label className="text-[11px]">
                             Material

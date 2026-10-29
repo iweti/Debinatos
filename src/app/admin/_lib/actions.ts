@@ -55,7 +55,7 @@ export async function logout() {
 export async function saveProduct(value: ProductInput): Promise<ActionResult> {
     await requireAdmin()
     const input = parseProductInput(value, validImageUrl)
-    if (!input) return { error: 'Confira os campos, o estoque inteiro e as fotos do Cloudinary.' }
+    if (!input) return { error: 'Confira os campos, o preço maior que zero, o estoque inteiro e as fotos do Cloudinary.' }
     try {
         const sql = database()
         const { id, images, ...data } = input

@@ -3,6 +3,7 @@ import { Heart, Plus, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
 import { Photo } from '@/components/product/Photo'
+import { formatMoney } from '@/lib/domain/money'
 import type { Product } from '@/lib/types/store'
 
 import { useProductCard } from './use-product-card'
@@ -42,7 +43,8 @@ export function ProductCard({ product }: { product: Product }) {
                 <Link href={`/produto/${product.id}`}>
                     <h3 className="mt-1 mb-2 font-serif text-[15px] font-medium tracking-tight hover:text-brand md:text-[17px]">{product.name}</h3>
                 </Link>
-                <div className="flex items-center justify-end gap-2">
+                <div className="flex items-center justify-between gap-2">
+                    <p className="text-sm font-semibold text-brand md:text-base">{formatMoney(product.priceCents)}</p>
                     <button
                         className="grid size-7 place-items-center rounded-full border border-[#e8d8cc] text-brand transition hover:border-brand hover:bg-brand hover:text-white md:size-7.5"
                         onClick={() => add(product.id)}

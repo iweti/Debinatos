@@ -37,12 +37,20 @@ Aplique uma única vez, na ordem, os arquivos SQL versionados:
 2. `migrations/002_products.sql`: tabela de produtos, validação de quantidade e lista de imagens.
 3. `migrations/003_product_images_highlights.sql`: converte as URLs para `product_images`, preserva a ordem dos destaques e vincula o hero aos IDs das fotos. Reconcilia também o schema parcialmente implementado no `dev`.
 4. `migrations/004_remove_legacy_images.sql`: remove `products.img` e `hero_products.image_url`, somente após publicar e validar a aplicação que usa `product_images`.
+5. `migrations/005_product_prices.sql`: adiciona `price_cents` e atualiza a gravação atômica para exigir preço positivo em centavos.
+6. `migrations/006_require_product_prices.sql`: torna o preço obrigatório no banco, após preencher os produtos existentes.
 
 As migrações não criam usuários nem produtos e não são executadas automaticamente no build ou na inicialização. O catálogo começa vazio. Aplique e valide primeiro em uma branch de desenvolvimento, usando conexão direta; depois aplique os mesmos arquivos na branch de produção antes de publicar a aplicação.
 
 Nesta implementação, `.neon` e as conexões locais apontam para a branch `dev` do projeto existente. A branch é temporária: confira sua expiração no Neon antes de reutilizá-la. A branch `production` não foi alterada por esta implementação. `.neon` e `.env.local` não são versionados.
 
 A tabela `products` contém os dados do produto e `featured`/`featured_order`, que devem permanecer sincronizados. As fotos ficam em `product_images` (`id`, `product_id`, `url`, `position`), com posição única por produto. `Product.images` contém objetos `{ id, url, position }` ordenados; a primeira foto é a capa. Quantidades são inteiras e não negativas.
+
+O contrato de `Product` e `ProductInput` inclui `priceCents`: inteiro de 1 a 2.147.483.647, correspondente a `products.price_cents`. A Server Action `saveProduct` valida esse campo antes de acessar o banco; `save_store_product` exige o mesmo campo no JSON tanto na criação quanto na edição. O formulário aceita reais com vírgula ou ponto, com no máximo duas casas decimais. Cards, detalhes, painel e carrinho exibem os valores em reais. Os totais usam `bigint` em centavos para preservar a precisão mesmo com grandes quantidades, sem alterar a mensagem do WhatsApp.
+
+Na branch `dev`, aplique a migração 005, preencha os preços e depois aplique a 006. Para os valores fictícios autorizados (R$ 19,90, R$ 29,90 e R$ 49,90), use `node --env-file=.env.local scripts/seed-dev-prices.mjs`. O script confere projeto, branch e endpoint e preenche somente preços ausentes, incluindo produtos inativos. Ele não faz parte das migrações de produção. Valide com `node --env-file=.env.local scripts/validate-prices.mjs`: os testes SQL são revertidos e a reexecução do preenchimento não altera preços existentes. Em produção, preencha preços reais entre as migrações 005 e 006 antes de publicar a aplicação; esta alteração foi aplicada somente na `dev`.
+
+O carrinho armazena apenas IDs e quantidades. Produtos ausentes ou desativados são removidos ao recuperar os dados locais, atualizar o catálogo ou sincronizar outra aba; favoritos e produtos ativos sem estoque são preservados. Falhas ao carregar o catálogo não provocam limpeza. Se a persistência local falhar, a limpeza permanece na tela e um aviso informa que não foi possível salvá-la.
 
 `hero_products` contém as posições `primary` e `secondary`, com `product_id` e `image_id`. A chave estrangeira composta impede escolher uma foto de outro produto. Remover uma foto limpa apenas `image_id`, mantendo o produto para usar sua primeira foto disponível. Limpar a seleção remove ambas as referências; produto desativado usa a foto padrão. As duas posições podem usar fotos do mesmo produto.
 

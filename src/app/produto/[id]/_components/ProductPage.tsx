@@ -6,6 +6,7 @@ import { ProductCard } from '@/components/product/ProductCard'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Quantity } from '@/components/ui/Quantity'
+import { formatMoney } from '@/lib/domain/money'
 
 import { useProduct } from '../_lib/use-product'
 
@@ -52,6 +53,7 @@ export function ProductPage() {
                         {product.category}
                     </span>
                     <h1 className="mb-5 text-[33px] lg:text-[39px]">{product.name}</h1>
+                    <p className="mb-5 text-2xl font-semibold text-brand lg:text-3xl">{formatMoney(product.priceCents)}</p>
                     <p className="mb-5 text-xs leading-[1.9] text-muted lg:text-[13px]">{product.description}</p>
                     <p className="text-[10px] text-muted">Disponibilidade a confirmar pelo WhatsApp.</p>
                     <div className="my-6 flex flex-wrap items-center gap-2 lg:flex-nowrap">

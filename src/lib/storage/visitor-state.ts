@@ -1,4 +1,5 @@
-import type { VisitorState } from '../types/store'
+import { reconcileVisitor } from '../domain/cart'
+import type { Product, VisitorState } from '../types/store'
 
 export const VISITOR_STORAGE_KEY = 'debinatos-visitor-v1'
 export const VISITOR_LEGACY_KEYS = ['debinatos-demo-v2', 'debinatos-demo-v1']
@@ -41,5 +42,17 @@ export function writeVisitor(state: VisitorState) {
         localStorage.setItem(VISITOR_STORAGE_KEY, JSON.stringify({ cart: state.cart, favorites: state.favorites }))
     } catch {
         throw new Error('Não foi possível salvar no navegador. Verifique o espaço disponível e permita o armazenamento local.')
+    }
+}
+
+export function readVisitorForCatalog(products: Product[], catalogError: boolean): { state: VisitorState; warning?: string } {
+    const loaded = readVisitor()
+    const state = reconcileVisitor(loaded.state, products, catalogError)
+    if (state === loaded.state) return loaded
+    try {
+        writeVisitor(state)
+        return { state, warning: loaded.warning }
+    } catch (error) {
+        return { state, warning: error instanceof Error ? error.message : 'Não foi possível salvar no navegador.' }
     }
 }

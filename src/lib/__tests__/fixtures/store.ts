@@ -11,6 +11,7 @@ export function createStoreState(): StoreState {
             dimensions: '10 cm',
             images: [{ id: `foto-${index + 1}`, url: 'https://res.cloudinary.com/test/image/upload/produto.webp', position: 1 }],
             stock,
+            priceCents: [1990, 2990, 4990][index],
             active: true,
             featured: false,
             featuredOrder: null,
