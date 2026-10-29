@@ -1,11 +1,8 @@
-import type { Metadata } from 'next'
 import { Suspense } from 'react'
 
 import { Loading } from '@/components/ui/Loading'
 
 import { About } from './_components/About'
-
-export const metadata: Metadata = { title: 'Nossa história' }
 
 export default function Page() {
     return (

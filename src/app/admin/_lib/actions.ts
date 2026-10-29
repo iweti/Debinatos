@@ -11,7 +11,7 @@ import { imageService, validImageUrl } from '@/lib/server/cloudinary'
 import { database } from '@/lib/server/db'
 import type { ActionResult, HighlightsInput, ProductInput } from '@/lib/types/admin'
 
-export async function login(_previous: ActionResult, form: FormData): Promise<ActionResult> {
+export async function login(...[, form]: [ActionResult, FormData]): Promise<ActionResult> {
     const email = form.get('email')
     const password = form.get('password')
     if (

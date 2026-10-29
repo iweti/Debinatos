@@ -15,10 +15,7 @@ import { getProducts } from '@/lib/server/products'
 import type { Product } from '@/lib/types/store'
 
 export const metadata: Metadata = {
-    title: {
-        default: 'Debinatos • Pequenos detalhes, grandes encantos',
-        template: 'Debinatos | %s',
-    },
+    title: 'Debinatos',
     description: 'Artesanatos, bijuterias e itens personalizados feitos com amor, qualidade e exclusividade. Envios para todo o Brasil.',
     icons: { icon: { url: '/favicon.png', sizes: '128x128', type: 'image/png' } },
     robots: { index: false, follow: false },
