@@ -19,85 +19,65 @@ export function About() {
                     </PageHeading>
                 </div>
             </div>
-            <article className="mx-auto max-w-3xl space-y-10 pt-10 text-sm text-muted md:space-y-14 md:pt-14 md:text-[15px]">
+            <article className="max-w-full space-y-8 pt-10 text-sm text-muted md:space-y-10 md:pt-14 md:text-[15px]">
                 <section>
-                    <h2 className="mb-5 text-ink">1. Nossa história</h2>
-                    <div className="space-y-4">
-                        <p className="font-medium text-ink">Uma ideia que nasceu na universidade e ganhou vida em família.</p>
-                        <p>Toda grande história tem um começo. A nossa começou de uma maneira especial: por meio de um projeto de extensão universitária.</p>
+                    <h2 className="mb-4 text-ink">Nossa história</h2>
+                    <div className="space-y-3">
                         <p>
-                            O que inicialmente surgiu como uma iniciativa acadêmica tornou-se uma oportunidade de unir conhecimento, criatividade e
-                            empreendedorismo, dando os primeiros passos para a construção de algo que pudesse ir além das salas de aula.
+                            <span className="font-medium text-ink">Uma ideia que nasceu na universidade e ganhou vida em família.</span> Toda grande história
+                            tem um começo. A nossa começou de uma maneira especial: por meio de um projeto de extensão universitária. O que inicialmente surgiu
+                            como uma iniciativa acadêmica tornou-se uma oportunidade de unir conhecimento, criatividade e empreendedorismo, dando os primeiros
+                            passos para a construção de algo que pudesse ir além das salas de aula.
                         </p>
                         <p>
                             Foi nesse contexto que nasceu a Debinatos, uma marca que carrega em sua essência não apenas o desejo de empreender, mas também o
-                            valor dos laços familiares.
-                        </p>
-                        <p>
-                            De um lado, Vitor, um jovem universitário que encontrou no projeto uma oportunidade de transformar conhecimento em uma iniciativa
-                            empreendedora. Do outro, sua mãe, Débora, responsável pelo coração criativo da Debinatos, dando vida aos produtos por meio de suas
-                            habilidades, dedicação e sensibilidade.
-                        </p>
-                        <p>
-                            Essa união representa muito do que acreditamos: que diferentes talentos, quando caminham juntos, podem transformar ideias em
-                            realizações.
+                            valor dos laços familiares. De um lado, Vitor, um jovem universitário que encontrou no projeto uma oportunidade de transformar
+                            conhecimento em uma iniciativa empreendedora. Do outro, sua mãe, Débora, responsável pelo coração criativo da Debinatos, dando vida
+                            aos produtos por meio de suas habilidades, dedicação e sensibilidade. Essa união representa muito do que acreditamos: que diferentes
+                            talentos, quando caminham juntos, podem transformar ideias em realizações.
                         </p>
                         <p>
                             Na Debinatos, cada criação carrega um pouco dessa história. Por trás dos produtos, existem mãos que criam, ideias que se desenvolvem
-                            e uma família que participa da construção de um sonho.
-                        </p>
-                        <p>
-                            Nosso trabalho vai além da produção e comercialização de artigos artesanais, presentes e produtos personalizados. Buscamos oferecer
-                            peças que despertem sentimentos, transmitam carinho e façam parte de momentos especiais.
-                        </p>
-                        <p>
-                            Acreditamos que a criatividade é uma forma de expressão e que os pequenos detalhes têm o poder de transformar experiências simples
-                            em lembranças significativas.
+                            e uma família que participa da construção de um sonho. Nosso trabalho vai além da produção e comercialização de artigos artesanais,
+                            presentes e produtos personalizados. Buscamos oferecer peças que despertem sentimentos, transmitam carinho e façam parte de momentos
+                            especiais. Acreditamos que a criatividade é uma forma de expressão e que os pequenos detalhes têm o poder de transformar
+                            experiências simples em lembranças significativas.
                         </p>
                         <p>
                             Hoje, a Debinatos representa o encontro entre gerações, conhecimentos e sonhos. Uma marca que nasceu de uma oportunidade acadêmica e
-                            encontrou na criatividade e na união familiar a inspiração para construir seu próprio caminho.
+                            encontrou na criatividade e na união familiar a inspiração para construir seu próprio caminho. E, embora nossa história ainda esteja
+                            sendo escrita, temos a certeza de que cada novo produto, cada cliente e cada conquista representam mais um capítulo dessa
+                            trajetória. Somos a Debinatos. Uma história de família, criatividade e sonhos que ganham forma.
                         </p>
-                        <p>
-                            E, embora nossa história ainda esteja sendo escrita, temos a certeza de que cada novo produto, cada cliente e cada conquista
-                            representam mais um capítulo dessa trajetória.
-                        </p>
-                        <p>Somos a Debinatos. Uma história de família, criatividade e sonhos que ganham forma.</p>
                     </div>
                 </section>
                 <section>
-                    <h2 className="mb-5 text-ink">2. Nossa missão</h2>
-                    <div className="space-y-4">
-                        <p className="font-medium text-ink">Transformar criatividade e dedicação em produtos que encantam e aproximam pessoas.</p>
+                    <h2 className="mb-4 text-ink">Nossa missão</h2>
+                    <div className="space-y-3">
                         <p>
+                            <span className="font-medium text-ink">Transformar criatividade e dedicação em produtos que encantam e aproximam pessoas.</span>{' '}
                             Desenvolver e oferecer produtos artesanais, personalizados e criativos, valorizando o cuidado em cada detalhe, a originalidade e o
-                            carinho presente em cada criação.
-                        </p>
-                        <p>
-                            Buscamos proporcionar experiências que ultrapassem o ato de comprar, fazendo parte de momentos especiais e construindo relações de
-                            confiança com nossos clientes.
+                            carinho presente em cada criação. Buscamos proporcionar experiências que ultrapassem o ato de comprar, fazendo parte de momentos
+                            especiais e construindo relações de confiança com nossos clientes.
                         </p>
                     </div>
                 </section>
                 <section>
-                    <h2 className="mb-5 text-ink">3. Nossa visão</h2>
-                    <div className="space-y-4">
-                        <p className="font-medium text-ink">
-                            Ser uma marca reconhecida pela criatividade, autenticidade e pelo cuidado que transforma cada produto em algo especial.
-                        </p>
+                    <h2 className="mb-4 text-ink">Nossa visão</h2>
+                    <div className="space-y-3">
                         <p>
+                            <span className="font-medium text-ink">
+                                Ser uma marca reconhecida pela criatividade, autenticidade e pelo cuidado que transforma cada produto em algo especial.
+                            </span>{' '}
                             Expandir nossa presença no mercado de produtos artesanais, criativos e personalizados, alcançando novos públicos e oportunidades,
-                            sem perder nossas raízes familiares e o compromisso com a qualidade.
-                        </p>
-                        <p>
-                            Queremos construir uma marca duradoura, capaz de inspirar pessoas e demonstrar que grandes realizações podem nascer de pequenas
-                            iniciativas.
+                            sem perder nossas raízes familiares e o compromisso com a qualidade. Queremos construir uma marca duradoura, capaz de inspirar
+                            pessoas e demonstrar que grandes realizações podem nascer de pequenas iniciativas.
                         </p>
                     </div>
                 </section>
                 <section>
-                    <h2 className="mb-5 text-ink">4. Nossos valores</h2>
-                    <div className="space-y-6">
+                    <h2 className="mb-4 text-ink">Nossos valores</h2>
+                    <div className="space-y-4">
                         <div>
                             <h3 className="mb-2 text-ink">Família e união</h3>
                             <p>
@@ -147,23 +127,22 @@ export function About() {
                     </div>
                 </section>
                 <section>
-                    <h2 className="mb-5 text-ink">5. Nosso propósito</h2>
-                    <div className="space-y-4">
-                        <p className="font-medium text-ink">
-                            Transformar ideias em criações que carregam sentimentos, valorizando a criatividade, os laços familiares e a beleza dos pequenos
-                            detalhes.
-                        </p>
-                        <p>A Debinatos existe para mostrar que o trabalho feito com dedicação pode ir além de um produto.</p>
+                    <h2 className="mb-4 text-ink">Nosso propósito</h2>
+                    <div className="space-y-3">
                         <p>
-                            Queremos participar de celebrações, demonstrar carinho por meio de nossas criações e levar um pouco da nossa história para a vida de
-                            outras pessoas.
+                            <span className="font-medium text-ink">
+                                Transformar ideias em criações que carregam sentimentos, valorizando a criatividade, os laços familiares e a beleza dos pequenos
+                                detalhes.
+                            </span>{' '}
+                            A Debinatos existe para mostrar que o trabalho feito com dedicação pode ir além de um produto. Queremos participar de celebrações,
+                            demonstrar carinho por meio de nossas criações e levar um pouco da nossa história para a vida de outras pessoas. Porque, para nós,
+                            cada criação representa mais do que aquilo que se vê: representa dedicação, afeto e a realização de um sonho.
                         </p>
-                        <p>Porque, para nós, cada criação representa mais do que aquilo que se vê: representa dedicação, afeto e a realização de um sonho.</p>
                     </div>
                 </section>
                 <section className="rounded-xl bg-[#fcf8f2] p-6 md:p-8">
-                    <h2 className="mb-5 text-ink">6. O significado da Debinatos</h2>
-                    <div className="space-y-4">
+                    <h2 className="mb-4 text-ink">O significado da Debinatos</h2>
+                    <div className="space-y-3">
                         <p>
                             A Debinatos representa a união entre o conhecimento de um filho e a criatividade de uma mãe. Nossa essência está nessa história
                             verdadeira, com pessoas reais por trás de cada produto.

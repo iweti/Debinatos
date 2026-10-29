@@ -11,7 +11,7 @@ export function Header() {
             <div className="mx-auto w-[calc(100%-36px)] max-w-310 md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] flex h-19 items-center justify-between gap-3 md:h-23 md:gap-6">
                 <Link className="inline-flex shrink-0 items-center" href="/" aria-label="Debinatos, início">
                     <img
-                        className="h-14 w-16 object-cover sm:h-18 sm:w-20.5 md:h-22.5 md:w-25.5"
+                        className="h-14 w-16 p-2 object-cover sm:h-18 sm:w-20.5 md:h-22.5 md:w-25.5"
                         src="/images/logo-debinatos-transparente.png"
                         width={340}
                         height={120}
