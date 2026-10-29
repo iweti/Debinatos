@@ -53,10 +53,10 @@ export function Footer() {
                     <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/contato">
                         Contato
                     </Link>
-                    <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/sobre#entregas">
+                    <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/contato#entregas">
                         Envio e retirada
                     </Link>
-                    <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/sobre#duvidas">
+                    <Link className="my-3 block text-[11px] text-muted hover:text-brand" href="/contato#duvidas">
                         Dúvidas frequentes
                     </Link>
                     <a className="my-3 block text-[11px] text-muted hover:text-brand" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">

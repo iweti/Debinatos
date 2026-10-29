@@ -1,11 +1,9 @@
 'use client'
-import { ArrowRight, MapPin, Truck } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { PageHeading } from '@/components/ui/PageHeading'
-import { INSTAGRAM_URL } from '@/lib/constants/brand'
-import { PICKUP_ADDRESS } from '@/lib/constants/store'
 
 export function About() {
     return (
@@ -15,7 +13,8 @@ export function About() {
                 <img className="mx-auto w-52 rounded-t-[140px] rounded-b-xl md:w-full" src="/images/marca-debinatos.jpg" alt="Logo e mascote da Debinatos" />
                 <div>
                     <PageHeading eyebrow="DEBINATOS" title="Nossa história, nossa essência e nosso futuro">
-                        Pequenos detalhes, grandes sentimentos.
+                        De um projeto universitário a um sonho em família: a Debinatos une o conhecimento de um filho à criatividade de uma mãe, transformando
+                        pequenos detalhes em grandes sentimentos.
                     </PageHeading>
                 </div>
             </div>
@@ -87,19 +86,6 @@ export function About() {
                         </p>
                     </div>
                 </section>
-                <section className="rounded-xl bg-[#fcf8f2] p-6 md:p-8">
-                    <h2 className="mb-4 text-ink">O significado da Debinatos</h2>
-                    <div className="space-y-3">
-                        <p>
-                            A Debinatos representa a união entre o conhecimento de um filho e a criatividade de uma mãe. Nossa essência está nessa história
-                            verdadeira, com pessoas reais por trás de cada produto.
-                        </p>
-                        <blockquote className="border-l-2 border-brand pl-5 font-serif text-xl text-brand md:text-2xl">
-                            <p>“De um projeto universitário a um sonho em família.”</p>
-                        </blockquote>
-                        <p>Essa frase traduz nossa origem e os laços familiares que inspiram cada criação.</p>
-                    </div>
-                </section>
                 <Link
                     className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark"
                     href="/catalogo"
@@ -107,69 +93,6 @@ export function About() {
                     Conhecer a coleção <ArrowRight size={16} />
                 </Link>
             </article>
-            <section id="entregas" className="scroll-mt-7 pt-12 md:pt-16">
-                <span className="inline-flex items-center gap-2 text-[9px] leading-relaxed font-semibold tracking-[.18em] text-brand uppercase">
-                    DO NOSSO CANTINHO PARA O SEU
-                </span>
-                <h2 className="mt-3 mb-7">Envio e retirada</h2>
-                <div className="grid gap-5 md:grid-cols-2">
-                    <article className="rounded-xl border border-line p-6 md:p-8">
-                        <Truck className="mb-5 text-brand" size={25} />
-                        <h3 className="mb-4 font-serif text-xl font-medium">Envios para todo o Brasil</h3>
-                        <p className="mt-3 text-xs text-muted">Entre em contato pelo WhatsApp para combinar as opções de envio e os prazos para sua região.</p>
-                    </article>
-                    <article className="rounded-xl border border-line p-6 md:p-8">
-                        <MapPin className="mb-5 text-brand" size={25} />
-                        <h3 className="mb-4 font-serif text-xl font-medium">Retire na loja</h3>
-                        <p className="mt-3 text-xs text-muted">Combine a retirada diretamente com a Debinatos pelo WhatsApp.</p>
-                        <p className="mt-3 text-xs text-muted">{PICKUP_ADDRESS}.</p>
-                    </article>
-                </div>
-            </section>
-            <section id="duvidas" className="scroll-mt-7 pt-12 md:pt-16">
-                <span className="inline-flex items-center gap-2 text-[9px] leading-relaxed font-semibold tracking-[.18em] text-brand uppercase">
-                    PODEMOS AJUDAR?
-                </span>
-                <h2 className="mt-3 mb-7">Dúvidas frequentes</h2>
-                {[
-                    {
-                        q: 'Onde meus favoritos e carrinho ficam salvos?',
-                        a: 'Apenas neste navegador e dispositivo. Limpar os dados do navegador remove seus favoritos e carrinho.',
-                    },
-                    {
-                        q: 'Como consulto os produtos que escolhi?',
-                        a: 'Adicione os produtos ao carrinho e toque em Consultar pelo WhatsApp. A mensagem incluirá os nomes e as quantidades para combinar os detalhes com a Debinatos.',
-                    },
-                    {
-                        q: 'Como falo com a loja?',
-                        a: (
-                            <>
-                                Conheça as peças e fale com a Debinatos pelo{' '}
-                                <a
-                                    className="inline-flex items-center gap-2 p-0 text-xs/relaxed  font-semibold text-brand hover:underline hover:underline-offset-4"
-                                    href={INSTAGRAM_URL}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Instagram @debinatos
-                                    <span className="sr-only"> (abre em nova aba)</span>
-                                </a>
-                                .
-                            </>
-                        ),
-                    },
-                ].map(({ q, a }) => (
-                    <details className="group border-b border-line py-5" key={q}>
-                        <summary className="flex cursor-pointer list-none justify-between gap-5 text-xs [&::-webkit-details-marker]:hidden">
-                            {q}
-                            <span className="text-xl leading-none text-brand group-open:rotate-45" aria-hidden="true">
-                                +
-                            </span>
-                        </summary>
-                        <p className="mt-4 max-w-187.5 text-xs text-muted">{a}</p>
-                    </details>
-                ))}
-            </section>
         </div>
     )
 }
