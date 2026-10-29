@@ -51,81 +51,28 @@ export function About() {
                         </p>
                     </div>
                 </section>
-                <section>
-                    <h2 className="mb-4 text-ink">Nossa missão</h2>
-                    <div className="space-y-3">
+                <div className="grid gap-5 md:grid-cols-3">
+                    <section className="group rounded-xl border border-line bg-[#fcf8f2] p-6 transition duration-300 ease-out hover:-translate-y-2 hover:border-brand hover:bg-brand hover:text-white hover:shadow-xl hover:shadow-brand/25 motion-reduce:transform-none motion-reduce:transition-none md:p-8">
+                        <h2 className="mb-4 text-ink transition-colors duration-300 group-hover:text-white motion-reduce:transition-none">Missão</h2>
                         <p>
-                            <span className="font-medium text-ink">Transformar criatividade e dedicação em produtos que encantam e aproximam pessoas.</span>{' '}
-                            Desenvolver e oferecer produtos artesanais, personalizados e criativos, valorizando o cuidado em cada detalhe, a originalidade e o
-                            carinho presente em cada criação. Buscamos proporcionar experiências que ultrapassem o ato de comprar, fazendo parte de momentos
-                            especiais e construindo relações de confiança com nossos clientes.
+                            Criar produtos artesanais e personalizados que encantam e aproximam pessoas, com originalidade, carinho e cuidado em cada detalhe.
                         </p>
-                    </div>
-                </section>
-                <section>
-                    <h2 className="mb-4 text-ink">Nossa visão</h2>
-                    <div className="space-y-3">
+                    </section>
+                    <section className="group rounded-xl border border-line bg-[#fcf8f2] p-6 transition duration-300 ease-out hover:-translate-y-2 hover:border-brand hover:bg-brand hover:text-white hover:shadow-xl hover:shadow-brand/25 motion-reduce:transform-none motion-reduce:transition-none md:p-8">
+                        <h2 className="mb-4 text-ink transition-colors duration-300 group-hover:text-white motion-reduce:transition-none">Visão</h2>
                         <p>
-                            <span className="font-medium text-ink">
-                                Ser uma marca reconhecida pela criatividade, autenticidade e pelo cuidado que transforma cada produto em algo especial.
-                            </span>{' '}
-                            Expandir nossa presença no mercado de produtos artesanais, criativos e personalizados, alcançando novos públicos e oportunidades,
-                            sem perder nossas raízes familiares e o compromisso com a qualidade. Queremos construir uma marca duradoura, capaz de inspirar
-                            pessoas e demonstrar que grandes realizações podem nascer de pequenas iniciativas.
+                            Ser reconhecida pela criatividade e qualidade, levando nossas criações a novos públicos sem perder as raízes familiares e a
+                            autenticidade.
                         </p>
-                    </div>
-                </section>
-                <section>
-                    <h2 className="mb-4 text-ink">Nossos valores</h2>
-                    <div className="space-y-4">
-                        <div>
-                            <h3 className="mb-2 text-ink">Família e união</h3>
-                            <p>
-                                Nossa história nasceu da colaboração familiar. Acreditamos que o respeito, o apoio mútuo e a união são fundamentais para
-                                construir relações verdadeiras e duradouras.
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Criatividade e originalidade</h3>
-                            <p>
-                                Valorizamos a liberdade de imaginar, desenvolver e transformar ideias em produtos que expressem personalidade e despertem
-                                sentimentos.
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Carinho em cada detalhe</h3>
-                            <p>
-                                Reconhecemos que cada produto representa uma oportunidade de proporcionar alegria. Por isso, buscamos colocar dedicação e
-                                atenção em tudo o que fazemos.
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Ética e transparência</h3>
-                            <p>
-                                Conduzimos nossas atividades com honestidade, responsabilidade e respeito, valorizando a confiança de nossos clientes e
-                                parceiros.
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Empreendedorismo e aprendizado</h3>
-                            <p>
-                                Nascemos de uma iniciativa acadêmica e acreditamos no conhecimento como ferramenta de transformação. Buscamos aprender
-                                continuamente, superar desafios e encontrar novas oportunidades.
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Qualidade e compromisso</h3>
-                            <p>
-                                Trabalhamos para oferecer produtos que atendam às expectativas de nossos clientes, respeitando nossos compromissos e buscando a
-                                melhoria contínua.
-                            </p>
-                        </div>
-                        <div>
-                            <h3 className="mb-2 text-ink">Valorização das pessoas</h3>
-                            <p>Acreditamos que cada pessoa possui uma história única. Por isso, buscamos construir relações próximas, acolhedoras e humanas.</p>
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                    <section className="group rounded-xl border border-line bg-[#fcf8f2] p-6 transition duration-300 ease-out hover:-translate-y-2 hover:border-brand hover:bg-brand hover:text-white hover:shadow-xl hover:shadow-brand/25 motion-reduce:transform-none motion-reduce:transition-none md:p-8">
+                        <h2 className="mb-4 text-ink transition-colors duration-300 group-hover:text-white motion-reduce:transition-none">Valores</h2>
+                        <p>
+                            Família, união e valorização das pessoas orientam nosso trabalho, com criatividade, carinho, ética, transparência, qualidade e
+                            compromisso em aprender e empreender.
+                        </p>
+                    </section>
+                </div>
                 <section>
                     <h2 className="mb-4 text-ink">Nosso propósito</h2>
                     <div className="space-y-3">
