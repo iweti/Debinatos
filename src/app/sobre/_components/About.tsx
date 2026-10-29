@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { PageHeading } from '@/components/ui/PageHeading'
 
+import { AboutCard } from './AboutCard'
+
 export function About() {
     return (
         <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
@@ -44,35 +46,30 @@ export function About() {
                         </p>
                         <p>
                             Hoje, a Debinatos representa o encontro entre gerações, conhecimentos e sonhos. Uma marca que nasceu de uma oportunidade acadêmica e
-                            encontrou na criatividade e na união familiar a inspiração para construir seu próprio caminho. E, embora nossa história ainda esteja
-                            sendo escrita, temos a certeza de que cada novo produto, cada cliente e cada conquista representam mais um capítulo dessa
-                            trajetória. Somos a Debinatos. Uma história de família, criatividade e sonhos que ganham forma.
+                            encontrou na criatividade e na união familiar a inspiração para construir seu próprio caminho.
                         </p>
                     </div>
                 </section>
-                <div className="grid gap-5 md:grid-cols-3">
-                    <section className="group rounded-xl border border-line bg-[#fcf8f2] p-6 transition duration-300 ease-out hover:-translate-y-2 hover:border-brand hover:bg-brand hover:text-white hover:shadow-xl hover:shadow-brand/25 motion-reduce:transform-none motion-reduce:transition-none md:p-8">
-                        <h2 className="mb-4 text-ink transition-colors duration-300 group-hover:text-white motion-reduce:transition-none">Missão</h2>
-                        <p>
-                            Criar produtos artesanais e personalizados que encantam e aproximam pessoas, com originalidade, carinho e cuidado em cada detalhe.
+                <div className="grid gap-5 my-30 md:grid-cols-3">
+                    <AboutCard title="Missão">
+                        <p className="text-pretty">
+                            Criar produtos e personalizados que encantam e aproximam pessoas, com originalidade, carinho e cuidado em cada detalhe.
                         </p>
-                    </section>
-                    <section className="group rounded-xl border border-line bg-[#fcf8f2] p-6 transition duration-300 ease-out hover:-translate-y-2 hover:border-brand hover:bg-brand hover:text-white hover:shadow-xl hover:shadow-brand/25 motion-reduce:transform-none motion-reduce:transition-none md:p-8">
-                        <h2 className="mb-4 text-ink transition-colors duration-300 group-hover:text-white motion-reduce:transition-none">Visão</h2>
+                    </AboutCard>
+                    <AboutCard title="Visão">
                         <p>
                             Ser reconhecida pela criatividade e qualidade, levando nossas criações a novos públicos sem perder as raízes familiares e a
                             autenticidade.
                         </p>
-                    </section>
-                    <section className="group rounded-xl border border-line bg-[#fcf8f2] p-6 transition duration-300 ease-out hover:-translate-y-2 hover:border-brand hover:bg-brand hover:text-white hover:shadow-xl hover:shadow-brand/25 motion-reduce:transform-none motion-reduce:transition-none md:p-8">
-                        <h2 className="mb-4 text-ink transition-colors duration-300 group-hover:text-white motion-reduce:transition-none">Valores</h2>
+                    </AboutCard>
+                    <AboutCard title="Valores">
                         <p>
                             Família, união e valorização das pessoas orientam nosso trabalho, com criatividade, carinho, ética, transparência, qualidade e
                             compromisso em aprender e empreender.
                         </p>
-                    </section>
+                    </AboutCard>
                 </div>
-                <section>
+                <section className="m-0">
                     <h2 className="mb-4 text-ink">Nosso propósito</h2>
                     <div className="space-y-3">
                         <p>
@@ -87,10 +84,10 @@ export function About() {
                     </div>
                 </section>
                 <Link
-                    className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark"
+                    className="mx-auto mt-20 flex min-h-14 w-fit items-center justify-center rounded-lg border border-brand bg-brand px-7 py-4 text-sm/snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark"
                     href="/catalogo"
                 >
-                    Conhecer a coleção <ArrowRight size={16} />
+                    Conheça o encanto
                 </Link>
             </article>
         </div>
