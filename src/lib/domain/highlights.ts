@@ -20,10 +20,7 @@ export function compareFeatured(a: Product, b: Product) {
 }
 
 export function homeFavorites(products: Product[]) {
-    return products
-        .filter((product) => product.active && product.featured)
-        .sort(compareFeatured)
-        .slice(0, 4)
+    return products.filter((product) => product.active && product.featured).sort(compareFeatured)
 }
 
 export function moveFavorite(ids: string[], id: string, position: number) {

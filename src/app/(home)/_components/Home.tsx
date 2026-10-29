@@ -2,10 +2,10 @@
 import { ArrowRight, ArrowUpRight, Flower2, Gem, Gift, Heart, Sparkles, Truck } from 'lucide-react'
 import Link from 'next/link'
 
-import { ProductCard } from '@/components/product/ProductCard'
 import type { HeroPhotos } from '@/lib/types/store'
 
 import { useHome } from '../_lib/use-home'
+import { FavoritesCarousel } from './FavoritesCarousel'
 import { Hero } from './Hero'
 
 export function Home({ heroPhotos }: { heroPhotos: HeroPhotos }) {
@@ -57,11 +57,7 @@ export function Home({ heroPhotos }: { heroPhotos: HeroPhotos }) {
                             Ver todos os produtos <ArrowRight size={16} />
                         </Link>
                     </div>
-                    <div className="grid grid-cols-2 gap-x-3.5 gap-y-7 md:grid-cols-4 md:gap-6">
-                        {featured.map((product) => (
-                            <ProductCard key={product.id} product={product} />
-                        ))}
-                    </div>
+                    <FavoritesCarousel products={featured} />
                     {!featured.length && <p className="text-xs text-muted">Novos encantos em breve. Explore nosso catálogo.</p>}
                 </div>
             </section>

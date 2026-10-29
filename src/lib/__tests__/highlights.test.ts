@@ -44,11 +44,23 @@ describe('Ordem dos Favoritos da Debinatos', () => {
         ).toEqual(['produto-5', 'produto-4', 'produto-3', 'produto-2', 'produto-1', 'produto-7', 'produto-6'])
     })
 
-    it('limita a home a quatro ativos e preenche a vaga de um favorito desativado', () => {
+    it('retorna todos os favoritos ativos em ordem, sem modificar a lista original', () => {
         const items = products()
+        expect(homeFavorites(items).map((p) => p.id)).toEqual(['produto-5', 'produto-4', 'produto-3', 'produto-2', 'produto-1'])
+        expect(items.map((p) => p.id)).toEqual(products().map((p) => p.id))
         items[4].active = false
         expect(homeFavorites(items).map((p) => p.id)).toEqual(['produto-4', 'produto-3', 'produto-2', 'produto-1'])
         expect(homeFavorites([])).toEqual([])
+    })
+
+    it.each([0, 1, 4, 5, 12])('preserva todos os %i favoritos ativos na ordem configurada', (count) => {
+        const items = [...Array(count).keys()].map((index) => ({
+            ...products()[0],
+            id: `favorito-${index}`,
+            featuredOrder: count - index,
+        }))
+        const expected = [...items].reverse().map((product) => product.id)
+        expect(homeFavorites(items).map((product) => product.id)).toEqual(expected)
     })
 
     it('mantém a ordem entre resultados filtrados e ignora destaque em novidades', () => {

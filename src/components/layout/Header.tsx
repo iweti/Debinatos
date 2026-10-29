@@ -1,17 +1,17 @@
 'use client'
-import { Heart, Menu, Search, ShoppingBag, X } from 'lucide-react'
+import { Heart, Search, ShoppingBag, X } from 'lucide-react'
 import Link from 'next/link'
 
 import { useHeader } from './use-header'
 
 export function Header() {
-    const { pathname, mobileMenu, setMobileMenu, searchOpen, setSearchOpen, query, setQuery, count, favoriteCount, search } = useHeader()
+    const { pathname, searchOpen, setSearchOpen, query, setQuery, count, favoriteCount, search } = useHeader()
     return (
         <header className="relative z-20 border-b border-line bg-white">
             <div className="mx-auto w-[calc(100%-36px)] max-w-310 md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] flex h-19 items-center justify-between gap-3 md:h-23 md:gap-6">
                 <Link className="inline-flex shrink-0 items-center" href="/" aria-label="Debinatos, início">
                     <img
-                        className="h-auto w-40 object-contain sm:w-51 md:w-63.75"
+                        className="h-14 w-16 p-2 object-cover sm:h-18 sm:w-20.5 md:h-22.5 md:w-25.5"
                         src="/images/logo-debinatos-transparente.png"
                         width={340}
                         height={120}
@@ -58,7 +58,7 @@ export function Header() {
                         <Search size={20} />
                     </button>
                     <Link
-                        className="relative shrink-0 items-center justify-center rounded-full transition hover:bg-cream h-9 w-8 hidden sm:inline-flex"
+                        className="relative shrink-0 items-center justify-center rounded-full transition hover:bg-cream h-9 w-8 hidden lg:inline-flex"
                         href="/favoritos"
                         aria-label={`Itens salvos, ${favoriteCount} ${favoriteCount === 1 ? 'produto' : 'produtos'}`}
                     >
@@ -66,7 +66,7 @@ export function Header() {
                         {favoriteCount > 0 && <span className="absolute top-1 right-1 size-1.5 rounded-full bg-brand" />}
                     </Link>
                     <Link
-                        className="relative inline-flex shrink-0 items-center justify-center rounded-full transition hover:bg-cream h-9 w-8"
+                        className="relative hidden shrink-0 items-center justify-center rounded-full transition hover:bg-cream h-9 w-8 lg:inline-flex"
                         href="/carrinho"
                         aria-label={`Carrinho, ${count} ${count === 1 ? 'item' : 'itens'}`}
                     >
@@ -77,14 +77,6 @@ export function Header() {
                             </span>
                         )}
                     </Link>
-                    <button
-                        className="relative inline-flex shrink-0 items-center justify-center rounded-full transition hover:bg-cream lg:hidden h-9 w-8"
-                        aria-label={mobileMenu ? 'Fechar menu' : 'Abrir menu'}
-                        aria-expanded={mobileMenu}
-                        onClick={() => setMobileMenu(!mobileMenu)}
-                    >
-                        {mobileMenu ? <X size={22} /> : <Menu size={22} />}
-                    </button>
                 </div>
             </div>
             {searchOpen && (
@@ -119,33 +111,6 @@ export function Header() {
                         <X size={20} />
                     </button>
                 </form>
-            )}
-            {mobileMenu && (
-                <nav
-                    onClick={() => setMobileMenu(false)}
-                    className="grid grid-cols-2 gap-x-4 border-t border-line bg-[#fffdf8] px-5 py-3 lg:hidden"
-                    aria-label="Navegação no celular"
-                >
-                    <Link className="px-2 py-3 text-xs" href="/">
-                        Início
-                    </Link>
-                    <Link className="px-2 py-3 text-xs" href="/catalogo">
-                        Todos os produtos
-                    </Link>
-                    <Link className="px-2 py-3 text-xs" href="/favoritos">
-                        Meus favoritos
-                    </Link>
-                    <Link className="px-2 py-3 text-xs" href="/sobre">
-                        Sobre a Debinatos
-                    </Link>
-                    <Link
-                        className="px-2 py-3 text-xs aria-[current=page]:font-semibold aria-[current=page]:text-brand"
-                        href="/contato"
-                        aria-current={pathname === '/contato' ? 'page' : undefined}
-                    >
-                        Contato
-                    </Link>
-                </nav>
             )}
         </header>
     )

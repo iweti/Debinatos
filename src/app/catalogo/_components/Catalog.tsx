@@ -1,6 +1,7 @@
 'use client'
 import { Flower2, Search, SlidersHorizontal } from 'lucide-react'
 
+import { ContactAction } from '@/components/contact/ContactAction'
 import { ProductCard } from '@/components/product/ProductCard'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -8,7 +9,7 @@ import { PageHeading } from '@/components/ui/PageHeading'
 
 import { useCatalog } from '../_lib/use-catalog'
 
-export function Catalog() {
+export function Catalog({ phone }: { phone?: string }) {
     const { filtersOpen, setFiltersOpen, query, searchInput, category, sort, categories, categoryCounts, updateFilter, clearFilters, changeSearch, products } =
         useCatalog()
     return (
@@ -100,15 +101,23 @@ export function Catalog() {
                             icon={<Search size={30} />}
                             title="Esse encanto ainda não apareceu."
                             action={
-                                <button
-                                    className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug  font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
-                                    onClick={clearFilters}
-                                >
-                                    Limpar filtros
-                                </button>
+                                <div className="flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-start">
+                                    <button
+                                        className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand px-5 py-3 text-xs/snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0"
+                                        onClick={clearFilters}
+                                    >
+                                        Limpar filtros
+                                    </button>
+                                    <ContactAction
+                                        phone={phone}
+                                        label="Pedido personalizado"
+                                        message="Olá! Não encontrei o que procurava no catálogo e gostaria de consultar a possibilidade de uma produção personalizada."
+                                    />
+                                </div>
                             }
                         >
-                            Tente outro nome ou ajuste os filtros para explorar nossa coleção.
+                            Tente outro nome ou ajuste os filtros. Se preferir, fale com a gente para conferir a possibilidade de criar uma peça personalizada
+                            para você.
                         </EmptyState>
                     )}
                 </section>
