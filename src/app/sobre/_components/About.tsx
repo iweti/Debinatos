@@ -20,7 +20,7 @@ export function About() {
                     </PageHeading>
                 </div>
             </div>
-            <article className="max-w-full space-y-8 pt-10 text-sm text-muted md:space-y-10 md:pt-14 md:text-[15px]">
+            <article className="flex max-w-full flex-col gap-8 pt-10 text-sm text-muted md:gap-10 md:pt-14 md:text-[15px]">
                 <section>
                     <h2 className="mb-4 text-ink">Nossa história</h2>
                     <div className="space-y-3">
@@ -69,7 +69,7 @@ export function About() {
                         </p>
                     </AboutCard>
                 </div>
-                <section className="m-0">
+                <section>
                     <h2 className="mb-4 text-ink">Nosso propósito</h2>
                     <div className="space-y-3">
                         <p>
@@ -83,12 +83,14 @@ export function About() {
                         </p>
                     </div>
                 </section>
-                <Link
-                    className="mx-auto mt-20 flex min-h-14 w-fit items-center justify-center rounded-lg border border-brand bg-brand px-7 py-4 text-sm/snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark"
-                    href="/catalogo"
-                >
-                    Conheça o encanto
-                </Link>
+                <div className="flex justify-center pt-8 md:pt-10">
+                    <Link
+                        className="flex min-h-14 w-fit items-center justify-center rounded-lg border border-brand bg-brand px-7 py-4 text-sm/snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark"
+                        href="/catalogo"
+                    >
+                        Conheça o encanto
+                    </Link>
+                </div>
             </article>
         </div>
     )
