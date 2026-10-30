@@ -1,10 +1,11 @@
 'use client'
-import { Check, ImagePlus, X } from 'lucide-react'
+import { Check, GripVertical, ImagePlus, X } from 'lucide-react'
 
 import { Photo } from '@/components/product/Photo'
 import type { Product } from '@/lib/types/store'
 
 import { useProductEditor } from '../_lib/use-product-editor'
+import { useReorder } from '../_lib/use-reorder'
 import { Modal } from './Modal'
 
 export function ProductEditor({ product, close, categories }: { product: Product | null; close: () => void; categories: string[] }) {
@@ -36,6 +37,13 @@ export function ProductEditor({ product, close, categories }: { product: Product
         upload,
         submit,
     } = useProductEditor(product, close)
+    function moveImage(from: number, to: number) {
+        const reordered = [...images]
+        const [image] = reordered.splice(from, 1)
+        reordered.splice(to, 0, image)
+        setImages(reordered)
+    }
+    const reorder = useReorder(moveImage, uploading || saving)
     return (
         <Modal
             title={product ? 'Editar produto' : 'Cadastrar um novo encanto'}
@@ -91,7 +99,7 @@ export function ProductEditor({ product, close, categories }: { product: Product
                                 placeholder="Ex.: 19,90"
                             />
                         </label>
-                        <label className="text-[11px]">
+                        <label className="col-span-2 text-[11px]">
                             Material
                             <input
                                 className="text-xs"
@@ -129,59 +137,71 @@ export function ProductEditor({ product, close, categories }: { product: Product
                     <div className="mt-6">
                         <h3 className="mb-2 text-xs">Fotos do produto</h3>
                         <small className="block text-[9px] leading-relaxed text-muted">
-                            JPG, PNG ou WebP • até 5 MB por foto • máximo de 5 fotos. A primeira é a capa.
+                            JPG, PNG ou WebP • até 5 MB por foto • máximo de 5 fotos. A primeira é a capa. Arraste pela alça para reorganizar.
                         </small>
-                        <div className="mt-4 flex flex-wrap gap-2.5">
+                        <output className="sr-only">{reorder.announcement}</output>
+                        <ol ref={reorder.container} className="mt-4 grid grid-cols-2 items-start gap-4 sm:grid-cols-3">
                             {images.map((image, i) => (
-                                <div className="relative w-26" key={image.id ?? `${image.url}-${i}`}>
-                                    <Photo className="h-23 w-full rounded object-cover" source={image.url} alt={`Foto ${i + 1} do produto`} />
-                                    <button
-                                        className="inline-flex shrink-0 items-center justify-center rounded-full transition absolute top-1 right-1 size-6 bg-white"
-                                        type="button"
-                                        disabled={uploading || saving}
-                                        onClick={() => setImages([...images.slice(0, i), ...images.slice(i + 1)])}
-                                        aria-label={`Remover foto ${i + 1}`}
-                                    >
-                                        <X size={14} />
-                                    </button>
-                                    <label className="mt-1 flex items-center gap-1 text-[9px]">
-                                        {i === 0 ? 'Capa' : 'Posição'}
-                                        <select
-                                            className="min-w-0 py-1 text-[10px]"
-                                            aria-label={`Posição da foto ${i + 1}`}
-                                            value={i + 1}
-                                            onChange={(event) => {
-                                                const reordered = [...images]
-                                                reordered.splice(i, 1)
-                                                reordered.splice(Number(event.target.value) - 1, 0, image)
-                                                setImages(reordered)
-                                            }}
+                                <li
+                                    {...reorder.itemProps(i)}
+                                    className="min-w-0 rounded-lg border border-line p-2 transition duration-200 ease-out data-[dragging=true]:border-brand data-[dragging=true]:bg-cream"
+                                    key={image.id ?? image.url}
+                                >
+                                    <div className="relative">
+                                        <Photo className="aspect-square w-full rounded object-cover" source={image.url} alt={`Foto ${i + 1} do produto`} />
+                                        <button
+                                            className="inline-flex shrink-0 items-center justify-center rounded-full transition absolute top-1 right-1 size-6 bg-white"
+                                            type="button"
+                                            disabled={uploading || saving}
+                                            onClick={() => setImages([...images.slice(0, i), ...images.slice(i + 1)])}
+                                            aria-label={`Remover foto ${i + 1}`}
                                         >
-                                            {images.map((imageAtPosition, position) => (
-                                                <option key={imageAtPosition.id ?? `${imageAtPosition.url}-${position}`} value={position + 1}>
-                                                    {position + 1}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </label>
-                                </div>
+                                            <X size={14} />
+                                        </button>
+                                    </div>
+                                    <div className="mt-2 flex items-center gap-2">
+                                        <button
+                                            {...reorder.handleProps(i, `foto ${i + 1}`)}
+                                            className="inline-flex min-h-11 w-8 shrink-0 touch-none items-center justify-center rounded text-muted select-none hover:bg-cream active:cursor-grabbing cursor-grab"
+                                        >
+                                            <GripVertical size={18} />
+                                        </button>
+                                        <label className="flex min-w-0 flex-1 flex-col gap-1 text-[10px]">
+                                            {i === 0 ? 'Capa' : 'Posição'}
+                                            <select
+                                                className="min-h-10 w-full px-2 py-1 text-xs"
+                                                aria-label={`Posição da foto ${i + 1}`}
+                                                value={i + 1}
+                                                onChange={(event) => {
+                                                    moveImage(i, Number(event.target.value) - 1)
+                                                }}
+                                            >
+                                                {images.map((imageAtPosition, position) => (
+                                                    <option key={imageAtPosition.id ?? `${imageAtPosition.url}-${position}`} value={position + 1}>
+                                                        {position + 1}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </label>
+                                    </div>
+                                </li>
                             ))}
-                            <label className="relative flex h-23 w-26.25 cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded border border-dashed border-[#cdb7a3] bg-[#fcf8f1] text-brand focus-within:outline-2 focus-within:outline-brand text-[11px]">
-                                <ImagePlus size={24} />
-                                <span>{uploading ? 'Salvando…' : 'Adicionar fotos'}</span>
-                                <input
-                                    className="text-xs absolute inset-0 cursor-pointer opacity-0"
-                                    type="file"
-                                    accept="image/jpeg,image/png,image/webp"
-                                    multiple
-                                    disabled={uploading || saving || images.length >= 5}
-                                    onChange={(e) => {
-                                        void upload(e.target.files)
-                                        e.target.value = ''
-                                    }}
-                                />
-                            </label>
-                        </div>
+                        </ol>
+                        <label className="mt-4 relative flex min-h-28 w-full cursor-pointer flex-col items-center justify-center gap-2 overflow-hidden rounded border border-dashed border-[#cdb7a3] bg-[#fcf8f1] text-brand focus-within:outline-2 focus-within:outline-brand text-[11px]">
+                            <ImagePlus size={24} />
+                            <span>{uploading ? 'Salvando…' : 'Adicionar fotos'}</span>
+                            <input
+                                className="text-xs absolute inset-0 cursor-pointer opacity-0"
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                multiple
+                                disabled={uploading || saving || images.length >= 5}
+                                onChange={(e) => {
+                                    void upload(e.target.files)
+                                    e.target.value = ''
+                                }}
+                            />
+                        </label>
                     </div>
                     <label className="mt-5 block text-[11px]">
                         Selo (opcional)
