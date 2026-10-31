@@ -125,14 +125,15 @@ As rotas ficam em `src/app`, com componentes e lógica específicos em `_compone
 
 ```sh
 npx next typegen
-npm run typecheck
-npm run lint
-npm test
+make check
+make test
 npm run build
 ```
 
 Nenhum arquivo novo de teste faz parte desta etapa. A suíte existente cobre carrinho, contato e persistência local de carrinho e favoritos. Confira manualmente login válido/inválido, expiração, logout, bloqueio de operações sem sessão, cadastro/edição/visibilidade, falhas de upload e catálogo vazio. Para sucesso autenticado, use uma conta criada manualmente pelo proprietário no banco.
 
-`npm run lint:fix` organiza imports e aplica correções automáticas; `npm run format` aplica Prettier. `make lint` também formata e verifica tipos; `make validate` acrescenta os testes.
+`make check` verifica formatação, lint e tipos sem corrigir os arquivos. A verificação de formatação também pode ser executada isoladamente com `npm run format:check`: ela usa os mesmos caminhos de `npm run format`, retorna erro quando encontra divergências e não reescreve o código. Gere os tipos de rota com `npx next typegen` antes da primeira verificação em um checkout novo.
+
+Para corrigir arquivos explicitamente, use `npm run lint:fix` (organização de imports e correções do ESLint), `npm run format` (Prettier) ou `make fix` (ambos). Depois rode `make check` novamente. `make lint` continua disponível como alias de `make check`, agora sem correções automáticas; `make validate` executa `make check` e os testes. As verificações de CI podem reutilizar `make check`.
 
 Referências dos recursos visuais: [ASSETS.md](ASSETS.md).
