@@ -1,0 +1,84 @@
+.card {
+    container-type: inline-size;
+}
+
+.category {
+    display: block;
+    height: 1.5em;
+    overflow: hidden;
+    font-size: 8px;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.name {
+    display: -webkit-box;
+    height: 2.6em;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    font-size: 13px;
+    line-height: 1.3;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.purchase {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.price {
+    min-width: 0;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.tagline {
+    height: 3em;
+    font-size: 7px;
+    line-height: 1.5;
+}
+
+/* Use the card width: the same viewport also contains narrower carousel slides. */
+@container (min-width: 160px) {
+    .category {
+        font-size: 9px;
+    }
+
+    .name {
+        font-size: 15px;
+    }
+
+    .purchase {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .price {
+        font-size: 14px;
+    }
+
+    .tagline {
+        font-size: 8px;
+    }
+}
+
+@container (min-width: 200px) {
+    .name {
+        font-size: 17px;
+    }
+
+    .price {
+        font-size: 16px;
+    }
+
+    .tagline {
+        font-size: 9px;
+    }
+}
