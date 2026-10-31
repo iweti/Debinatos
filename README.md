@@ -136,4 +136,12 @@ Nenhum arquivo novo de teste faz parte desta etapa. A suíte existente cobre car
 
 Para corrigir arquivos explicitamente, use `npm run lint:fix` (organização de imports e correções do ESLint), `npm run format` (Prettier) ou `make fix` (ambos). Depois rode `make check` novamente. `make lint` continua disponível como alias de `make check`, agora sem correções automáticas; `make validate` executa `make check` e os testes. As verificações de CI podem reutilizar `make check`.
 
+### Integração contínua
+
+O workflow [CI](.github/workflows/ci.yml) executa em pushes para `dev` e `main` e em PRs destinados a essas branches. PRs encadeados com base em `codex/issue-*` também são validados. O check **Validação** usa Node.js de `.nvmrc`, instala o npm fixado em `packageManager` e executa `npm ci`, geração dos tipos de rota, `make check`, `make test` e o build de produção. Uma falha interrompe o job e reprova o check; uma nova execução da mesma branch ou PR cancela a anterior.
+
+O CI não recebe secrets, não cria arquivos `.env` e não usa banco ou Cloudinary reais. Nenhum valor fictício é necessário para gerar os tipos ou o build: as rotas que dependem desses serviços são renderizadas no servidor durante as requisições. Essa validação não comprova login, upload, migrações ou conectividade dos serviços. O token do workflow tem apenas `contents: read`, e o checkout não persiste credenciais.
+
+O nome **Validação** deve ser mantido estável ao configurar o check obrigatório nas proteções de `dev` e `main`. A criação do workflow não aplica proteção de branch; essa configuração é acompanhada na issue [#16](https://github.com/iweti/Debinatos/issues/16).
+
 Referências dos recursos visuais: [ASSETS.md](ASSETS.md).
