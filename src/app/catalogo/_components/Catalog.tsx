@@ -6,6 +6,7 @@ import { ProductCard } from '@/components/product/ProductCard'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { PageHeading } from '@/components/ui/PageHeading'
+import { CATALOG_SORT_OPTIONS } from '@/lib/domain/catalog'
 
 import { useCatalog } from '../_lib/use-catalog'
 
@@ -85,8 +86,11 @@ export function Catalog({ phone }: { phone?: string }) {
                                 value={sort}
                                 onChange={(e) => updateFilter('ordem', e.target.value)}
                             >
-                                <option value="destaques">Destaques</option>
-                                <option value="novidades">Novidades</option>
+                                {CATALOG_SORT_OPTIONS.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
                             </select>
                         </label>
                     </div>
