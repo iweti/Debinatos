@@ -44,6 +44,9 @@ jobs:
       - name: Instalar dependências do lockfile
         run: npm ci
 
+      - name: Auditar dependências de produção
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Gerar tipos de rotas
         run: npx --no-install next typegen
 

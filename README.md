@@ -158,6 +158,8 @@ O workflow [CI](.github/workflows/ci.yml) executa em pushes para `dev` e `main` 
 
 O CI não recebe secrets, não cria arquivos `.env` e não usa banco ou Cloudinary reais. Nenhum valor fictício é necessário para gerar os tipos ou o build: as rotas que dependem desses serviços são renderizadas no servidor durante as requisições. Essa validação não comprova login, upload, migrações ou conectividade dos serviços. O token do workflow tem apenas `contents: read`, e o checkout não persiste credenciais.
 
-O nome **Validação** deve ser mantido estável ao configurar o check obrigatório nas proteções de `dev` e `main`. A criação do workflow não aplica proteção de branch; essa configuração é acompanhada na issue [#16](https://github.com/iweti/Debinatos/issues/16).
+O job também executa `npm audit --omit=dev --audit-level=high`: vulnerabilidades altas/críticas nas dependências de produção reprovam o check. O [Dependabot](.github/dependabot.yml) propõe atualizações semanais de npm e GitHub Actions para `dev`, preservando as versões npm exatas e os SHAs das actions. A configuração precisa chegar à branch padrão (`main`) para o GitHub começar a processá-la.
+
+O nome **Validação** deve ser mantido estável ao configurar o check obrigatório nas proteções de `dev` e `main`. As proteções remotas **não foram verificadas nem ativadas** nesta implementação. A [documentação de governança](docs/governanca.md) contém o estado observado, o ruleset importável sem bypass e o procedimento para exigir PR, revisão e CI nas duas branches. A confirmação administrativa segue pendente na issue [#16](https://github.com/iweti/Debinatos/issues/16).
 
 Referências dos recursos visuais: [ASSETS.md](ASSETS.md).
