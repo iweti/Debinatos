@@ -79,6 +79,7 @@ describe('Ações administrativas', () => {
         const values = mocks.sql.mock.calls[0].slice(1)
         const data = JSON.parse(values[1] as string)
         expect(data.priceCents).toBe(1990)
+        expect(data.stock).toBe(product.stock)
         expect(data).not.toHaveProperty('featured')
         expect(data).not.toHaveProperty('featuredOrder')
         expect(mocks.transaction).toHaveBeenCalledTimes(1)

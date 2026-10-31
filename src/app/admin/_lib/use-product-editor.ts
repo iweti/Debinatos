@@ -4,12 +4,11 @@ import { useRef, useState, useTransition } from 'react'
 
 import { parsePrice, priceInput } from '@/lib/domain/money'
 import { useStore } from '@/lib/state/store-context'
-import type { ProductImageInput } from '@/lib/types/admin'
-import type { Product } from '@/lib/types/store'
+import type { AdminProduct, ProductImageInput } from '@/lib/types/admin'
 
 import { authorizeImageUpload, saveProduct } from './actions'
 
-export function useProductEditor(product: Product | null, close: () => void) {
+export function useProductEditor(product: AdminProduct | null, close: () => void) {
     const { notify } = useStore()
     const [name, setName] = useState(product?.name ?? '')
     const [category, setCategory] = useState(product?.category ?? 'Bijuterias')
