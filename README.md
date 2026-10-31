@@ -37,13 +37,13 @@ No início de cada instância Node, `src/instrumentation.ts` valida a configura�
 
 `npm run build` não exige secrets ou valores fictícios no CI, nem consulta banco/Cloudinary: importar o módulo não valida o ambiente, e as páginas que usam serviços dependem de renderização dinâmica. A validação é obrigatória em `next dev` e `next start`. As rotas atuais usam Node; caso seja adicionada uma rota Edge com serviços, ela precisará de uma estratégia de configuração compatível antes de ser publicada.
 
-O teste SQL isolado do limitador de login pode ler exclusivamente `LOGIN_RATE_LIMIT_TEST_CONTAINER`, para selecionar um contêiner descartável; essa opção do executor tem exceção ESLint específica e não integra o ambiente da loja.
+Os testes SQL isolados do limitador de login e do runner de migrações podem ler exclusivamente `LOGIN_RATE_LIMIT_TEST_CONTAINER`, para selecionar um contêiner descartável; essa opção do executor tem exceção ESLint específica e não integra o ambiente da loja.
 
 ## Banco e migrações
 
 A aplicação usa SQL parametrizado com `@neondatabase/serverless`, sem ORM. `DATABASE_URL` é a conexão da aplicação; `DATABASE_URL_UNPOOLED` deve usar o host direto, sem `-pooler`, para migrações. Os módulos de banco, sessão e Cloudinary são marcados com `server-only`.
 
-Aplique uma única vez, na ordem, os arquivos SQL versionados:
+Use o runner com histórico transacional, uma migração por vez e na ordem. Em bancos existentes, registre primeiro o baseline inspecionado; nunca reaplique SQL para inicializar o histórico. O procedimento completo está em [Publicação e migrações](docs/deploy-and-migrations.md). Arquivos versionados:
 
 1. `migrations/001_admin_users.sql`: extensão `pgcrypto`, tabela de administradores e índice único de e-mail sem diferenciar maiúsculas/minúsculas.
 2. `migrations/002_products.sql`: tabela de produtos, validação de quantidade e lista de imagens.
@@ -53,7 +53,7 @@ Aplique uma única vez, na ordem, os arquivos SQL versionados:
 6. `migrations/006_require_product_prices.sql`: torna o preço obrigatório no banco, após preencher os produtos existentes.
 7. `migrations/007_admin_login_rate_limit.sql`: cria limites compartilhados de tentativas do login administrativo; aplique antes de publicar o limitador.
 
-As migrações não criam usuários nem produtos e não são executadas automaticamente no build ou na inicialização. O catálogo começa vazio. Aplique e valide primeiro em uma branch de desenvolvimento, usando conexão direta; depois aplique os mesmos arquivos na branch de produção antes de publicar a aplicação.
+As migrações não criam usuários nem produtos e não são executadas automaticamente no build ou na inicialização. O catálogo começa vazio. Aplique e valide primeiro em uma branch de desenvolvimento, usando conexão direta; depois siga a sequência revisada no ambiente de produção. A 004 exige publicar e validar antes a versão compatível com `product_images`; a 007 precisa ser aplicada antes de publicar o limitador.
 
 Nesta implementação, `.neon` e as conexões locais apontam para a branch `dev` do projeto existente. A branch é temporária: confira sua expiração no Neon antes de reutilizá-la. A branch `production` não foi alterada por esta implementação. `.neon` e `.env.local` não são versionados.
 
@@ -163,3 +163,9 @@ O job também executa `npm audit --omit=dev --audit-level=high`: vulnerabilidade
 O nome **Validação** deve ser mantido estável ao configurar o check obrigatório nas proteções de `dev` e `main`. As proteções remotas **não foram verificadas nem ativadas** nesta implementação. A [documentação de governança](docs/governanca.md) contém o estado observado, o ruleset importável sem bypass e o procedimento para exigir PR, revisão e CI nas duas branches. A confirmação administrativa segue pendente na issue [#16](https://github.com/iweti/Debinatos/issues/16).
 
 Referências dos recursos visuais: [ASSETS.md](ASSETS.md).
+
+## Publicação
+
+A publicação usa o projeto existente **debinatos** na Vercel. O [CD](.github/workflows/deploy.yml) exige CI verde do mesmo SHA de `dev`/`main`; produção usa environment protegido, publicação sem promover domínios, smoke HTTP e promoção do mesmo artefato. O [workflow manual de migrações](.github/workflows/migrate.yml) exige conexão direta, validação de configuração e registro transacional com checksum. Ambos começam desabilitados por variáveis explícitas.
+
+Consulte [Publicação e migrações](docs/deploy-and-migrations.md) antes de habilitar: define ambientes, secrets separados, reviewers obrigatórios, baseline de bancos existentes, proteção especial da 004 e recuperação. A configuração [vercel.json](vercel.json) desabilita deploys automáticos da integração Git para preservar o gate de CI. Nenhuma configuração remota, publicação ou migração real foi executada por esta PR.

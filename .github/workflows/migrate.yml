@@ -1,0 +1,91 @@
+name: Migração manual
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Ambiente protegido (preview/staging de dev; production de main)
+        type: choice
+        options: [preview, staging, production]
+        default: staging
+        required: true
+      migration:
+        description: Nome exato versionado, por exemplo 008_nova_migracao.sql
+        type: string
+        required: true
+      compatible_sha:
+        description: Somente 004 — SHA completo já publicado e validado com product_images
+        type: string
+        required: false
+      validation_reference:
+        description: Somente 004 — URL HTTPS do registro da validação publicada
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    name: Aplicar uma migração aprovada
+    if: >-
+      vars.MIGRATIONS_ENABLED == 'true' &&
+      ((github.ref == 'refs/heads/main' && inputs.environment == 'production') ||
+       (github.ref == 'refs/heads/dev' && (inputs.environment == 'preview' || inputs.environment == 'staging')))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: ${{ inputs.environment }}
+    steps:
+      - name: Exigir proteção e validar argumentos antes de acessar secrets
+        env:
+          MIGRATION: ${{ inputs.migration }}
+          COMPATIBLE_SHA: ${{ inputs.compatible_sha }}
+          VALIDATION_REFERENCE: ${{ inputs.validation_reference }}
+          VALIDATED_SHA: ${{ vars.PRODUCT_IMAGES_VALIDATED_SHA }}
+          PROTECTION_CONFIGURED: ${{ vars.RELEASE_PROTECTION_CONFIGURED }}
+        run: |
+          node --input-type=module <<'NODE'
+          if (process.env.PROTECTION_CONFIGURED !== 'true') throw Error('Configure e ateste as proteções do environment antes de habilitar migrações.');
+          if (!/^(?!0+_)\d{3,6}_[a-z][a-z0-9_]*\.sql$/.test(process.env.MIGRATION)) throw Error('Nome de migração inválido.');
+          if (/^0*4_/.test(process.env.MIGRATION)) {
+            if (!/^[a-f0-9]{40}$/.test(process.env.COMPATIBLE_SHA) || process.env.COMPATIBLE_SHA !== process.env.VALIDATED_SHA) throw Error('004 exige o SHA publicado/validado atestado neste environment.');
+            const reference = new URL(process.env.VALIDATION_REFERENCE);
+            if (reference.protocol !== 'https:' || reference.username || reference.password) throw Error('Registre a evidência HTTPS de validação da versão publicada.');
+          }
+          NODE
+
+      - name: Obter o commit selecionado na branch protegida
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalar dependências revisadas
+        run: |
+          npm install --global "$(node -p 'require("./package.json").packageManager')"
+          npm ci
+
+      - name: Validar conexão direta e aplicar com registro transacional
+        env:
+          MIGRATION_DATABASE_URL: ${{ secrets.MIGRATION_DATABASE_URL }}
+          MIGRATION: ${{ inputs.migration }}
+          COMPATIBLE_SHA: ${{ inputs.compatible_sha }}
+          VALIDATION_REFERENCE: ${{ inputs.validation_reference }}
+        run: |
+          npm run check:env -- --context=migration
+          if [[ "$MIGRATION" =~ ^0*4_ ]]; then
+            node scripts/migrate.mjs "$MIGRATION" --compatible-sha "$COMPATIBLE_SHA" --validation-reference "$VALIDATION_REFERENCE"
+          else
+            node scripts/migrate.mjs "$MIGRATION"
+          fi

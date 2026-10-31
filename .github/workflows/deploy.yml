@@ -1,0 +1,186 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [dev, main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Ambiente protegido (preview/staging a partir de dev; production de main)
+        type: choice
+        options: [preview, staging, production]
+        default: preview
+        required: true
+
+permissions:
+  contents: read
+  actions: read
+
+# Mesma trava do workflow manual de migrações; não cancelar SQL/deploy em curso.
+concurrency:
+  group: release-${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.event.workflow_run.head_branch == 'main' && 'production' || 'staging') }}
+  cancel-in-progress: false
+
+env:
+  VERCEL_CLI_VERSION: '65.9.0'
+  VERCEL_ORG_ID: team_qSsneVzWahDtXXUtgMZzNrp0
+  VERCEL_PROJECT_ID: prj_gT1UYRuRyeuJMkHtmMee4bl5HmVX
+  NEXT_TELEMETRY_DISABLED: '1'
+  NODE_ENV: production
+
+jobs:
+  deploy:
+    name: Publicar commit validado
+    if: >-
+      vars.DEPLOYMENTS_ENABLED == 'true' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_repository.full_name == github.repository &&
+        (github.event.workflow_run.head_branch == 'dev' || github.event.workflow_run.head_branch == 'main')))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment:
+      name: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.event.workflow_run.head_branch == 'main' && 'production' || 'staging') }}
+      url: ${{ steps.publish.outputs.url }}
+    steps:
+      # Executado ANTES de checkout ou secrets de deploy. workflow_run de PR,
+      # fork, branch arbitrária ou SHA ultrapassado nunca executa código com token.
+      - name: Validar origem, CI e SHA atual da branch protegida
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_ENV: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || (github.event.workflow_run.head_branch == 'main' && 'production' || 'staging') }}
+          PROTECTION_CONFIGURED: ${{ vars.RELEASE_PROTECTION_CONFIGURED }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync, appendFileSync } from 'node:fs';
+          const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+          const repo = process.env.GITHUB_REPOSITORY;
+          const manual = process.env.GITHUB_EVENT_NAME === 'workflow_dispatch';
+          const branch = manual ? process.env.GITHUB_REF_NAME : event.workflow_run.head_branch;
+          const sha = manual ? process.env.GITHUB_SHA : event.workflow_run.head_sha;
+          const target = process.env.TARGET_ENV;
+          if (process.env.PROTECTION_CONFIGURED !== 'true') throw Error('Configure e ateste as proteções do environment antes de habilitar CD.');
+          if (!/^[a-f0-9]{40}$/.test(sha) || !['dev', 'main'].includes(branch) ||
+              (branch === 'main' ? target !== 'production' : !['preview', 'staging'].includes(target))) throw Error('Branch, SHA ou ambiente inválidos.');
+          if (!manual && (event.workflow_run.event !== 'push' || event.workflow_run.head_repository.full_name !== repo)) throw Error('Origem de CI não confiável.');
+          async function get(path) {
+            const response = await fetch(`https://api.github.com/repos/${repo}/${path}`, {
+              headers: { Authorization: `Bearer ${process.env.GH_TOKEN}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
+            });
+            if (!response.ok) throw Error('Não foi possível confirmar o CI/SHA no GitHub.');
+            return response.json();
+          }
+          const head = await get(`git/ref/heads/${branch}`);
+          if (head.object.sha !== sha) throw Error('A branch avançou; publique somente o CI do SHA atual.');
+          const runs = await get(`actions/workflows/ci.yml/runs?branch=${branch}&event=push&status=success&head_sha=${sha}&per_page=100`);
+          if (!runs.workflow_runs.some(run => run.head_sha === sha && run.head_branch === branch && run.event === 'push' &&
+              run.conclusion === 'success' && run.head_repository.full_name === repo && (manual || run.id === event.workflow_run.id))) throw Error('CI verde deste mesmo SHA não encontrado.');
+          appendFileSync(process.env.GITHUB_OUTPUT, `sha=${sha}\nbranch=${branch}\ntarget=${target === 'production' ? 'production' : 'preview'}\n`);
+          NODE
+
+      - name: Obter exatamente o commit aprovado pelo CI
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          ref: ${{ steps.gate.outputs.sha }}
+          persist-credentials: false
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalar ferramentas com versões exatas
+        run: |
+          npm install --global "$(node -p 'require("./package.json").packageManager')" "vercel@$VERCEL_CLI_VERSION"
+          npm ci --include=dev
+
+      - name: Confirmar migrações necessárias sem alterar o banco
+        run: |
+          npm run check:env -- --context=migration
+          node scripts/migrate.mjs --verify-through 007_admin_login_rate_limit.sql
+        env:
+          MIGRATION_DATABASE_URL: ${{ secrets.MIGRATION_DATABASE_URL }}
+
+      - name: Carregar configuração do projeto existente
+        run: |
+          vercel pull --yes --environment "$VERCEL_TARGET" --git-branch "$RELEASE_BRANCH"
+          vercel project inspect --non-interactive
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TARGET: ${{ steps.gate.outputs.target }}
+          RELEASE_BRANCH: ${{ steps.gate.outputs.branch }}
+
+      - name: Conferir projeto e validar variáveis de runtime
+        env:
+          VERCEL_TARGET: ${{ steps.gate.outputs.target }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const project = JSON.parse(readFileSync('.vercel/project.json', 'utf8'));
+          if (project.projectId !== process.env.VERCEL_PROJECT_ID || project.orgId !== process.env.VERCEL_ORG_ID) throw Error('Projeto Vercel inesperado.');
+          NODE
+          node --env-file=".vercel/.env.$VERCEL_TARGET.local" scripts/check-env.mjs --context=runtime
+
+      - name: Gerar artefato de publicação
+        run: |
+          if [ "$VERCEL_TARGET" = production ]; then vercel build --prod; else vercel build; fi
+        env:
+          VERCEL_TARGET: ${{ steps.gate.outputs.target }}
+
+      - name: Reconfirmar que a branch não avançou durante o build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ steps.gate.outputs.sha }}
+          RELEASE_BRANCH: ${{ steps.gate.outputs.branch }}
+        run: |
+          node --input-type=module <<'NODE'
+          const response = await fetch(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/git/ref/heads/${process.env.RELEASE_BRANCH}`, {
+            headers: { Authorization: `Bearer ${process.env.GH_TOKEN}`, Accept: 'application/vnd.github+json' }
+          });
+          if (!response.ok || (await response.json()).object.sha !== process.env.RELEASE_SHA) throw Error('A branch avançou; aguarde o CI do novo SHA.');
+          NODE
+
+      - name: Publicar artefato validado (produção sem promover domínios)
+        id: publish
+        run: |
+          if [ "$VERCEL_TARGET" = production ]; then
+            deployment_url="$(vercel deploy --prebuilt --prod --skip-domain --yes --meta "githubCommitSha=$RELEASE_SHA")"
+          else
+            deployment_url="$(vercel deploy --prebuilt --yes --meta "githubCommitSha=$RELEASE_SHA" --meta "githubCommitRef=$RELEASE_BRANCH")"
+          fi
+          DEPLOYMENT_URL="$deployment_url" node --input-type=module <<'NODE'
+          import { appendFileSync } from 'node:fs';
+          const value = process.env.DEPLOYMENT_URL;
+          const url = new URL(value);
+          if (url.protocol !== 'https:' || url.origin !== value || !url.hostname.endsWith('.vercel.app')) throw Error('Resposta de deploy inesperada.');
+          appendFileSync(process.env.GITHUB_OUTPUT, `url=${value}\n`);
+          NODE
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TARGET: ${{ steps.gate.outputs.target }}
+          RELEASE_SHA: ${{ steps.gate.outputs.sha }}
+          RELEASE_BRANCH: ${{ steps.gate.outputs.branch }}
+
+      - name: Verificar resposta HTTP da publicação
+        run: |
+          vercel curl / --deployment "$DEPLOYMENT_URL" -- --fail --silent --show-error --max-time 30 --output /dev/null
+          vercel curl /catalogo --deployment "$DEPLOYMENT_URL" -- --fail --silent --show-error --max-time 30 --output /dev/null
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          DEPLOYMENT_URL: ${{ steps.publish.outputs.url }}
+
+      - name: Promover exatamente o artefato de produção verificado
+        if: steps.gate.outputs.target == 'production'
+        run: vercel promote "$DEPLOYMENT_URL" --yes
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          DEPLOYMENT_URL: ${{ steps.publish.outputs.url }}
+
+      - name: Remover configuração sensível do runner
+        if: always()
+        run: rm -rf .vercel
