@@ -9,7 +9,7 @@ import { PageHeading } from '@/components/ui/PageHeading'
 import { useFavorites } from '../_lib/use-favorites'
 
 export function Favorites() {
-    const { products, hasUnavailable } = useFavorites()
+    const { products, unavailableCount, ready, removeUnavailableFavorites } = useFavorites()
     return (
         <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
             <Breadcrumb items={[{ label: 'Itens salvos' }]} />
@@ -32,11 +32,24 @@ export function Favorites() {
                     Toque no coração dos produtos para guardar seus encantos aqui.
                 </EmptyState>
             )}
-            {hasUnavailable && (
-                <p className="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#856e5f]">
-                    Alguns itens salvos foram desativados e não estão disponíveis na vitrine.
-                </p>
-            )}
+            {unavailableCount > 0 ? (
+                <div className="mt-6 rounded-lg border border-line bg-cream p-5">
+                    <p className="text-xs/relaxed  text-muted">
+                        {unavailableCount === 1
+                            ? 'Um item salvo não está mais disponível na vitrine.'
+                            : `${unavailableCount} itens salvos não estão mais disponíveis na vitrine.`}{' '}
+                        Você pode remover essas referências e manter os favoritos disponíveis.
+                    </p>
+                    <button
+                        type="button"
+                        className="mt-4 min-h-11 rounded-lg border border-brand px-4 py-2 text-xs font-semibold text-brand disabled:opacity-60"
+                        disabled={!ready}
+                        onClick={removeUnavailableFavorites}
+                    >
+                        Remover {unavailableCount === 1 ? 'item indisponível' : 'itens indisponíveis'}
+                    </button>
+                </div>
+            ) : null}
         </div>
     )
 }
