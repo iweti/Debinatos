@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+      # Mantém a validação dos PRs encadeados antes de chegarem à dev.
+      - codex/issue-*
+  push:
+    branches:
+      - dev
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validação
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - name: Obter código
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalar a versão de npm do projeto
+        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
+
+      - name: Instalar dependências do lockfile
+        run: npm ci
+
+      - name: Gerar tipos de rotas
+        run: npx --no-install next typegen
+
+      - name: Verificar formatação, lint e tipos
+        run: make check
+
+      - name: Executar testes
+        run: make test
+
+      - name: Gerar build de produção
+        run: npm run build
