@@ -11,7 +11,8 @@
     "test": "vitest run src",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "format": "prettier --write src next.config.ts postcss.config.mjs tsconfig.json vitest.config.ts"
+    "format": "prettier --write src next.config.ts postcss.config.mjs tsconfig.json vitest.config.ts",
+    "format:check": "prettier --check src next.config.ts postcss.config.mjs tsconfig.json vitest.config.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "1.2.0",
