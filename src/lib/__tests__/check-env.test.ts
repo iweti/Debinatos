@@ -20,10 +20,28 @@ describe('Configuração de scripts', () => {
     it.each([undefined, '', 'invalid', pooled, 'https://example.com/db'])('recusa conexão inválida ou pooled (%s)', (value) => {
         expect(() => validateMigrationEnv({ MIGRATION_DATABASE_URL: value })).toThrow()
     })
+    it('recusa host pooled com escapes que o SDK Neon normaliza antes de conectar', () => {
+        const disguisedPooled = pooled.replace('-pooler', '%2Dpoo%6cer')
+        expect(() => validateMigrationEnv({ MIGRATION_DATABASE_URL: disguisedPooled })).toThrow('MIGRATION_DATABASE_URL')
+        expect(() => validateValidationEnv({ DATABASE_URL: direct.replace('ep-one', 'ep-two'), VALIDATION_DATABASE_URL: disguisedPooled })).toThrow(
+            'VALIDATION_DATABASE_URL'
+        )
+    })
     it('exige destino de validação separado, inclusive com credenciais ou pool diferentes', () => {
         expect(() => validateValidationEnv({ DATABASE_URL: pooled, VALIDATION_DATABASE_URL: direct })).toThrow('VALIDATION_DATABASE_URL')
         expect(() => validateValidationEnv({ DATABASE_URL: direct, VALIDATION_DATABASE_URL: direct.replace('user:password', 'other:secret') })).toThrow()
         expect(validateValidationEnv({ DATABASE_URL: pooled, VALIDATION_DATABASE_URL: direct.replace('ep-one', 'ep-two') }).databaseUrl).toContain('ep-two')
+    })
+    it.each([
+        [direct, direct.replace('ep-one', 'ep-%6fne')],
+        [direct.replace('ep-one', 'ep-%6fne'), direct],
+        [pooled.replace('-pooler', '%2Dpooler'), direct.replace('ep-one', 'EP-%6FNE')],
+    ])('recusa origem e destino que identificam o mesmo banco após normalizar o host (%s)', (source, target) => {
+        expect(() => validateValidationEnv({ DATABASE_URL: source, VALIDATION_DATABASE_URL: target })).toThrow('VALIDATION_DATABASE_URL')
+    })
+    it('aceita hosts escapados quando identificam bancos separados', () => {
+        const target = direct.replace('ep-one', 'ep-%74wo')
+        expect(validateValidationEnv({ DATABASE_URL: direct, VALIDATION_DATABASE_URL: target }).databaseUrl).toBe(target)
     })
     it('agrega nomes inválidos sem expor os valores no CLI', () => {
         const result = spawnSync(process.execPath, ['scripts/check-env.mjs', '--context=migration'], {
@@ -53,15 +71,41 @@ describe('Paridade do exemplo', () => {
         expect([...refs].sort()).toEqual(['FOUR', 'ONE', 'THREE', 'TWO'])
         await expect(environmentReferences('process.env[name]')).rejects.toThrow('dinâmico')
     })
+    it.each([
+        'const { env } = process; env.NEW_SETTING',
+        'const { env: variables } = process; variables.NEW_SETTING',
+        'const { env: { NEW_SETTING: value } } = process',
+        "import { env } from 'node:process'; env.NEW_SETTING",
+        "import { env as variables } from 'node:process'; variables.NEW_SETTING",
+        "import * as runtime from 'node:process'; runtime.env.NEW_SETTING",
+        "import runtime from 'node:process'; runtime.env.NEW_SETTING",
+        "import { default as runtime } from 'node:process'; runtime.env.NEW_SETTING",
+        "import { env as variables } from 'process'; const copy = variables; copy['NEW_SETTING']",
+        "const runtime = process; const { ['env']: variables } = runtime; const { NEW_SETTING: value } = variables",
+        'function read() { const variables = runtime.env; return variables.NEW_SETTING }; const runtime = process',
+    ])('acompanha imports e aliases de process/env (%s)', async (source) => {
+        expect([...(await environmentReferences(source))]).toEqual(['NEW_SETTING'])
+    })
+    it.each(["import { env as variables } from 'node:process'; variables[name]", 'const { env: variables } = process; const { [name]: value } = variables'])(
+        'recusa acesso dinâmico por aliases (%s)',
+        async (source) => {
+            await expect(environmentReferences(source)).rejects.toThrow('dinâmic')
+        }
+    )
     it('confere as fontes reais sem precisar de credenciais', async () => {
         await expect(checkEnvironmentParity()).resolves.toBeUndefined()
     })
-    it('detecta variáveis novas ausentes e entradas sem uso no exemplo', async () => {
+    it.each([
+        'process.env.NEW_SETTING',
+        'const { env } = process; env.NEW_SETTING',
+        "import { env as variables } from 'node:process'; variables.NEW_SETTING",
+        "import * as runtime from 'node:process'; runtime.env.NEW_SETTING",
+    ])('detecta variáveis novas ausentes e entradas sem uso no exemplo (%s)', async (source) => {
         const root = await mkdtemp(join(tmpdir(), 'debinatos-env-parity-'))
         try {
             await mkdir(join(root, 'src'))
             await mkdir(join(root, 'scripts'))
-            await writeFile(join(root, 'src', 'consumer.ts'), 'process.env.NEW_SETTING')
+            await writeFile(join(root, 'src', 'consumer.ts'), source)
             await writeFile(join(root, '.env.example'), 'OBSOLETE=\n')
             await expect(checkEnvironmentParity(root)).rejects.toThrow('NEW_SETTING')
             await expect(checkEnvironmentParity(root)).rejects.toThrow('OBSOLETE')

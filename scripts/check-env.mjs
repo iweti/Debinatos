@@ -20,21 +20,58 @@ export async function environmentReferences(text, configuration = false) {
     const file = ts.createSourceFile('source.tsx', text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
     const names = new Set()
     const aliases = new Set()
+    const processes = new Set(['process'])
     const access = (node) => ts.isPropertyAccessExpression(node) || ts.isElementAccessExpression(node)
     const key = (node) =>
         ts.isPropertyAccessExpression(node) ? node.name.text : ts.isStringLiteral(node.argumentExpression) ? node.argumentExpression.text : null
+    const processObject = (node) => node && ts.isIdentifier(node) && processes.has(node.text)
     const environment = (node) =>
-        node &&
-        ((access(node) && key(node) === 'env' && ts.isIdentifier(node.expression) && node.expression.text === 'process') ||
-            (ts.isIdentifier(node) && aliases.has(node.text)))
+        node && ((access(node) && key(node) === 'env' && processObject(node.expression)) || (ts.isIdentifier(node) && aliases.has(node.text)))
+    const bindingKey = (item) => {
+        const property = item.propertyName ?? item.name
+        if (ts.isIdentifier(property) || ts.isStringLiteral(property)) return property.text
+        if (ts.isComputedPropertyName(property) && ts.isStringLiteral(property.expression)) return property.expression.text
+        throw new Error('Desestruturação dinâmica de variável de ambiente não pode ser conferida.')
+    }
+    const binding = (pattern, kind) => {
+        if (ts.isIdentifier(pattern)) (kind === 'environment' ? aliases : processes).add(pattern.text)
+        else if (ts.isObjectBindingPattern(pattern)) {
+            for (const item of pattern.elements) {
+                if (item.dotDotDotToken) binding(item.name, kind)
+                else {
+                    const name = bindingKey(item)
+                    if (kind === 'environment') names.add(name)
+                    else if (name === 'env') binding(item.name, 'environment')
+                }
+            }
+        } else throw new Error('Desestruturação de variável de ambiente não pode ser conferida.')
+    }
     const collect = (node) => {
-        if (ts.isVariableDeclaration(node) && environment(node.initializer)) {
-            if (ts.isIdentifier(node.name)) aliases.add(node.name.text)
-            else if (ts.isObjectBindingPattern(node.name)) for (const item of node.name.elements) names.add((item.propertyName ?? item.name).text)
+        if (ts.isImportDeclaration(node) && ['node:process', 'process'].includes(node.moduleSpecifier.text)) {
+            const clause = node.importClause
+            if (clause?.name) processes.add(clause.name.text)
+            const imported = clause?.namedBindings
+            if (imported && ts.isNamespaceImport(imported)) processes.add(imported.name.text)
+            else if (imported && ts.isNamedImports(imported)) {
+                for (const item of imported.elements) {
+                    const name = (item.propertyName ?? item.name).text
+                    if (name === 'env') aliases.add(item.name.text)
+                    else if (name === 'default') processes.add(item.name.text)
+                }
+            }
+        }
+        if (ts.isVariableDeclaration(node)) {
+            if (environment(node.initializer)) binding(node.name, 'environment')
+            else if (processObject(node.initializer)) binding(node.name, 'process')
         }
         ts.forEachChild(node, collect)
     }
-    collect(file)
+    // Imports e aliases podem aparecer depois de funções que os utilizam.
+    let known = -1
+    while (known !== aliases.size + processes.size) {
+        known = aliases.size + processes.size
+        collect(file)
+    }
     const visit = (node) => {
         if (access(node) && (environment(node.expression) || (configuration && ts.isIdentifier(node.expression) && node.expression.text === 'source'))) {
             const name = key(node)
