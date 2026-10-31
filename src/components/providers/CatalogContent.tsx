@@ -11,7 +11,7 @@ export function CatalogContent({ children }: { children: ReactNode }) {
     const pathname = usePathname()
     const router = useRouter()
     const [pending, startTransition] = useTransition()
-    const needsCatalog = pathname === '/' || ['/catalogo', '/produto/', '/favoritos', '/carrinho', '/contato'].some((path) => pathname.startsWith(path))
+    const needsCatalog = pathname === '/' || ['/catalogo', '/produto/', '/favoritos', '/carrinho'].some((path) => pathname.startsWith(path))
     if (!catalogError || !needsCatalog) return children
     return (
         <div className="mx-auto min-h-96 max-w-lg px-5 py-16 text-center" role="alert">
