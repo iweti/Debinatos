@@ -7,9 +7,8 @@ import { createStoreState } from './fixtures/store'
 const phone = '5511999999999'
 
 describe('Consulta pelo WhatsApp', () => {
-    it.each([0, 1])('inclui nomes e quantidades acima do estoque cadastrado (%i) na consulta', (stock) => {
+    it('inclui nomes e quantidades na consulta sem depender do estoque interno', () => {
         const state = createStoreState()
-        state.products[0].stock = stock
         state.products[0].name = 'Terrário Ursos Polares & Cia #1'
         state.products[1].name = 'Mini Aquário de Urso'
         const cart = [
@@ -52,7 +51,7 @@ describe('Consulta pelo WhatsApp', () => {
         expect(whatsappUrl(phone, selection.message)).toBeUndefined()
     })
 
-    it('atualiza a mensagem ao mudar a seleção e não altera carrinho ou estoque', () => {
+    it('atualiza a mensagem ao mudar a seleção e não altera carrinho ou catálogo', () => {
         const state = addToCart(createStoreState(), 'produto-1', 2)
         const before = structuredClone(state)
         const first = getContactSelection(state.products, state.cart)

@@ -4,7 +4,8 @@ import Link from 'next/link'
 
 import { Photo } from '@/components/product/Photo'
 import { formatMoney } from '@/lib/domain/money'
-import type { HeroSelections, Product } from '@/lib/types/store'
+import type { AdminProduct } from '@/lib/types/admin'
+import type { HeroSelections } from '@/lib/types/store'
 
 import { logout } from '../_lib/actions'
 import { useAdmin } from '../_lib/use-admin'
@@ -13,7 +14,7 @@ import { HighlightsEditor } from './HighlightsEditor'
 import { ProductEditor } from './ProductEditor'
 import { StatsCard } from './StatsCard'
 
-export function Admin({ initialProducts, initialHero }: { initialProducts: Product[]; initialHero: HeroSelections }) {
+export function Admin({ initialProducts, initialHero }: { initialProducts: AdminProduct[]; initialHero: HeroSelections }) {
     const { tab, editor, setEditor, search, setSearch, products, stats, totalProducts, changeTab, toggleProduct, pending } = useAdmin(initialProducts)
     const highlights = useHighlights(initialProducts, initialHero)
     return (
