@@ -8,6 +8,7 @@
     "build": "next build --webpack",
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit",
+    "check:env": "node scripts/check-env.mjs",
     "test": "vitest run src",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",

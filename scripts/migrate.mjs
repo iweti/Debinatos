@@ -4,6 +4,8 @@ import { pathToFileURL } from 'node:url'
 
 import { neon } from '@neondatabase/serverless'
 
+import { validateMigrationEnv } from '../src/lib/config/env.mjs'
+
 // Preserve quoted strings, comments and PL/pgSQL bodies when batching SQL over HTTP.
 export function splitSql(source) {
     const statements = []
@@ -73,9 +75,7 @@ export async function migrationStatements(filename) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
     const filename = process.argv[2]
-    const connection = process.env.MIGRATION_DATABASE_URL || process.env.DATABASE_URL_UNPOOLED
-    if (!connection || new URL(connection).hostname.includes('-pooler'))
-        throw new Error('Use uma conexão direta em DATABASE_URL_UNPOOLED ou MIGRATION_DATABASE_URL.')
+    const { databaseUrl: connection } = validateMigrationEnv(process.env)
     if (!/^00[1-7]_[\w]+\.sql$/.test(filename ?? '')) throw new Error('Informe o nome de uma migração versionada.')
     const sql = neon(connection)
     const statements = await migrationStatements(filename)
