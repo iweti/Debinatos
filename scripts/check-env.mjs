@@ -13,7 +13,10 @@ import {
 } from '../src/lib/config/env.mjs'
 
 // Um controle de teste não é uma configuração da loja. A exceção vale só aqui.
-const testExceptions = { 'src/lib/__tests__/login-rate-limit-sql.test.ts': ['LOGIN_RATE_LIMIT_TEST_CONTAINER'] }
+const testExceptions = {
+    'src/lib/__tests__/login-rate-limit-sql.test.ts': ['LOGIN_RATE_LIMIT_TEST_CONTAINER'],
+    'src/lib/__tests__/migration-runner-sql.test.ts': ['LOGIN_RATE_LIMIT_TEST_CONTAINER'],
+}
 
 export async function environmentReferences(text, configuration = false) {
     const { default: ts } = await import('typescript')
