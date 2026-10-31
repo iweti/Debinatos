@@ -2,14 +2,12 @@ import assert from 'node:assert/strict'
 
 import { neon } from '@neondatabase/serverless'
 
+import { validateValidationEnv } from '../src/lib/config/env.mjs'
 import { migrationStatements } from './migrate.mjs'
 
-const connection = process.env.VALIDATION_DATABASE_URL
-if (!connection || connection === process.env.DATABASE_URL || new URL(connection).hostname.includes('-pooler')) {
-    throw new Error('Defina VALIDATION_DATABASE_URL com uma conexão direta da branch temporária de testes.')
-}
-const source = neon(process.env.DATABASE_URL)
-const sql = neon(connection)
+const { databaseUrl, sourceDatabaseUrl } = validateValidationEnv(process.env)
+const source = neon(sourceDatabaseUrl)
+const sql = neon(databaseUrl)
 const [{ modern }] = await source`SELECT to_regclass('public.product_images') IS NOT NULL AS modern`
 const products = modern
     ? await source`SELECT p.*, ARRAY(SELECT url FROM product_images i WHERE i.product_id = p.id ORDER BY position) AS img FROM products p ORDER BY p.created_at DESC, p.id`
