@@ -1,20 +1,28 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const mocks = vi.hoisted(() => ({ sql: vi.fn(), headers: vi.fn() }))
+const mocks = vi.hoisted(() => ({ sql: vi.fn(), headers: vi.fn(), secret: 's'.repeat(32), vercel: '' }))
 vi.mock('server-only', () => ({}))
 vi.mock('@/lib/server/db', () => ({ database: () => mocks.sql }))
 vi.mock('next/headers', () => ({ headers: mocks.headers }))
+vi.mock('@/lib/server/env', () => ({
+    env: {
+        get SESSION_SECRET() {
+            return mocks.secret
+        },
+        get VERCEL() {
+            return mocks.vercel
+        },
+    },
+}))
 
 import { consumeLoginAttempt, loginRateLimitKeys } from '@/lib/server/login-rate-limit'
 
 beforeEach(() => {
     vi.resetAllMocks()
-    vi.stubEnv('SESSION_SECRET', 's'.repeat(32))
-    vi.stubEnv('VERCEL', '')
+    mocks.secret = 's'.repeat(32)
+    mocks.vercel = ''
     mocks.headers.mockResolvedValue(new Headers())
 })
-
-afterEach(() => vi.unstubAllEnvs())
 
 describe('Chaves do limite de login', () => {
     it('normaliza a conta e guarda somente HMACs separados por finalidade', () => {
@@ -32,7 +40,7 @@ describe('Chaves do limite de login', () => {
     })
 
     it('na Vercel usa somente um IP válido do header da plataforma', () => {
-        vi.stubEnv('VERCEL', '1')
+        mocks.vercel = '1'
         const first = loginRateLimitKeys('admin@example.com', new Headers({ 'x-vercel-forwarded-for': '203.0.113.1' }))
         const changedAccount = loginRateLimitKeys('other@example.com', new Headers({ 'x-vercel-forwarded-for': '203.0.113.1' }))
         const changedOrigin = loginRateLimitKeys('admin@example.com', new Headers({ 'x-vercel-forwarded-for': '203.0.113.2' }))
@@ -46,14 +54,14 @@ describe('Chaves do limite de login', () => {
     })
 
     it('canonicaliza representações equivalentes de IPv6', () => {
-        vi.stubEnv('VERCEL', '1')
+        mocks.vercel = '1'
         expect(loginRateLimitKeys('admin@example.com', new Headers({ 'x-vercel-forwarded-for': '2001:db8::1' }))).toEqual(
             loginRateLimitKeys('admin@example.com', new Headers({ 'x-vercel-forwarded-for': '2001:0db8:0:0:0:0:0:0001' }))
         )
     })
 
     it('recusa segredo insuficiente para as chaves compartilhadas', () => {
-        vi.stubEnv('SESSION_SECRET', '')
+        mocks.secret = ''
         expect(() => loginRateLimitKeys('admin@example.com', new Headers())).toThrow('SESSION_SECRET')
     })
 })
