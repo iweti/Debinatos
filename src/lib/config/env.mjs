@@ -23,19 +23,26 @@ export class EnvironmentError extends Error {
     }
 }
 
+function postgresUrl(value) {
+    const original = new URL(value)
+    if (!['postgres:', 'postgresql:'].includes(original.protocol) || !original.hostname) throw new Error('URL Postgres inválida.')
+    // O SDK Neon usa HTTP no parser para normalizar escapes e caixa do host.
+    return new URL(`http:${value.slice(original.protocol.length)}`)
+}
+
 export function isPostgresUrl(value) {
     if (typeof value !== 'string' || !value || /\s/.test(value)) return false
     try {
-        const url = new URL(value)
+        const url = postgresUrl(value)
         decodeURIComponent(url.pathname)
-        return ['postgres:', 'postgresql:'].includes(url.protocol) && !!url.hostname && url.pathname.length > 1 && !url.hash
+        return !!url.hostname && url.pathname.length > 1 && !url.hash
     } catch {
         return false
     }
 }
 
 export function isDirectPostgresUrl(value) {
-    return isPostgresUrl(value) && !new URL(value).hostname.toLowerCase().includes('-pooler')
+    return isPostgresUrl(value) && !postgresUrl(value).hostname.includes('-pooler')
 }
 
 export function validateMigrationEnv(source) {
@@ -52,8 +59,8 @@ export function validateMigrationEnv(source) {
 // A validação escreve somente no destino descartável. Credenciais ou o host
 // pooled diferentes não tornam seguro usar o mesmo banco da origem.
 function databaseIdentity(value) {
-    const url = new URL(value)
-    return `${url.hostname.toLowerCase().replace(/-pooler(?=\.|$)/g, '')}:${url.port || '5432'}${decodeURIComponent(url.pathname)}`
+    const url = postgresUrl(value)
+    return `${url.hostname.replace(/-pooler(?=\.|$)/g, '')}:${url.port || '5432'}${decodeURIComponent(url.pathname)}`
 }
 
 export function validateValidationEnv(source) {
