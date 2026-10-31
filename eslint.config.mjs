@@ -93,7 +93,7 @@ export default [
     },
     {
         // Controle opt-in do teste de integração isolado; não é configuração da loja.
-        files: ['src/lib/__tests__/login-rate-limit-sql.test.ts'],
+        files: ['src/lib/__tests__/login-rate-limit-sql.test.ts', 'src/lib/__tests__/migration-runner-sql.test.ts'],
         rules: {
             'no-restricted-properties': 'off',
             'no-restricted-syntax': [
