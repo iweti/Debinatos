@@ -39,6 +39,7 @@ Aplique uma única vez, na ordem, os arquivos SQL versionados:
 4. `migrations/004_remove_legacy_images.sql`: remove `products.img` e `hero_products.image_url`, somente após publicar e validar a aplicação que usa `product_images`.
 5. `migrations/005_product_prices.sql`: adiciona `price_cents` e atualiza a gravação atômica para exigir preço positivo em centavos.
 6. `migrations/006_require_product_prices.sql`: torna o preço obrigatório no banco, após preencher os produtos existentes.
+7. `migrations/007_admin_login_rate_limit.sql`: cria limites compartilhados de tentativas do login administrativo; aplique antes de publicar o limitador.
 
 As migrações não criam usuários nem produtos e não são executadas automaticamente no build ou na inicialização. O catálogo começa vazio. Aplique e valide primeiro em uma branch de desenvolvimento, usando conexão direta; depois aplique os mesmos arquivos na branch de produção antes de publicar a aplicação.
 
@@ -87,6 +88,8 @@ Produto e suas fotos são salvos em uma transação separada da configuração d
 Todos os registros dessa tabela têm acesso administrativo ao catálogo inteiro. O projeto não oferece cadastro, listagem de usuários, recuperação de senha, contas iniciais ou scripts de criação de usuários.
 
 Configure `SESSION_SECRET` com um valor aleatório de pelo menos 32 bytes, exclusivo do servidor e igual entre instâncias de um mesmo ambiente. A sessão assinada com `jose` expira em 24 horas fixas, em cookie `HttpOnly`, `SameSite=Lax` e `Secure` em produção. Configure HTTPS na publicação. A existência do usuário é conferida no banco ao acessar o painel e executar operações protegidas. Excluir o usuário invalida seu acesso; trocar sua senha não encerra automaticamente uma sessão já emitida. Trocar o segredo invalida todas as sessões do ambiente. Sair remove o cookie do navegador.
+
+O login admite cinco tentativas por conta e trinta por origem em quinze minutos, com reservas atômicas no PostgreSQL antes da verificação da senha. Aplique a migração `007_admin_login_rate_limit.sql` antes de publicar esta versão. Confira [limites, identificação confiável de origem, retenção e testes](docs/admin-login-rate-limit.md).
 
 A proteção acontece no servidor, tanto na página quanto nas Server Actions; dados do navegador não concedem acesso. Erros de banco ou autenticação não restauram o modo demonstrativo. Sem uma conta criada manualmente pelo proprietário, o login de sucesso e as operações autenticadas ficam pendentes de validação.
 
