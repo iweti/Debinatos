@@ -133,6 +133,10 @@ Os botões de contato abrem uma nova aba com nomes e quantidades do carrinho. A 
 
 ## Organização e validação
 
+Antes de iniciar/publicar, execute `npm run check:env` com as variáveis injetadas no processo (para um arquivo local: `node --env-file=.env.local scripts/check-env.mjs`). O contexto padrão é `runtime`. Use `--context=migration` para conferir somente a conexão direta de migração e `--context=validation` para conferir origem e destino separado da validação. Os erros listam nomes, sem valores. Cada contexto reutiliza as regras puras de configuração do servidor.
+
+`npm run check:env -- --parity` confere o exemplo contra as referências de configuração em fontes e scripts, sem credenciais. `NODE_ENV`, `NEXT_RUNTIME`, `NEXT_PHASE` e `VERCEL` são fornecidas pela plataforma; `LOGIN_RATE_LIMIT_TEST_CONTAINER` é uma exceção exclusiva do teste SQL. Acesso dinâmico a `process.env` é recusado pelo verificador. Migração e validação não exigem credenciais de Cloudinary ou sessão; um destino de validação que identifique o mesmo banco da origem é recusado.
+
 As rotas ficam em `src/app`, com componentes e lógica específicos em `_components` e `_lib`. Componentes reutilizados ficam em `src/components`. Acesso ao banco e serviços externos ficam em `src/lib/server`; regras de carrinho e contato em `src/lib/domain`.
 
 ```sh

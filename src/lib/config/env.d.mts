@@ -19,4 +19,7 @@ export class EnvironmentError extends Error {
     constructor(variables: readonly string[])
 }
 export function isPostgresUrl(value: unknown): boolean
+export function isDirectPostgresUrl(value: unknown): boolean
 export function validateRuntimeEnv(source: EnvironmentSource): RuntimeEnv
+export function validateMigrationEnv(source: EnvironmentSource): Readonly<{ databaseUrl: string }>
+export function validateValidationEnv(source: EnvironmentSource): Readonly<{ databaseUrl: string; sourceDatabaseUrl: string }>
