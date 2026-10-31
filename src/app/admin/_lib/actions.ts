@@ -43,8 +43,6 @@ export async function login(...[, form]: [ActionResult, FormData]): Promise<Acti
             stage,
             name: error instanceof Error ? error.name : 'UnknownError',
             code: error && typeof error === 'object' && 'code' in error && typeof error.code === 'string' ? error.code : undefined,
-            databaseConfigured: Boolean(process.env.DATABASE_URL),
-            sessionSecretValid: Buffer.byteLength(process.env.SESSION_SECRET ?? '', 'utf8') >= 32,
         })
         return { error: 'Não foi possível entrar agora. Tente novamente em instantes.' }
     }

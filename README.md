@@ -27,6 +27,18 @@ npm start
 
 As dependências têm versões exatas em `package.json` e dependências indiretas registradas em `package-lock.json`. Use `npm ci` para reproduzir a instalação. Atualizações são explícitas e devem ser seguidas das verificações abaixo. O build usa Webpack para funcionar também em ambientes que restringem portas internas do Turbopack.
 
+## Configuração do servidor
+
+[env.mjs](src/lib/config/env.mjs) concentra regras manuais reutilizáveis por scripts Node, sem biblioteca adicional. [env.ts](src/lib/server/env.ts) restringe o acesso ao servidor e exporta `env`, tipado e congelado. Seus getters adiam a leitura até o runtime; depois da primeira validação, os valores formam um único snapshot congelado por instância. Reinicie o servidor após alterar a configuração.
+
+No início de cada instância Node, `src/instrumentation.ts` valida a configuração antes de aceitar requisições. A inicialização falha com código 1 e todos os **nomes** ausentes ou inválidos, sem valores de credenciais. O encerramento explícito evita que o Next.js 16 mantenha um listener devolvendo apenas erros após rejeitar `register()`. `DATABASE_URL` deve usar `postgres://` ou `postgresql://`, com host e nome de banco; `SESSION_SECRET` precisa de pelo menos 32 bytes UTF-8; as três credenciais `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` e `CLOUDINARY_API_SECRET` são obrigatórias. `CLOUDINARY_FOLDER` ausente ou vazio usa `debinatos`. `WHATSAPP_PHONE` é opcional: vazio mantém o canal indisponível; preenchido exige 12 ou 13 dígitos, sem pontuação. Espaços nas extremidades são removidos desses campos, exceto do segredo de sessão, cujos bytes são preservados.
+
+`NODE_ENV` aceita somente `development`, `production` ou `test` e é definido pelo Next.js. `NEXT_RUNTIME` e `NEXT_PHASE` são marcadores internos usados apenas pela instrumentação para distinguir Node, Edge e compilação. `VERCEL` também é fornecida pela plataforma: somente o valor exato `1` identifica sua origem. Essas variáveis não precisam constar em `.env.example`. O ESLint proíbe novos acessos a `process.env` na aplicação, exceto no módulo central e nesses dois marcadores da instrumentação; scripts Node mantêm uma exceção explícita para sua configuração própria.
+
+`npm run build` não exige secrets ou valores fictícios no CI, nem consulta banco/Cloudinary: importar o módulo não valida o ambiente, e as páginas que usam serviços dependem de renderização dinâmica. A validação é obrigatória em `next dev` e `next start`. As rotas atuais usam Node; caso seja adicionada uma rota Edge com serviços, ela precisará de uma estratégia de configuração compatível antes de ser publicada.
+
+O teste SQL isolado do limitador de login pode ler exclusivamente `LOGIN_RATE_LIMIT_TEST_CONTAINER`, para selecionar um contêiner descartável; essa opção do executor tem exceção ESLint específica e não integra o ambiente da loja.
+
 ## Banco e migrações
 
 A aplicação usa SQL parametrizado com `@neondatabase/serverless`, sem ORM. `DATABASE_URL` é a conexão da aplicação; `DATABASE_URL_UNPOOLED` deve usar o host direto, sem `-pooler`, para migrações. Os módulos de banco, sessão e Cloudinary são marcados com `server-only`.
@@ -115,7 +127,7 @@ O catálogo vazio é exibido sem produtos fictícios. Falhas de conexão apresen
 
 ## WhatsApp
 
-Configure `WHATSAPP_PHONE` com código do país, DDD e número, apenas dígitos. Sem configuração válida, o botão fica desativado com o aviso “WhatsApp em breve”. Reinicie o desenvolvimento ou publique novamente após alterar a variável, que é lida no servidor.
+Configure `WHATSAPP_PHONE` com código do país, DDD e número, apenas dígitos (12–13 caracteres). Sem número, o botão fica desativado com o aviso “WhatsApp em breve”; um número preenchido em formato inválido impede a inicialização do servidor. Reinicie o desenvolvimento ou publique novamente após alterar a variável, que é lida no servidor.
 
 Os botões de contato abrem uma nova aba com nomes e quantidades do carrinho. A quantidade cadastrada no banco permanece como informação interna: não limita o carrinho, mesmo quando é zero. Produtos removidos ou desativados e quantidades inválidas exigem revisão. O contato não exige login, não envia a mensagem automaticamente, não esvazia o carrinho e não baixa estoque. Disponibilidade, envio, retirada e demais detalhes são confirmados na conversa pelo WhatsApp.
 
@@ -130,7 +142,7 @@ make test
 npm run build
 ```
 
-Nenhum arquivo novo de teste faz parte desta etapa. A suíte existente cobre carrinho, contato e persistência local de carrinho e favoritos. Confira manualmente login válido/inválido, expiração, logout, bloqueio de operações sem sessão, cadastro/edição/visibilidade, falhas de upload e catálogo vazio. Para sucesso autenticado, use uma conta criada manualmente pelo proprietário no banco.
+A suíte cobre configuração do servidor, carrinho, contato e persistência local de carrinho e favoritos. Os testes de configuração usam valores fictícios e verificam erros agregados, UTF-8, opcionais, imutabilidade e inicialização, sem acessar serviços externos. Confira manualmente login válido/inválido, expiração, logout, bloqueio de operações sem sessão, cadastro/edição/visibilidade, falhas de upload e catálogo vazio. Para sucesso autenticado, use uma conta criada manualmente pelo proprietário no banco.
 
 `make check` verifica formatação, lint e tipos sem corrigir os arquivos. A verificação de formatação também pode ser executada isoladamente com `npm run format:check`: ela usa os mesmos caminhos de `npm run format`, retorna erro quando encontra divergências e não reescreve o código. Gere os tipos de rota com `npx next typegen` antes da primeira verificação em um checkout novo.
 
