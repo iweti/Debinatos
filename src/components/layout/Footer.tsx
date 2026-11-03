@@ -1,7 +1,7 @@
 import { Heart, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
-import { INSTAGRAM_URL } from '@/lib/constants/brand'
+import { INSTAGRAM_URL } from '@/lib/constants'
 
 export function Footer() {
     return (

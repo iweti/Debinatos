@@ -3,8 +3,7 @@ import { Gift, MapPin, Truck } from 'lucide-react'
 import { ContactAction } from '@/components/contact/ContactAction'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { PageHeading } from '@/components/ui/PageHeading'
-import { INSTAGRAM_URL } from '@/lib/constants/brand'
-import { PICKUP_ADDRESS } from '@/lib/constants/store'
+import { INSTAGRAM_URL, PICKUP_ADDRESS } from '@/lib/constants'
 import { env } from '@/lib/server/env'
 
 export default function Page() {
