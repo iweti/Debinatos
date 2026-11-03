@@ -42,7 +42,7 @@ export function Catalog({ phone }: { phone?: string }) {
             </div>
             <div className="grid gap-6 md:grid-cols-[170px_minmax(0,1fr)] lg:grid-cols-[190px_minmax(0,1fr)] lg:gap-10">
                 <aside
-                    className="hidden md:block data-[open=true]:block data-[open=true]:rounded-lg data-[open=true]:border data-[open=true]:border-line data-[open=true]:bg-surface data-[open=true]:p-5 data-[open=true]:md:rounded-none data-[open=true]:md:border-0 data-[open=true]:md:bg-transparent data-[open=true]:md:p-0"
+                    className="hidden min-w-0 md:block data-[open=true]:block data-[open=true]:rounded-lg data-[open=true]:border data-[open=true]:border-line data-[open=true]:bg-surface data-[open=true]:p-5 data-[open=true]:md:rounded-none data-[open=true]:md:border-0 data-[open=true]:md:bg-transparent data-[open=true]:md:p-0"
                     data-open={filtersOpen}
                 >
                     <h3 className="mb-7 flex items-center gap-2 text-sm">
@@ -53,8 +53,8 @@ export function Catalog({ phone }: { phone?: string }) {
                         {['', ...categories].map((c) => (
                             <label className="mb-3.5 flex cursor-pointer items-center gap-2 text-[11px] text-[#6b554c]" key={c}>
                                 <input className="m-0" type="radio" name="categoria" checked={category === c} onChange={() => updateFilter('categoria', c)} />
-                                {c || 'Todos os produtos'}
-                                <span className="ml-auto text-[10px] text-muted">{categoryCounts[c]}</span>
+                                <span className="min-w-0 flex-1 wrap-anywhere">{c || 'Todos os produtos'}</span>
+                                <span className="ml-auto shrink-0 text-[10px] text-muted">{categoryCounts[c]}</span>
                             </label>
                         ))}
                     </fieldset>
@@ -72,8 +72,8 @@ export function Catalog({ phone }: { phone?: string }) {
                         <p className="mt-2.5 text-[10px] text-muted">Seu próximo favorito pode estar a um detalhe de distância.</p>
                     </div>
                 </aside>
-                <section aria-label="Produtos">
-                    <div className="mb-6 flex min-h-9 items-center justify-between gap-3 text-[10px] text-muted md:text-[11px]">
+                <section className="min-w-0" aria-label="Produtos">
+                    <div className="mb-6 flex min-h-9 flex-wrap items-center justify-between gap-3 text-[10px] text-muted md:text-[11px]">
                         <span>
                             <strong className="font-medium text-ink">{products.length}</strong>{' '}
                             {products.length === 1 ? 'encanto encontrado' : 'encantos encontrados'}
