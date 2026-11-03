@@ -1,20 +1,49 @@
 'use client'
 import { Check, Plus, ShoppingBag } from 'lucide-react'
+import type { RefObject } from 'react'
 
 import { useStore } from '@/lib/state/store-context'
 import type { Product } from '@/lib/types/store'
 
 import styles from './ActionFeedback.module.css'
+import { useCartAnimation } from './cart-animation-context'
 import { useActionFeedback } from './use-action-feedback'
 
-export function AddToCartButton({ product, quantity = 1, compact = false }: { product: Pick<Product, 'id' | 'name'>; quantity?: number; compact?: boolean }) {
+export function AddToCartButton({
+    product,
+    quantity = 1,
+    compact = false,
+    photoRef,
+}: {
+    photoRef?: RefObject<HTMLDivElement | null>
+    product: Pick<Product, 'id' | 'name'>
+    quantity?: number
+    compact?: boolean
+}) {
     const { add, ready } = useStore()
     const { feedback, confirm, reset } = useActionFeedback(2000)
+    const animate = useCartAnimation()
 
     const handleAdd = () => {
         if (!add(product.id, quantity)) {
             reset()
             return
+        }
+        const image = photoRef?.current?.querySelector('img')
+        if (image && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const rect = image.getBoundingClientRect()
+            if (rect.width > 0 && rect.height > 0) {
+                const computed = window.getComputedStyle(image)
+                animate({
+                    source: image.currentSrc || image.src,
+                    left: rect.left,
+                    top: rect.top,
+                    width: rect.width,
+                    height: rect.height,
+                    objectFit: computed.objectFit,
+                    objectPosition: computed.objectPosition,
+                })
+            }
         }
         confirm()
     }

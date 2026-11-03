@@ -1,6 +1,7 @@
 'use client'
 import { Sparkles } from 'lucide-react'
 import Link from 'next/link'
+import { useRef } from 'react'
 
 import { AddToCartButton } from '@/components/product/AddToCartButton'
 import { FavoriteButton } from '@/components/product/FavoriteButton'
@@ -11,9 +12,10 @@ import type { Product } from '@/lib/types/store'
 import styles from './ProductCard.module.css'
 
 export function ProductCard({ product }: { product: Product }) {
+    const photoRef = useRef<HTMLDivElement>(null)
     return (
         <article className={`group/product-card relative min-w-0 ${styles.card}`}>
-            <div className="relative aspect-[.91] overflow-hidden rounded-lg bg-[#f5f1ec]">
+            <div ref={photoRef} className="relative aspect-[.91] overflow-hidden rounded-lg bg-[#f5f1ec]">
                 <Link className="block h-full" href={`/produto/${product.id}`} aria-label={`Ver ${product.name}`}>
                     <Photo
                         className="size-full object-cover transition-transform duration-500 group-hover/product-card:scale-[1.035]"
@@ -41,7 +43,7 @@ export function ProductCard({ product }: { product: Product }) {
                 </Link>
                 <div className={styles.purchase}>
                     <p className={`${styles.price} font-semibold text-brand`}>{formatMoney(product.priceCents)}</p>
-                    <AddToCartButton key={product.id} product={product} compact />
+                    <AddToCartButton key={product.id} product={product} photoRef={photoRef} compact />
                 </div>
                 <small className={`${styles.tagline} mt-1.5 block text-muted`}>Um detalhe para chamar de seu.</small>
             </div>
