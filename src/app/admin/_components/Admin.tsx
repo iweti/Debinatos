@@ -3,9 +3,7 @@ import { ArrowLeft, LayoutDashboard, LogOut, Pencil, Plus, Search, ShieldCheck, 
 import Link from 'next/link'
 
 import { Photo } from '@/components/product/Photo'
-import { formatMoney } from '@/lib/domain/money'
-import type { AdminProduct } from '@/lib/types/admin'
-import type { HeroSelections } from '@/lib/types/store'
+import type { HeroSelections, Product } from '@/lib/types/store'
 
 import { logout } from '../_lib/actions'
 import { useAdmin } from '../_lib/use-admin'
@@ -14,7 +12,7 @@ import { HighlightsEditor } from './HighlightsEditor'
 import { ProductEditor } from './ProductEditor'
 import { StatsCard } from './StatsCard'
 
-export function Admin({ initialProducts, initialHero }: { initialProducts: AdminProduct[]; initialHero: HeroSelections }) {
+export function Admin({ initialProducts, initialHero }: { initialProducts: Product[]; initialHero: HeroSelections }) {
     const { tab, editor, setEditor, search, setSearch, products, stats, totalProducts, changeTab, toggleProduct, pending } = useAdmin(initialProducts)
     const highlights = useHighlights(initialProducts, initialHero)
     return (
@@ -120,7 +118,6 @@ export function Admin({ initialProducts, initialHero }: { initialProducts: Admin
                                     <tr>
                                         <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">Produto</th>
                                         <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">Categoria</th>
-                                        <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">Preço</th>
                                         <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">Estoque</th>
                                         <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">Visibilidade</th>
                                         <th className="border-b border-line bg-[#fdfbf7] px-5 py-4 text-[10px] font-medium text-muted">
@@ -138,9 +135,6 @@ export function Admin({ initialProducts, initialHero }: { initialProducts: Admin
                                                 </div>
                                             </td>
                                             <td className="border-b border-[#f0e8de] px-5 py-4 last:px-2.5 group-last/tr:border-0">{p.category}</td>
-                                            <td className="border-b border-[#f0e8de] px-5 py-4 last:px-2.5 group-last/tr:border-0">
-                                                {formatMoney(p.priceCents)}
-                                            </td>
                                             <td className="border-b border-[#f0e8de] px-5 py-4 last:px-2.5 group-last/tr:border-0">
                                                 <span className={p.stock <= 3 ? 'text-brand' : undefined}>{p.stock} un.</span>
                                             </td>

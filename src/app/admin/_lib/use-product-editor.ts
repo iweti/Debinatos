@@ -2,18 +2,17 @@
 import type { FormEvent } from 'react'
 import { useRef, useState, useTransition } from 'react'
 
-import { parsePrice, priceInput } from '@/lib/domain/money'
 import { useStore } from '@/lib/state/store-context'
-import type { AdminProduct, ProductImageInput } from '@/lib/types/admin'
+import type { ProductImageInput } from '@/lib/types/admin'
+import type { Product } from '@/lib/types/store'
 
 import { authorizeImageUpload, saveProduct } from './actions'
 
-export function useProductEditor(product: AdminProduct | null, close: () => void) {
+export function useProductEditor(product: Product | null, close: () => void) {
     const { notify } = useStore()
     const [name, setName] = useState(product?.name ?? '')
     const [category, setCategory] = useState(product?.category ?? 'Bijuterias')
     const [stock, setStock] = useState(product?.stock.toString() ?? '1')
-    const [price, setPrice] = useState(product ? priceInput(product.priceCents) : '')
     const [description, setDescription] = useState(product?.description ?? '')
     const [material, setMaterial] = useState(product?.material ?? '')
     const [dimensions, setDimensions] = useState(product?.dimensions ?? '')
@@ -75,11 +74,6 @@ export function useProductEditor(product: AdminProduct | null, close: () => void
         event.preventDefault()
         if (busy.current || uploadFailed) return
         const quantity = Number(stock)
-        const priceCents = parsePrice(price)
-        if (priceCents === undefined) {
-            setError('Informe um preço maior que zero, com até duas casas decimais e no máximo R$ 21.474.836,47.')
-            return
-        }
         if (
             !stock.trim() ||
             !name.trim() ||
@@ -105,7 +99,6 @@ export function useProductEditor(product: AdminProduct | null, close: () => void
                     name,
                     category,
                     stock: quantity,
-                    priceCents,
                     description,
                     material,
                     dimensions,
@@ -132,8 +125,6 @@ export function useProductEditor(product: AdminProduct | null, close: () => void
         setCategory,
         stock,
         setStock,
-        price,
-        setPrice,
         description,
         setDescription,
         material,

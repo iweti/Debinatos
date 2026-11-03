@@ -6,21 +6,20 @@ import type { HeroSelections, Product } from '@/lib/types/store'
 
 import { database } from './db'
 
-export const getProducts = cache(async (): Promise<Product[]> => {
+export const getProducts = cache(async (includeInactive = false): Promise<Product[]> => {
     const rows = await database()`
-        SELECT p.id, p.name, p.description, p.price_cents, p.created_at, p.category, p.material, p.dimensions,
+        SELECT p.id, p.name, p.description, p.stock, p.created_at, p.category, p.material, p.dimensions,
             p.active, p.featured, p.featured_order, p.badge,
             coalesce((SELECT jsonb_agg(jsonb_build_object('id', i.id, 'url', i.url, 'position', i.position) ORDER BY i.position)
                 FROM product_images i WHERE i.product_id = p.id), '[]'::jsonb) AS images
-        FROM products p WHERE p.active = true
+        FROM products p WHERE p.active = true OR ${includeInactive} = true
         ORDER BY p.created_at DESC, p.id
     `
-    // Only public fields may cross the StoreProvider's server/client boundary.
     return rows.map((row) => ({
         id: row.id,
         name: row.name,
         description: row.description,
-        priceCents: row.price_cents,
+        stock: row.stock,
         createdAt: new Date(row.created_at).toISOString(),
         category: row.category,
         material: row.material,

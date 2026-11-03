@@ -13,7 +13,7 @@ export type Product = {
     material: string
     dimensions: string
     images: ProductImage[]
-    priceCents: number
+    stock: number
     active: boolean
     featured: boolean
     featuredOrder: number | null

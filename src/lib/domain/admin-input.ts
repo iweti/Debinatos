@@ -1,5 +1,4 @@
 import type { HighlightsInput, ProductInput } from '../types/admin'
-import { validPriceCents } from './money'
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export const validId = (value: unknown): value is string => typeof value === 'string' && uuid.test(value)
@@ -16,7 +15,6 @@ export function parseProductInput(value: unknown, validImageUrl: (url: unknown) 
     }
     if (value.id !== undefined && !validId(value.id)) return
     if (typeof value.stock !== 'number' || !Number.isInteger(value.stock) || value.stock < 0 || value.stock > 2147483647) return
-    if (!validPriceCents(value.priceCents)) return
     if (typeof value.active !== 'boolean') return
     if (!Array.isArray(value.images) || value.images.length < 1 || value.images.length > 5) return
     const images: ProductInput['images'] = []
@@ -36,7 +34,6 @@ export function parseProductInput(value: unknown, validImageUrl: (url: unknown) 
         material: text.material,
         dimensions: text.dimensions,
         stock: value.stock,
-        priceCents: value.priceCents,
         active: value.active,
         images,
         badge: typeof value.badge === 'string' ? value.badge.trim() || undefined : undefined,

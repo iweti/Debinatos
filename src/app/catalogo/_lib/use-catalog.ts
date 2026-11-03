@@ -2,7 +2,7 @@
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
-import { catalogFilterUrl, catalogProducts, parseCatalogSort } from '@/lib/domain/catalog'
+import { compareFeatured, compareNewest } from '@/lib/domain/highlights'
 import { useStore } from '@/lib/state/store-context'
 
 export function useCatalog() {
@@ -17,16 +17,26 @@ export function useCatalog() {
         if (document.activeElement !== searchInput.current) setQuery(urlQuery)
     }, [urlQuery])
     const category = params.get('categoria') ?? ''
-    const sort = parseCatalogSort(params.get('ordem'))
+    const sort = params.get('ordem') === 'novidades' ? 'novidades' : 'destaques'
     const categories = [...new Set(state.products.filter((p) => p.active).map((p) => p.category))]
-    const updateFilter = (key: 'q' | 'categoria' | 'ordem', value: string) => {
-        window.history.replaceState(null, '', catalogFilterUrl(window.location.search, { [key]: value }))
+    const updateFilter = (key: string, value: string) => {
+        const next = new URLSearchParams(window.location.search)
+        if (value) next.set(key, value)
+        else next.delete(key)
+        window.history.replaceState(null, '', `/catalogo?${next.toString()}`)
     }
     const clearFilters = () => {
         setQuery('')
-        window.history.replaceState(null, '', catalogFilterUrl(window.location.search, { q: '', categoria: '' }))
+        window.history.replaceState(null, '', '/catalogo')
     }
-    const products = catalogProducts(state.products, { query, category, sort })
+    const normalize = (s: string) =>
+        s
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+    const products = state.products
+        .filter((p) => p.active && (!category || p.category === category) && normalize(p.name).includes(normalize(query)))
+        .sort(sort === 'novidades' ? compareNewest : compareFeatured)
     const categoryCounts = Object.fromEntries(['', ...categories].map((c) => [c, state.products.filter((p) => p.active && (!c || p.category === c)).length]))
     function changeSearch(value: string) {
         setQuery(value)

@@ -1,38 +1,30 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help dev check lint fix test validate update
+.PHONY: help dev lint test validate update
 
 help:
 	@printf '%s\n' \
 	  'Comandos disponíveis:' \
 	  '  make help      Exibe esta ajuda' \
 	  '  make dev       Inicia o servidor de desenvolvimento' \
-	  '  make check     Verifica formatação, lint e tipos sem corrigir arquivos' \
-	  '  make lint      Alias de make check (não corrige arquivos)' \
-	  '  make fix       Aplica correções do ESLint e formata com Prettier' \
+	  '  make lint      Formata (Prettier), analisa (ESLint) e verifica tipos' \
 	  '  make test      Executa os testes' \
-	  '  make validate  Executa check e, se passar, os testes' \
+	  '  make validate  Executa lint e, se passar, os testes' \
 	  '  make update    Atualiza todas as dependências para latest e valida'
 
 dev:
 	npm run dev
 
-check:
-	npm run format:check
+lint:
+	npm run format
 	npm run lint
 	npm run typecheck
-
-lint: check
-
-fix:
-	npm run lint:fix
-	npm run format
 
 test:
 	npm test
 
 validate:
-	$(MAKE) check
+	$(MAKE) lint
 	$(MAKE) test
 
 # Atualização manual de todas as dependências, incluindo versões principais.
