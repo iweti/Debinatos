@@ -1,7 +1,8 @@
 'use client'
-import { Heart, Plus, Sparkles } from 'lucide-react'
+import { Heart, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 
+import { AddToCartButton } from '@/components/product/AddToCartButton'
 import { Photo } from '@/components/product/Photo'
 import { formatMoney } from '@/lib/domain/money'
 import type { Product } from '@/lib/types/store'
@@ -10,7 +11,7 @@ import styles from './ProductCard.module.css'
 import { useProductCard } from './use-product-card'
 
 export function ProductCard({ product }: { product: Product }) {
-    const { saved, favorite, add } = useProductCard(product.id)
+    const { saved, favorite } = useProductCard(product.id)
     return (
         <article className={`group/product-card relative min-w-0 ${styles.card}`}>
             <div className="relative aspect-[.91] overflow-hidden rounded-lg bg-[#f5f1ec]">
@@ -48,13 +49,7 @@ export function ProductCard({ product }: { product: Product }) {
                 </Link>
                 <div className={styles.purchase}>
                     <p className={`${styles.price} font-semibold text-brand`}>{formatMoney(product.priceCents)}</p>
-                    <button
-                        className="grid size-7 shrink-0 self-end place-items-center rounded-full border border-[#e8d8cc] text-brand transition hover:border-brand hover:bg-brand hover:text-white md:size-7.5"
-                        onClick={() => add(product.id)}
-                        aria-label={`Adicionar ${product.name} ao carrinho`}
-                    >
-                        <Plus size={19} />
-                    </button>
+                    <AddToCartButton key={product.id} product={product} compact />
                 </div>
                 <small className={`${styles.tagline} mt-1.5 block text-muted`}>Um detalhe para chamar de seu.</small>
             </div>

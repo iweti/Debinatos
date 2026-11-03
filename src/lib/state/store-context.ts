@@ -12,7 +12,7 @@ export type Store = {
     quantity: (id: string, count: number) => boolean
     favorite: (id: string) => void
     removeUnavailableFavorites: () => boolean
-    toast: { message: string; error: boolean } | null
+    toast: { message: string; error: boolean; cartAdded?: boolean } | null
     dismissToast: () => void
 }
 export const StoreContext = createContext<Store | null>(null)
