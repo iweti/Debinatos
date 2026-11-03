@@ -6,14 +6,13 @@ import { redirect } from 'next/navigation'
 import { cache } from 'react'
 
 import { database } from './db'
+import { env } from './env'
 
 const COOKIE_NAME = 'debinatos-admin'
 const SESSION_SECONDS = 24 * 60 * 60
 
 function sessionKey() {
-    const secret = process.env.SESSION_SECRET
-    if (!secret || Buffer.byteLength(secret) < 32) throw new Error('Configure SESSION_SECRET com pelo menos 32 bytes.')
-    return new TextEncoder().encode(secret)
+    return new TextEncoder().encode(env.SESSION_SECRET)
 }
 
 export const getAdmin = cache(async () => {
@@ -56,7 +55,7 @@ export async function createSession(id: string) {
     const cookieStore = await cookies()
     cookieStore.set(COOKIE_NAME, token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
         expires,

@@ -71,4 +71,39 @@ export default [
             ],
         },
     },
+    {
+        files: ['src/**/*.{ts,tsx,mjs}'],
+        ignores: ['src/lib/server/env.ts', 'src/instrumentation.ts'],
+        rules: {
+            'no-restricted-properties': ['error', { object: 'process', property: 'env', message: 'Use o módulo server-only de configuração centralizada.' }],
+        },
+    },
+    {
+        files: ['src/instrumentation.ts'],
+        rules: {
+            'no-restricted-syntax': [
+                'error',
+                {
+                    selector:
+                        "MemberExpression[object.name='process'][property.name='env']:not([parent.type='MemberExpression'][parent.computed=false][parent.property.name=/^(NEXT_RUNTIME|NEXT_PHASE)$/])",
+                    message: 'A instrumentação pode ler apenas NEXT_RUNTIME e NEXT_PHASE; use o módulo central para a configuração.',
+                },
+            ],
+        },
+    },
+    {
+        // Controle opt-in do teste de integração isolado; não é configuração da loja.
+        files: ['src/lib/__tests__/login-rate-limit-sql.test.ts'],
+        rules: {
+            'no-restricted-properties': 'off',
+            'no-restricted-syntax': [
+                'error',
+                {
+                    selector:
+                        "MemberExpression[object.name='process'][property.name='env']:not([parent.type='MemberExpression'][parent.computed=false][parent.property.name='LOGIN_RATE_LIMIT_TEST_CONTAINER'])",
+                    message: 'Este teste pode ler somente LOGIN_RATE_LIMIT_TEST_CONTAINER para escolher o contêiner descartável.',
+                },
+            ],
+        },
+    },
 ]
