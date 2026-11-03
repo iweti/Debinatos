@@ -77,4 +77,8 @@ No painel, cadastre os produtos, envie até cinco fotos por produto e configure 
 
 Antes de enviar alterações, execute `npx next typegen`, `make check`, `make test` e `npm run build`. O CI também verifica vulnerabilidades das dependências de produção. Login, uploads e conexão com os serviços precisam de validação no ambiente configurado.
 
+## Publicação
+
+A publicação usa o projeto **debinatos** na Vercel, com deploys automáticos pela integração Git habilitados em [vercel.json](vercel.json). A Vercel define o destino das branches e os domínios. Esses deploys não aguardam o CI nem aplicam migrações automaticamente. O [CD opcional](.github/workflows/deploy.yml) e o [workflow manual de migrações](.github/workflows/migrate.yml) dependem de variáveis explícitas de habilitação; evite habilitar dois fluxos de publicação ao mesmo tempo.
+
 Referências das imagens utilizadas: [Recursos visuais](ASSETS.md).

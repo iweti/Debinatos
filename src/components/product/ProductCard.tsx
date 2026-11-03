@@ -1,20 +1,21 @@
 'use client'
-import { Heart, Sparkles } from 'lucide-react'
+import { Sparkles } from 'lucide-react'
 import Link from 'next/link'
+import { useRef } from 'react'
 
 import { AddToCartButton } from '@/components/product/AddToCartButton'
+import { FavoriteButton } from '@/components/product/FavoriteButton'
 import { Photo } from '@/components/product/Photo'
 import { formatMoney } from '@/lib/domain/money'
 import type { Product } from '@/lib/types/store'
 
 import styles from './ProductCard.module.css'
-import { useProductCard } from './use-product-card'
 
 export function ProductCard({ product }: { product: Product }) {
-    const { saved, favorite } = useProductCard(product.id)
+    const photoRef = useRef<HTMLDivElement>(null)
     return (
         <article className={`group/product-card relative min-w-0 ${styles.card}`}>
-            <div className="relative aspect-[.91] overflow-hidden rounded-lg bg-[#f5f1ec]">
+            <div ref={photoRef} className="relative aspect-[.91] overflow-hidden rounded-lg bg-[#f5f1ec]">
                 <Link className="block h-full" href={`/produto/${product.id}`} aria-label={`Ver ${product.name}`}>
                     <Photo
                         className="size-full object-cover transition-transform duration-500 group-hover/product-card:scale-[1.035]"
@@ -31,14 +32,7 @@ export function ProductCard({ product }: { product: Product }) {
                         {product.badge === 'Queridinho' && <Sparkles size={12} />} {product.badge}
                     </span>
                 )}
-                <button
-                    className="absolute top-2 right-2 grid size-7 place-items-center rounded-full border border-white/50 bg-[#fffef9ef] transition hover:scale-110 md:size-8 aria-pressed:text-brand"
-                    onClick={() => favorite(product.id)}
-                    aria-label={`${saved ? 'Remover' : 'Salvar'} ${product.name}${saved ? ' dos favoritos' : ' nos favoritos'}`}
-                    aria-pressed={saved}
-                >
-                    <Heart className="size-4" size={18} fill={saved ? 'currentColor' : 'none'} />
-                </button>
+                <FavoriteButton key={product.id} product={product} compact />
             </div>
             <div className="pt-3 md:pt-4">
                 <span className={`${styles.category} text-muted`} title={product.category}>
@@ -49,7 +43,7 @@ export function ProductCard({ product }: { product: Product }) {
                 </Link>
                 <div className={styles.purchase}>
                     <p className={`${styles.price} font-semibold text-brand`}>{formatMoney(product.priceCents)}</p>
-                    <AddToCartButton key={product.id} product={product} compact />
+                    <AddToCartButton key={product.id} product={product} photoRef={photoRef} compact />
                 </div>
                 <small className={`${styles.tagline} mt-1.5 block text-muted`}>Um detalhe para chamar de seu.</small>
             </div>
