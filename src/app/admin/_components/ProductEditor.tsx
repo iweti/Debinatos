@@ -2,13 +2,13 @@
 import { Check, GripVertical, ImagePlus, X } from 'lucide-react'
 
 import { Photo } from '@/components/product/Photo'
-import type { Product } from '@/lib/types/store'
+import type { AdminProduct } from '@/lib/types/admin'
 
 import { useProductEditor } from '../_lib/use-product-editor'
 import { useReorder } from '../_lib/use-reorder'
 import { Modal } from './Modal'
 
-export function ProductEditor({ product, close, categories }: { product: Product | null; close: () => void; categories: string[] }) {
+export function ProductEditor({ product, close, categories }: { product: AdminProduct | null; close: () => void; categories: string[] }) {
     const {
         name,
         setName,

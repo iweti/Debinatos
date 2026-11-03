@@ -38,7 +38,7 @@ describe('Totais do carrinho', () => {
 })
 
 describe('Reconciliação do carrinho com o catálogo', () => {
-    it('remove produtos ausentes ou inativos, preservando favoritos e produtos ativos sem estoque', () => {
+    it('remove produtos ausentes ou inativos, preservando favoritos e produtos ativos sem informação de estoque', () => {
         const state = createStoreState()
         state.products[0].active = false
         state.cart = [

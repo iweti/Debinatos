@@ -1,7 +1,8 @@
 import type { HeroSelections, Product } from './store'
 
 export type ProductImageInput = { id?: string; url: string }
-export type ProductInput = Omit<Product, 'id' | 'createdAt' | 'featured' | 'featuredOrder' | 'images'> & {
+export type AdminProduct = Product & { stock: number }
+export type ProductInput = Omit<AdminProduct, 'id' | 'createdAt' | 'featured' | 'featuredOrder' | 'images'> & {
     id?: string
     images: ProductImageInput[]
 }
