@@ -166,6 +166,6 @@ Referências dos recursos visuais: [ASSETS.md](ASSETS.md).
 
 ## Publicação
 
-A publicação usa o projeto existente **debinatos** na Vercel. O [CD](.github/workflows/deploy.yml) exige CI verde do mesmo SHA de `dev`/`main`; produção usa environment protegido, publicação sem promover domínios, smoke HTTP e promoção do mesmo artefato. O [workflow manual de migrações](.github/workflows/migrate.yml) exige conexão direta, validação de configuração e registro transacional com checksum. Ambos começam desabilitados por variáveis explícitas.
+A publicação usa o projeto existente **debinatos** na Vercel, com deploys automáticos pela integração Git habilitados em [vercel.json](vercel.json). A Vercel define o destino de cada branch e os domínios associados. O CI continua validando `dev`/`main`, mas não bloqueia esses deploys por esta configuração.
 
-Consulte [Publicação e migrações](docs/deploy-and-migrations.md) antes de habilitar: define ambientes, secrets separados, reviewers obrigatórios, baseline de bancos existentes, proteção especial da 004 e recuperação. A configuração [vercel.json](vercel.json) desabilita deploys automáticos da integração Git para preservar o gate de CI. Nenhuma configuração remota, publicação ou migração real foi executada por esta PR.
+O [CD opcional](.github/workflows/deploy.yml) e o [workflow manual de migrações](.github/workflows/migrate.yml) continuam dependendo de variáveis explícitas de habilitação. Consulte [Publicação e migrações](docs/deploy-and-migrations.md) antes de habilitá-los: define ambientes, secrets separados, reviewers obrigatórios, baseline de bancos existentes, proteção especial da 004 e recuperação. Deploys pela integração Git não executam esses workflows nem aplicam migrações automaticamente.
