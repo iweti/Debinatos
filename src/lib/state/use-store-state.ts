@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { addToCart, reconcileVisitor, setQuantity } from '../domain/cart'
+import { removeUnavailableFavorites } from '../domain/favorites'
 import { emptyVisitor, readVisitorForCatalog, VISITOR_LEGACY_KEYS, VISITOR_STORAGE_KEY, writeVisitor } from '../storage/visitor-state'
 import type { Product, StoreState } from '../types/store'
 import type { Store } from './store-context'
@@ -60,5 +61,6 @@ export function useStoreState(products: Product[], catalogError: boolean): Store
         add: (id, quantity = 1) => update((s) => addToCart(s, id, quantity), 'Um encanto a mais no seu carrinho!'),
         quantity: (id, count) => update((s) => setQuantity(s, id, count)),
         favorite: (id) => update((s) => ({ ...s, favorites: s.favorites.includes(id) ? s.favorites.filter((f) => f !== id) : [...s.favorites, id] })),
+        removeUnavailableFavorites: () => update((s) => removeUnavailableFavorites(s, catalogError), 'Itens indisponíveis removidos dos favoritos.'),
     }
 }
