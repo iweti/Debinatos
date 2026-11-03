@@ -16,7 +16,7 @@ function store(overrides: Partial<Store> = {}): Store {
         notify: vi.fn(),
         add: vi.fn(() => true),
         quantity: vi.fn(() => true),
-        favorite: vi.fn(),
+        favorite: vi.fn(() => true),
         removeUnavailableFavorites: vi.fn(() => true),
         toast: null,
         dismissToast: vi.fn(),

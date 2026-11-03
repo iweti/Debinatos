@@ -27,7 +27,7 @@ function renderContact({ catalogError = true, phone = '5511999999999' }: { catal
         notify: vi.fn(),
         add: vi.fn(),
         quantity: vi.fn(),
-        favorite: vi.fn(),
+        favorite: vi.fn(() => true),
         removeUnavailableFavorites: vi.fn(),
         toast: null,
         dismissToast: vi.fn(),

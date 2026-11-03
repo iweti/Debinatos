@@ -1,0 +1,83 @@
+.icon {
+    display: inline-flex;
+}
+
+.ring {
+    position: absolute;
+    inset: 0;
+    border: 1px solid currentColor;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.cartRing {
+    color: var(--color-leaf);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .favoriteIcon {
+        animation: heart-pop 500ms ease-out;
+    }
+
+    .favoriteRing {
+        animation: favorite-ripple 550ms ease-out;
+    }
+
+    .cartIcon {
+        animation: cart-pop 400ms ease-out;
+    }
+
+    .cartRing {
+        animation: cart-ripple 500ms ease-out;
+    }
+}
+
+@keyframes heart-pop {
+    0% {
+        transform: scale(0.75);
+    }
+    40% {
+        transform: scale(1.3) rotate(-12deg);
+    }
+    70% {
+        transform: scale(0.95) rotate(5deg);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes favorite-ripple {
+    from {
+        opacity: 0.5;
+        transform: scale(0.7);
+    }
+    to {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+}
+
+@keyframes cart-pop {
+    0% {
+        transform: scale(0.6) rotate(-15deg);
+    }
+    60% {
+        transform: scale(1.2) rotate(5deg);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes cart-ripple {
+    from {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(1.15, 1.35);
+    }
+}
