@@ -8,12 +8,13 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Loading } from '@/components/ui/Loading'
 import { PageHeading } from '@/components/ui/PageHeading'
 import { Quantity } from '@/components/ui/Quantity'
+import { formatMoney } from '@/lib/domain/money'
 
 import { useCart } from '../_lib/use-cart'
 import { CartContactAction } from './CartContactAction'
 
 export function Cart({ phone }: { phone?: string }) {
-    const { quantity, ready, rows, itemCount } = useCart()
+    const { quantity, ready, rows, itemCount, totalCents } = useCart()
     if (!ready) return <Loading />
     return (
         <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
@@ -29,7 +30,7 @@ export function Cart({ phone }: { phone?: string }) {
                 <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_330px] lg:gap-8">
                     <div>
                         <div className="border-t border-line">
-                            {rows.map(({ item, product }) => (
+                            {rows.map(({ item, product, subtotalCents }) => (
                                 <article
                                     className="relative flex items-start gap-3 border-b border-line py-5 md:items-center md:gap-5 md:py-6"
                                     key={item.productId}
@@ -41,18 +42,14 @@ export function Cart({ phone }: { phone?: string }) {
                                             alt={`Foto de ${product?.name ?? 'Produto indisponível'}`}
                                         />
                                     </Link>
-                                    <div className="min-w-0 flex-1 pb-9 md:pb-0">
+                                    <div className="min-w-0 flex-1 pb-14 md:pb-0">
                                         <span className="inline-flex items-center gap-2 leading-relaxed font-semibold text-brand uppercase text-[7px] tracking-wider md:text-[8px]">
                                             {product?.category ?? 'Produto indisponível'}
                                         </span>
                                         <Link href={`/produto/${item.productId}`}>
                                             <h3 className="my-1.5 font-serif text-[15px] font-medium md:text-[17px]">{product?.name ?? 'Produto removido'}</h3>
                                         </Link>
-                                        {!product?.active && (
-                                            <span className="my-3 leading-relaxed block text-[11px] text-muted">
-                                                Produto fora do catálogo. Remova o item do carrinho.
-                                            </span>
-                                        )}
+                                        <p className="text-xs text-muted">{formatMoney(product.priceCents)} por unidade</p>
                                         <button
                                             className="pt-2 text-[10px] text-brand underline underline-offset-4"
                                             onClick={() => quantity(item.productId, 0)}
@@ -68,6 +65,10 @@ export function Cart({ phone }: { phone?: string }) {
                                             onChange={(count) => quantity(item.productId, count)}
                                             name={product?.name ?? 'produto'}
                                         />
+                                        <p className="text-right text-sm font-semibold text-brand">
+                                            <span className="mb-1 block text-[10px] font-normal text-muted">Subtotal</span>
+                                            {formatMoney(subtotalCents)}
+                                        </p>
                                     </div>
                                 </article>
                             ))}
@@ -87,6 +88,10 @@ export function Cart({ phone }: { phone?: string }) {
                         <p className="mb-5 text-xs text-muted">
                             {itemCount} {itemCount === 1 ? 'unidade selecionada' : 'unidades selecionadas'}
                         </p>
+                        <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2 border-y border-line py-4">
+                            <span className="text-xs font-medium">Total dos produtos</span>
+                            <strong className="text-xl text-brand">{formatMoney(totalCents)}</strong>
+                        </div>
                         <p className="mb-6 text-xs text-muted">
                             A mensagem incluirá os nomes e as quantidades dos produtos. Disponibilidade, entrega e demais detalhes serão combinados diretamente
                             com a Debinatos.

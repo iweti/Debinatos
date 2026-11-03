@@ -1,4 +1,21 @@
-import type { StoreState } from '../types/store'
+import type { CartItem, Product, StoreState, VisitorState } from '../types/store'
+
+export function reconcileVisitor(state: VisitorState, products: Product[], catalogError: boolean): VisitorState {
+    if (catalogError) return state
+    const active = new Set(products.filter((product) => product.active).map((product) => product.id))
+    const cart = state.cart.filter((item) => active.has(item.productId))
+    return cart.length === state.cart.length ? state : { ...state, cart }
+}
+
+export function getCartTotals(products: Product[], cart: CartItem[]) {
+    const available = new Map(products.filter((product) => product.active).map((product) => [product.id, product]))
+    const rows = cart.flatMap((item) => {
+        const product = available.get(item.productId)
+        if (!product || !Number.isSafeInteger(item.quantity) || item.quantity < 1) return []
+        return [{ item, product, subtotalCents: BigInt(product.priceCents) * BigInt(item.quantity) }]
+    })
+    return { rows, totalCents: rows.reduce((total, row) => total + row.subtotalCents, 0n) }
+}
 
 export function addToCart(state: StoreState, productId: string, quantity = 1): StoreState {
     const product = state.products.find((p) => p.id === productId && p.active)

@@ -9,6 +9,7 @@ import { parseHighlightsInput, parseProductInput, validId } from '@/lib/domain/a
 import { createSession, deleteSession, requireAdmin } from '@/lib/server/auth'
 import { imageService, validImageUrl } from '@/lib/server/cloudinary'
 import { database } from '@/lib/server/db'
+import { consumeLoginAttempt } from '@/lib/server/login-rate-limit'
 import type { ActionResult, HighlightsInput, ProductInput } from '@/lib/types/admin'
 
 export async function login(...[, form]: [ActionResult, FormData]): Promise<ActionResult> {
@@ -25,13 +26,16 @@ export async function login(...[, form]: [ActionResult, FormData]): Promise<Acti
     ) {
         return { error: 'Informe um e-mail válido e uma senha de até 72 bytes.' }
     }
-    let stage = 'database'
+    const loginFailure = { error: 'Não foi possível entrar. Confira os dados ou aguarde 15 minutos antes de tentar novamente.' }
+    let stage = 'rate-limit'
     try {
+        if (!(await consumeLoginAttempt(email))) return loginFailure
+        stage = 'database'
         const [user] = await database()`
             SELECT id FROM admin_users
             WHERE lower(email) = lower(${email.trim()}) AND password_hash = crypt(${password}, password_hash)
         `
-        if (!user) return { error: 'E-mail ou senha incorretos.' }
+        if (!user) return loginFailure
         stage = 'session'
         await createSession(user.id)
     } catch (error) {
@@ -39,8 +43,6 @@ export async function login(...[, form]: [ActionResult, FormData]): Promise<Acti
             stage,
             name: error instanceof Error ? error.name : 'UnknownError',
             code: error && typeof error === 'object' && 'code' in error && typeof error.code === 'string' ? error.code : undefined,
-            databaseConfigured: Boolean(process.env.DATABASE_URL),
-            sessionSecretValid: Buffer.byteLength(process.env.SESSION_SECRET ?? '', 'utf8') >= 32,
         })
         return { error: 'Não foi possível entrar agora. Tente novamente em instantes.' }
     }
@@ -55,7 +57,7 @@ export async function logout() {
 export async function saveProduct(value: ProductInput): Promise<ActionResult> {
     await requireAdmin()
     const input = parseProductInput(value, validImageUrl)
-    if (!input) return { error: 'Confira os campos, o estoque inteiro e as fotos do Cloudinary.' }
+    if (!input) return { error: 'Confira os campos, o preço maior que zero, o estoque inteiro e as fotos do Cloudinary.' }
     try {
         const sql = database()
         const { id, images, ...data } = input

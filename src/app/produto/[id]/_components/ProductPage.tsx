@@ -1,16 +1,18 @@
 'use client'
 import { Gift, Heart, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
 
+import { AddToCartButton } from '@/components/product/AddToCartButton'
 import { Photo } from '@/components/product/Photo'
 import { ProductCard } from '@/components/product/ProductCard'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { Quantity } from '@/components/ui/Quantity'
+import { formatMoney } from '@/lib/domain/money'
 
 import { useProduct } from '../_lib/use-product'
 
 export function ProductPage() {
-    const { product, count, setCount, photoIndex, setPhotoIndex, saved, related, add, favorite } = useProduct()
+    const { product, count, setCount, photoIndex, setPhotoIndex, saved, related, favorite } = useProduct()
     if (!product)
         return (
             <div className="mx-auto min-h-125 w-[calc(100%-36px)] max-w-310 pt-5 pb-12 md:w-[calc(100%-64px)] md:pt-7 md:pb-20 xl:w-[calc(100%-96px)]">
@@ -52,16 +54,12 @@ export function ProductPage() {
                         {product.category}
                     </span>
                     <h1 className="mb-5 text-[33px] lg:text-[39px]">{product.name}</h1>
+                    <p className="mb-5 text-2xl font-semibold text-brand lg:text-3xl">{formatMoney(product.priceCents)}</p>
                     <p className="mb-5 text-xs leading-[1.9] text-muted lg:text-[13px]">{product.description}</p>
                     <p className="text-[10px] text-muted">Disponibilidade a confirmar pelo WhatsApp.</p>
                     <div className="my-6 flex flex-wrap items-center gap-2 lg:flex-nowrap">
                         <Quantity value={count} onChange={setCount} name={product.name} />
-                        <button
-                            className="inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border border-brand bg-brand p-3 leading-snug font-semibold text-white transition hover:-translate-y-px hover:border-brand-dark hover:bg-brand-dark disabled:translate-y-0 flex-1 basis-full  text-[11px] sm:basis-auto md:basis-full lg:basis-auto"
-                            onClick={() => add(product.id, count)}
-                        >
-                            <ShoppingBag size={18} /> Adicionar ao carrinho
-                        </button>
+                        <AddToCartButton key={product.id} product={product} quantity={count} />
                         <button
                             className="relative inline-flex shrink-0 items-center justify-center transition hover:bg-cream aria-pressed:text-brand h-11 w-10 rounded-lg border border-[#dfd4c8] ml-auto"
                             aria-label={saved ? 'Remover dos favoritos' : 'Salvar nos favoritos'}

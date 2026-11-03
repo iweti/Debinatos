@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => {
 
 vi.mock('@/lib/server/auth', () => ({ requireAdmin: mocks.requireAdmin, createSession: vi.fn(), deleteSession: vi.fn() }))
 vi.mock('@/lib/server/db', () => ({ database: mocks.database }))
+vi.mock('@/lib/server/login-rate-limit', () => ({ consumeLoginAttempt: vi.fn() }))
 vi.mock('@/lib/server/cloudinary', () => ({
     validImageUrl: (url: unknown) => typeof url === 'string' && url.startsWith('https://res.cloudinary.com/'),
     imageService: vi.fn(),
@@ -29,6 +30,7 @@ const product: ProductInput = {
     material: 'Vidro',
     dimensions: '10 cm',
     stock: 1,
+    priceCents: 1990,
     active: true,
     images: [{ url: 'https://res.cloudinary.com/test/image/upload/a.webp' }],
 }
@@ -40,6 +42,11 @@ beforeEach(() => {
 })
 
 describe('Ações administrativas', () => {
+    it('recusa preço inválido antes de acessar o banco', async () => {
+        expect((await saveProduct({ ...product, priceCents: 0 })).error).toBeTruthy()
+        expect(mocks.database).not.toHaveBeenCalled()
+    })
+
     it('bloqueia destaques e cadastro sem sessão antes de acessar o banco', async () => {
         mocks.requireAdmin.mockRejectedValue(new Error('NEXT_REDIRECT'))
         await expect(saveHighlights(highlights)).rejects.toThrow('NEXT_REDIRECT')
@@ -71,6 +78,8 @@ describe('Ações administrativas', () => {
         expect(await saveProduct({ ...product, featured: true, featuredOrder: 1 } as ProductInput)).toEqual({ success: true })
         const values = mocks.sql.mock.calls[0].slice(1)
         const data = JSON.parse(values[1] as string)
+        expect(data.priceCents).toBe(1990)
+        expect(data.stock).toBe(product.stock)
         expect(data).not.toHaveProperty('featured')
         expect(data).not.toHaveProperty('featuredOrder')
         expect(mocks.transaction).toHaveBeenCalledTimes(1)

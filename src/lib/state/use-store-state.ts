@@ -1,8 +1,9 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { addToCart, setQuantity } from '../domain/cart'
-import { emptyVisitor, readVisitor, VISITOR_LEGACY_KEYS, VISITOR_STORAGE_KEY, writeVisitor } from '../storage/visitor-state'
+import { addToCart, reconcileVisitor, setQuantity } from '../domain/cart'
+import { removeUnavailableFavorites } from '../domain/favorites'
+import { emptyVisitor, readVisitorForCatalog, VISITOR_LEGACY_KEYS, VISITOR_STORAGE_KEY, writeVisitor } from '../storage/visitor-state'
 import type { Product, StoreState } from '../types/store'
 import type { Store } from './store-context'
 
@@ -12,38 +13,38 @@ export function useStoreState(products: Product[], catalogError: boolean): Store
     const current = useRef(visitor)
     const [toast, setToast] = useState<Store['toast']>(null)
     const notify = useCallback((message: string, error = false) => setToast({ message, error }), [])
-    useEffect(() => {
-        const loaded = readVisitor()
+    const loadVisitor = useCallback(() => {
+        const loaded = readVisitorForCatalog(products, catalogError)
         current.current = loaded.state
         setVisitor(loaded.state)
         setReady(true)
         if (loaded.warning) notify(loaded.warning, true)
-    }, [notify])
+    }, [products, catalogError, notify])
     useEffect(() => {
-        if (!toast) return
+        loadVisitor()
+    }, [loadVisitor])
+    useEffect(() => {
+        if (!toast || toast.cartAdded) return
         const timeout = setTimeout(() => setToast(null), toast.error ? 10000 : 4000)
         return () => clearTimeout(timeout)
     }, [toast])
     useEffect(() => {
         const sync = (event: StorageEvent) => {
             if (event.key !== VISITOR_STORAGE_KEY && !VISITOR_LEGACY_KEYS.includes(event.key ?? '') && event.key !== null) return
-            const loaded = readVisitor()
-            current.current = loaded.state
-            setVisitor(loaded.state)
-            if (loaded.warning) notify(loaded.warning, true)
+            loadVisitor()
         }
         window.addEventListener('storage', sync)
         return () => window.removeEventListener('storage', sync)
-    }, [notify])
-    const update = (fn: (previous: StoreState) => StoreState, message?: string): boolean => {
+    }, [loadVisitor])
+    const update = (fn: (previous: StoreState) => StoreState, successToast?: Store['toast']): boolean => {
         try {
             if (!ready) throw new Error('Aguarde o carregamento dos seus dados locais.')
-            const next = fn({ ...current.current, products })
+            const next = fn({ ...reconcileVisitor(current.current, products, catalogError), products })
             const local = { cart: next.cart, favorites: next.favorites }
             writeVisitor(local)
             current.current = local
             setVisitor(local)
-            if (message) notify(message)
+            if (successToast) setToast(successToast)
             return true
         } catch (error) {
             notify(error instanceof Error ? error.message : 'Não foi possível salvar.', true)
@@ -51,14 +52,16 @@ export function useStoreState(products: Product[], catalogError: boolean): Store
         }
     }
     return {
-        state: { ...visitor, products },
+        state: { ...reconcileVisitor(visitor, products, catalogError), products },
         ready,
         catalogError,
         notify,
         toast,
         dismissToast: () => setToast(null),
-        add: (id, quantity = 1) => update((s) => addToCart(s, id, quantity), 'Um encanto a mais no seu carrinho!'),
+        add: (id, quantity = 1) => update((s) => addToCart(s, id, quantity), { message: 'Um encanto a mais no seu carrinho!', error: false, cartAdded: true }),
         quantity: (id, count) => update((s) => setQuantity(s, id, count)),
         favorite: (id) => update((s) => ({ ...s, favorites: s.favorites.includes(id) ? s.favorites.filter((f) => f !== id) : [...s.favorites, id] })),
+        removeUnavailableFavorites: () =>
+            update((s) => removeUnavailableFavorites(s, catalogError), { message: 'Itens indisponíveis removidos dos favoritos.', error: false }),
     }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { Check, Images, Trash2 } from 'lucide-react'
+import { Check, GripVertical, Images, Trash2 } from 'lucide-react'
 
 import { HeroArtwork } from '@/components/product/HeroArtwork'
 import { Photo } from '@/components/product/Photo'
@@ -8,12 +8,14 @@ import { resolveHeroPhotos } from '@/lib/domain/highlights'
 import type { Product } from '@/lib/types/store'
 
 import type { useHighlights } from '../_lib/use-highlights'
+import { useReorder } from '../_lib/use-reorder'
 import { Modal } from './Modal'
 
 type HighlightsState = ReturnType<typeof useHighlights>
 
 export function HighlightsEditor({ products, editor }: { products: Product[]; editor: HighlightsState }) {
     const { draft, gallery, setGallery, selectPhoto, clearPhoto, addFavorite, removeFavorite, changePosition, save, pending, dirty, error } = editor
+    const reorder = useReorder((from, to) => changePosition(draft.favorites[from], to + 1), pending)
     const photos = resolveHeroPhotos(products, draft.hero)
     const available = products.filter((product) => product.active && !draft.favorites.includes(product.id))
     const galleryProducts = products.filter((product) => product.active)
@@ -84,7 +86,12 @@ export function HighlightsEditor({ products, editor }: { products: Product[]; ed
                     </p>
                     <label className="mt-5 block max-w-lg text-xs">
                         Adicionar produto ativo
-                        <select className="text-xs" value="" disabled={!available.length} onChange={(event) => addFavorite(event.target.value)}>
+                        <select
+                            className="mt-2 block w-full text-xs"
+                            value=""
+                            disabled={!available.length}
+                            onChange={(event) => addFavorite(event.target.value)}
+                        >
                             <option value="">{available.length ? 'Selecione um produto' : 'Nenhum produto disponível para adicionar'}</option>
                             {available.map((product) => (
                                 <option key={product.id} value={product.id}>
@@ -94,20 +101,32 @@ export function HighlightsEditor({ products, editor }: { products: Product[]; ed
                         </select>
                     </label>
                     {!draft.favorites.length && <p className="mt-5 text-xs text-muted">Nenhum favorito selecionado. Adicione um produto para começar.</p>}
-                    <ol className="mt-5 divide-y divide-line">
+                    <p className="mt-5 text-xs/relaxed text-muted">Arraste pela alça para mudar a ordem ou escolha a posição. Depois, salve as alterações.</p>
+                    <output className="sr-only">{reorder.announcement}</output>
+                    <ol ref={reorder.container} className="mt-4 space-y-3">
                         {draft.favorites.map((id, index) => {
                             const product = products.find((item) => item.id === id)
                             return (
-                                <li key={id} className="flex flex-wrap items-center gap-3 py-4">
+                                <li
+                                    key={id}
+                                    {...reorder.itemProps(index)}
+                                    className="grid grid-cols-[auto_auto_minmax(0,1fr)_auto] items-center gap-3 rounded-lg border border-line p-3 transition duration-200 ease-out data-[dragging=true]:border-brand data-[dragging=true]:bg-cream sm:grid-cols-[auto_auto_minmax(0,1fr)_auto_auto] sm:gap-4 sm:p-4"
+                                >
+                                    <button
+                                        {...reorder.handleProps(index, product?.name ?? 'produto')}
+                                        className="inline-flex size-11 shrink-0 touch-none items-center justify-center rounded-lg text-muted select-none hover:bg-cream hover:text-brand active:cursor-grabbing cursor-grab"
+                                    >
+                                        <GripVertical size={20} />
+                                    </button>
                                     <Photo source={product?.images[0]?.url ?? ''} alt="" className="size-14 rounded-lg object-cover" />
-                                    <div className="min-w-0 flex-1 basis-28">
+                                    <div className="col-span-2 min-w-0 wrap-break-word sm:col-span-1">
                                         <p className="text-xs font-semibold">{product?.name ?? 'Produto indisponível'}</p>
                                         {product && !product.active && <p className="mt-1 text-[11px] text-brand">Desativado — preservado na configuração</p>}
                                     </div>
-                                    <label className="text-[10px] text-muted">
+                                    <label className="col-span-3 ml-auto flex items-center gap-2 text-[10px] text-muted sm:col-span-1">
                                         Posição
                                         <select
-                                            className="mt-1 w-16 text-xs"
+                                            className="w-18 text-xs"
                                             value={index + 1}
                                             aria-label={`Posição de ${product?.name ?? 'produto'}`}
                                             onChange={(event) => changePosition(id, Number(event.target.value))}

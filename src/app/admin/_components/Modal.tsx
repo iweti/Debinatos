@@ -16,7 +16,7 @@ export function Modal({ title, children, close }: { title: string; children: Rea
             }}
             aria-labelledby="modal-title"
         >
-            <div className="sticky top-0 z-2 flex items-center justify-between border-b border-line bg-[#fffaf4] px-5 py-4 md:px-6">
+            <div className="sticky top-0 z-2 flex items-center justify-between gap-4 border-b border-line bg-[#fffaf4] px-5 py-4 md:px-6">
                 <h2 className="text-xl md:text-2xl" id="modal-title">
                     {title}
                 </h2>

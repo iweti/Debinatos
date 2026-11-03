@@ -27,22 +27,43 @@ npm start
 
 As dependências têm versões exatas em `package.json` e dependências indiretas registradas em `package-lock.json`. Use `npm ci` para reproduzir a instalação. Atualizações são explícitas e devem ser seguidas das verificações abaixo. O build usa Webpack para funcionar também em ambientes que restringem portas internas do Turbopack.
 
+## Configuração do servidor
+
+[env.mjs](src/lib/config/env.mjs) concentra regras manuais reutilizáveis por scripts Node, sem biblioteca adicional. [env.ts](src/lib/server/env.ts) restringe o acesso ao servidor e exporta `env`, tipado e congelado. Seus getters adiam a leitura até o runtime; depois da primeira validação, os valores formam um único snapshot congelado por instância. Reinicie o servidor após alterar a configuração.
+
+No início de cada instância Node, `src/instrumentation.ts` valida a configuração antes de aceitar requisições. A inicialização falha com código 1 e todos os **nomes** ausentes ou inválidos, sem valores de credenciais. O encerramento explícito evita que o Next.js 16 mantenha um listener devolvendo apenas erros após rejeitar `register()`. `DATABASE_URL` deve usar `postgres://` ou `postgresql://`, com host e nome de banco; `SESSION_SECRET` precisa de pelo menos 32 bytes UTF-8; as três credenciais `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` e `CLOUDINARY_API_SECRET` são obrigatórias. `CLOUDINARY_FOLDER` ausente ou vazio usa `debinatos`. `WHATSAPP_PHONE` é opcional: vazio mantém o canal indisponível; preenchido exige 12 ou 13 dígitos, sem pontuação. Espaços nas extremidades são removidos desses campos, exceto do segredo de sessão, cujos bytes são preservados.
+
+`NODE_ENV` aceita somente `development`, `production` ou `test` e é definido pelo Next.js. `NEXT_RUNTIME` e `NEXT_PHASE` são marcadores internos usados apenas pela instrumentação para distinguir Node, Edge e compilação. `VERCEL` também é fornecida pela plataforma: somente o valor exato `1` identifica sua origem. Essas variáveis não precisam constar em `.env.example`. O ESLint proíbe novos acessos a `process.env` na aplicação, exceto no módulo central e nesses dois marcadores da instrumentação; scripts Node mantêm uma exceção explícita para sua configuração própria.
+
+`npm run build` não exige secrets ou valores fictícios no CI, nem consulta banco/Cloudinary: importar o módulo não valida o ambiente, e as páginas que usam serviços dependem de renderização dinâmica. A validação é obrigatória em `next dev` e `next start`. As rotas atuais usam Node; caso seja adicionada uma rota Edge com serviços, ela precisará de uma estratégia de configuração compatível antes de ser publicada.
+
+Os testes SQL isolados do limitador de login e do runner de migrações podem ler exclusivamente `LOGIN_RATE_LIMIT_TEST_CONTAINER`, para selecionar um contêiner descartável; essa opção do executor tem exceção ESLint específica e não integra o ambiente da loja.
+
 ## Banco e migrações
 
 A aplicação usa SQL parametrizado com `@neondatabase/serverless`, sem ORM. `DATABASE_URL` é a conexão da aplicação; `DATABASE_URL_UNPOOLED` deve usar o host direto, sem `-pooler`, para migrações. Os módulos de banco, sessão e Cloudinary são marcados com `server-only`.
 
-Aplique uma única vez, na ordem, os arquivos SQL versionados:
+Use o runner com histórico transacional, uma migração por vez e na ordem. Em bancos existentes, registre primeiro o baseline inspecionado; nunca reaplique SQL para inicializar o histórico. O procedimento completo está em [Publicação e migrações](docs/deploy-and-migrations.md). Arquivos versionados:
 
 1. `migrations/001_admin_users.sql`: extensão `pgcrypto`, tabela de administradores e índice único de e-mail sem diferenciar maiúsculas/minúsculas.
 2. `migrations/002_products.sql`: tabela de produtos, validação de quantidade e lista de imagens.
 3. `migrations/003_product_images_highlights.sql`: converte as URLs para `product_images`, preserva a ordem dos destaques e vincula o hero aos IDs das fotos. Reconcilia também o schema parcialmente implementado no `dev`.
 4. `migrations/004_remove_legacy_images.sql`: remove `products.img` e `hero_products.image_url`, somente após publicar e validar a aplicação que usa `product_images`.
+5. `migrations/005_product_prices.sql`: adiciona `price_cents` e atualiza a gravação atômica para exigir preço positivo em centavos.
+6. `migrations/006_require_product_prices.sql`: torna o preço obrigatório no banco, após preencher os produtos existentes.
+7. `migrations/007_admin_login_rate_limit.sql`: cria limites compartilhados de tentativas do login administrativo; aplique antes de publicar o limitador.
 
-As migrações não criam usuários nem produtos e não são executadas automaticamente no build ou na inicialização. O catálogo começa vazio. Aplique e valide primeiro em uma branch de desenvolvimento, usando conexão direta; depois aplique os mesmos arquivos na branch de produção antes de publicar a aplicação.
+As migrações não criam usuários nem produtos e não são executadas automaticamente no build ou na inicialização. O catálogo começa vazio. Aplique e valide primeiro em uma branch de desenvolvimento, usando conexão direta; depois siga a sequência revisada no ambiente de produção. A 004 exige publicar e validar antes a versão compatível com `product_images`; a 007 precisa ser aplicada antes de publicar o limitador.
 
 Nesta implementação, `.neon` e as conexões locais apontam para a branch `dev` do projeto existente. A branch é temporária: confira sua expiração no Neon antes de reutilizá-la. A branch `production` não foi alterada por esta implementação. `.neon` e `.env.local` não são versionados.
 
 A tabela `products` contém os dados do produto e `featured`/`featured_order`, que devem permanecer sincronizados. As fotos ficam em `product_images` (`id`, `product_id`, `url`, `position`), com posição única por produto. `Product.images` contém objetos `{ id, url, position }` ordenados; a primeira foto é a capa. Quantidades são inteiras e não negativas.
+
+O contrato de `Product` e `ProductInput` inclui `priceCents`: inteiro de 1 a 2.147.483.647, correspondente a `products.price_cents`. A Server Action `saveProduct` valida esse campo antes de acessar o banco; `save_store_product` exige o mesmo campo no JSON tanto na criação quanto na edição. O formulário aceita reais com vírgula ou ponto, com no máximo duas casas decimais. Cards, detalhes, painel e carrinho exibem os valores em reais. Os totais usam `bigint` em centavos para preservar a precisão mesmo com grandes quantidades, sem alterar a mensagem do WhatsApp.
+
+Na branch `dev`, aplique a migração 005, preencha os preços e depois aplique a 006. Para os valores fictícios autorizados (R$ 19,90, R$ 29,90 e R$ 49,90), use `node --env-file=.env.local scripts/seed-dev-prices.mjs`. O script confere projeto, branch e endpoint e preenche somente preços ausentes, incluindo produtos inativos. Ele não faz parte das migrações de produção. Valide com `node --env-file=.env.local scripts/validate-prices.mjs`: os testes SQL são revertidos e a reexecução do preenchimento não altera preços existentes. Em produção, preencha preços reais entre as migrações 005 e 006 antes de publicar a aplicação; esta alteração foi aplicada somente na `dev`.
+
+O carrinho armazena apenas IDs e quantidades. Produtos ausentes ou desativados são removidos ao recuperar os dados locais, atualizar o catálogo ou sincronizar outra aba; favoritos e produtos ativos sem estoque são preservados. Falhas ao carregar o catálogo não provocam limpeza. Se a persistência local falhar, a limpeza permanece na tela e um aviso informa que não foi possível salvá-la.
 
 `hero_products` contém as posições `primary` e `secondary`, com `product_id` e `image_id`. A chave estrangeira composta impede escolher uma foto de outro produto. Remover uma foto limpa apenas `image_id`, mantendo o produto para usar sua primeira foto disponível. Limpar a seleção remove ambas as referências; produto desativado usa a foto padrão. As duas posições podem usar fotos do mesmo produto.
 
@@ -80,6 +101,8 @@ Todos os registros dessa tabela têm acesso administrativo ao catálogo inteiro.
 
 Configure `SESSION_SECRET` com um valor aleatório de pelo menos 32 bytes, exclusivo do servidor e igual entre instâncias de um mesmo ambiente. A sessão assinada com `jose` expira em 24 horas fixas, em cookie `HttpOnly`, `SameSite=Lax` e `Secure` em produção. Configure HTTPS na publicação. A existência do usuário é conferida no banco ao acessar o painel e executar operações protegidas. Excluir o usuário invalida seu acesso; trocar sua senha não encerra automaticamente uma sessão já emitida. Trocar o segredo invalida todas as sessões do ambiente. Sair remove o cookie do navegador.
 
+O login admite cinco tentativas por conta e trinta por origem em quinze minutos, com reservas atômicas no PostgreSQL antes da verificação da senha. Aplique a migração `007_admin_login_rate_limit.sql` antes de publicar esta versão. Confira [limites, identificação confiável de origem, retenção e testes](docs/admin-login-rate-limit.md).
+
 A proteção acontece no servidor, tanto na página quanto nas Server Actions; dados do navegador não concedem acesso. Erros de banco ou autenticação não restauram o modo demonstrativo. Sem uma conta criada manualmente pelo proprietário, o login de sucesso e as operações autenticadas ficam pendentes de validação.
 
 ## Fotos no Cloudinary
@@ -104,24 +127,45 @@ O catálogo vazio é exibido sem produtos fictícios. Falhas de conexão apresen
 
 ## WhatsApp
 
-Configure `WHATSAPP_PHONE` com código do país, DDD e número, apenas dígitos. Sem configuração válida, o botão fica desativado com o aviso “WhatsApp em breve”. Reinicie o desenvolvimento ou publique novamente após alterar a variável, que é lida no servidor.
+Configure `WHATSAPP_PHONE` com código do país, DDD e número, apenas dígitos (12–13 caracteres). Sem número, o botão fica desativado com o aviso “WhatsApp em breve”; um número preenchido em formato inválido impede a inicialização do servidor. Reinicie o desenvolvimento ou publique novamente após alterar a variável, que é lida no servidor.
 
 Os botões de contato abrem uma nova aba com nomes e quantidades do carrinho. A quantidade cadastrada no banco permanece como informação interna: não limita o carrinho, mesmo quando é zero. Produtos removidos ou desativados e quantidades inválidas exigem revisão. O contato não exige login, não envia a mensagem automaticamente, não esvazia o carrinho e não baixa estoque. Disponibilidade, envio, retirada e demais detalhes são confirmados na conversa pelo WhatsApp.
 
 ## Organização e validação
 
+Antes de iniciar/publicar, execute `NODE_ENV=production npm run check:env` com as variáveis injetadas no processo (para um arquivo local: `NODE_ENV=development node --env-file=.env.local scripts/check-env.mjs`). O Node independente não define `NODE_ENV` automaticamente; informe `production` ao conferir o deploy ou `development` para o desenvolvimento local. O contexto padrão é `runtime`. Use `--context=migration` para conferir somente a conexão direta de migração e `--context=validation` para conferir origem e destino separado da validação. Os erros listam nomes, sem valores. Cada contexto reutiliza as regras puras de configuração do servidor.
+
+`npm run check:env -- --parity` confere o exemplo contra as referências de configuração em fontes e scripts, sem credenciais. `NODE_ENV`, `NEXT_RUNTIME`, `NEXT_PHASE` e `VERCEL` são fornecidas pela plataforma; `LOGIN_RATE_LIMIT_TEST_CONTAINER` é uma exceção exclusiva do teste SQL. Acesso dinâmico a `process.env` é recusado pelo verificador. Migração e validação não exigem credenciais de Cloudinary ou sessão; um destino de validação que identifique o mesmo banco da origem é recusado.
+
 As rotas ficam em `src/app`, com componentes e lógica específicos em `_components` e `_lib`. Componentes reutilizados ficam em `src/components`. Acesso ao banco e serviços externos ficam em `src/lib/server`; regras de carrinho e contato em `src/lib/domain`.
 
 ```sh
 npx next typegen
-npm run typecheck
-npm run lint
-npm test
+make check
+make test
 npm run build
 ```
 
-Nenhum arquivo novo de teste faz parte desta etapa. A suíte existente cobre carrinho, contato e persistência local de carrinho e favoritos. Confira manualmente login válido/inválido, expiração, logout, bloqueio de operações sem sessão, cadastro/edição/visibilidade, falhas de upload e catálogo vazio. Para sucesso autenticado, use uma conta criada manualmente pelo proprietário no banco.
+A suíte cobre configuração do servidor, carrinho, contato e persistência local de carrinho e favoritos. Os testes de configuração usam valores fictícios e verificam erros agregados, UTF-8, opcionais, imutabilidade e inicialização, sem acessar serviços externos. Confira manualmente login válido/inválido, expiração, logout, bloqueio de operações sem sessão, cadastro/edição/visibilidade, falhas de upload e catálogo vazio. Para sucesso autenticado, use uma conta criada manualmente pelo proprietário no banco.
 
-`npm run lint:fix` organiza imports e aplica correções automáticas; `npm run format` aplica Prettier. `make lint` também formata e verifica tipos; `make validate` acrescenta os testes.
+`make check` verifica formatação, lint e tipos sem corrigir os arquivos. A verificação de formatação também pode ser executada isoladamente com `npm run format:check`: ela usa os mesmos caminhos de `npm run format`, retorna erro quando encontra divergências e não reescreve o código. Gere os tipos de rota com `npx next typegen` antes da primeira verificação em um checkout novo.
+
+Para corrigir arquivos explicitamente, use `npm run lint:fix` (organização de imports e correções do ESLint), `npm run format` (Prettier) ou `make fix` (ambos). Depois rode `make check` novamente. `make lint` continua disponível como alias de `make check`, agora sem correções automáticas; `make validate` executa `make check` e os testes. As verificações de CI podem reutilizar `make check`.
+
+### Integração contínua
+
+O workflow [CI](.github/workflows/ci.yml) executa em pushes para `dev` e `main` e em PRs destinados a essas branches. PRs encadeados com base em `codex/issue-*` também são validados. O check **Validação** usa Node.js de `.nvmrc`, instala o npm fixado em `packageManager` e executa `npm ci`, geração dos tipos de rota, `make check`, `make test` e o build de produção. Uma falha interrompe o job e reprova o check; uma nova execução da mesma branch ou PR cancela a anterior.
+
+O CI não recebe secrets, não cria arquivos `.env` e não usa banco ou Cloudinary reais. Nenhum valor fictício é necessário para gerar os tipos ou o build: as rotas que dependem desses serviços são renderizadas no servidor durante as requisições. Essa validação não comprova login, upload, migrações ou conectividade dos serviços. O token do workflow tem apenas `contents: read`, e o checkout não persiste credenciais.
+
+O job também executa `npm audit --omit=dev --audit-level=high`: vulnerabilidades altas/críticas nas dependências de produção reprovam o check. O [Dependabot](.github/dependabot.yml) propõe atualizações semanais de npm e GitHub Actions para `dev`, preservando as versões npm exatas e os SHAs das actions. A configuração precisa chegar à branch padrão (`main`) para o GitHub começar a processá-la.
+
+O nome **Validação** deve ser mantido estável ao configurar o check obrigatório nas proteções de `dev` e `main`. As proteções remotas **não foram verificadas nem ativadas** nesta implementação. A [documentação de governança](docs/governanca.md) contém o estado observado, o ruleset importável sem bypass e o procedimento para exigir PR, revisão e CI nas duas branches. A confirmação administrativa segue pendente na issue [#16](https://github.com/iweti/Debinatos/issues/16).
 
 Referências dos recursos visuais: [ASSETS.md](ASSETS.md).
+
+## Publicação
+
+A publicação usa o projeto existente **debinatos** na Vercel. O [CD](.github/workflows/deploy.yml) exige CI verde do mesmo SHA de `dev`/`main`; produção usa environment protegido, publicação sem promover domínios, smoke HTTP e promoção do mesmo artefato. O [workflow manual de migrações](.github/workflows/migrate.yml) exige conexão direta, validação de configuração e registro transacional com checksum. Ambos começam desabilitados por variáveis explícitas.
+
+Consulte [Publicação e migrações](docs/deploy-and-migrations.md) antes de habilitar: define ambientes, secrets separados, reviewers obrigatórios, baseline de bancos existentes, proteção especial da 004 e recuperação. A configuração [vercel.json](vercel.json) desabilita deploys automáticos da integração Git para preservar o gate de CI. Nenhuma configuração remota, publicação ou migração real foi executada por esta PR.
