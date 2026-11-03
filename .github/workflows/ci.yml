@@ -47,6 +47,9 @@ jobs:
       - name: Gerar tipos de rotas
         run: npx --no-install next typegen
 
+      - name: Conferir documentação da configuração
+        run: npm run check:env -- --parity
+
       - name: Verificar formatação, lint e tipos
         run: make check
 

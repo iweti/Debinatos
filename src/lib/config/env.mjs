@@ -23,14 +23,55 @@ export class EnvironmentError extends Error {
     }
 }
 
+function postgresUrl(value) {
+    const original = new URL(value)
+    if (!['postgres:', 'postgresql:'].includes(original.protocol) || !original.hostname) throw new Error('URL Postgres inválida.')
+    // O SDK Neon usa HTTP no parser para normalizar escapes e caixa do host.
+    return new URL(`http:${value.slice(original.protocol.length)}`)
+}
+
 export function isPostgresUrl(value) {
     if (typeof value !== 'string' || !value || /\s/.test(value)) return false
     try {
-        const url = new URL(value)
-        return ['postgres:', 'postgresql:'].includes(url.protocol) && !!url.hostname && url.pathname.length > 1 && !url.hash
+        const url = postgresUrl(value)
+        decodeURIComponent(url.pathname)
+        return !!url.hostname && url.pathname.length > 1 && !url.hash
     } catch {
         return false
     }
+}
+
+export function isDirectPostgresUrl(value) {
+    return isPostgresUrl(value) && !postgresUrl(value).hostname.includes('-pooler')
+}
+
+export function validateMigrationEnv(source) {
+    const migrationUrl = source.MIGRATION_DATABASE_URL?.trim()
+    const fallbackUrl = source.DATABASE_URL_UNPOOLED?.trim()
+    const databaseUrl = migrationUrl || fallbackUrl
+    const selected = migrationUrl ? 'MIGRATION_DATABASE_URL' : 'DATABASE_URL_UNPOOLED'
+    if (!isDirectPostgresUrl(databaseUrl)) {
+        throw new EnvironmentError(databaseUrl ? [selected] : ['MIGRATION_DATABASE_URL', 'DATABASE_URL_UNPOOLED'])
+    }
+    return Object.freeze({ databaseUrl })
+}
+
+// A validação escreve somente no destino descartável. Credenciais ou o host
+// pooled diferentes não tornam seguro usar o mesmo banco da origem.
+function databaseIdentity(value) {
+    const url = postgresUrl(value)
+    return `${url.hostname.replace(/-pooler(?=\.|$)/g, '')}:${url.port || '5432'}${decodeURIComponent(url.pathname)}`
+}
+
+export function validateValidationEnv(source) {
+    const invalid = []
+    const sourceDatabaseUrl = source.DATABASE_URL?.trim()
+    const databaseUrl = source.VALIDATION_DATABASE_URL?.trim()
+    if (!isPostgresUrl(sourceDatabaseUrl)) invalid.push('DATABASE_URL')
+    if (!isDirectPostgresUrl(databaseUrl)) invalid.push('VALIDATION_DATABASE_URL')
+    if (!invalid.length && databaseIdentity(sourceDatabaseUrl) === databaseIdentity(databaseUrl)) invalid.push('VALIDATION_DATABASE_URL')
+    if (invalid.length) throw new EnvironmentError(invalid)
+    return Object.freeze({ databaseUrl, sourceDatabaseUrl })
 }
 
 export function validateRuntimeEnv(source) {
