@@ -1,8 +1,8 @@
 # Publicação e migrações
 
-A plataforma escolhida é o projeto **debinatos** já existente na Vercel. Next.js continua responsável pelo build; o GitHub Actions só publica o artefato do commit que passou no workflow CI. O arquivo [vercel.json](../vercel.json) desabilita deploy automático pela integração Git para que um push não contorne esse gate. Revise essa mudança antes de mesclar: depois que a configuração alcançar a branch, novas publicações dependem da habilitação descrita abaixo.
+A plataforma escolhida é o projeto **debinatos** já existente na Vercel. O arquivo [vercel.json](../vercel.json) habilita deploys automáticos pela integração Git. Next.js continua responsável pelo build; a configuração remota da Vercel define o destino das branches e os domínios. Esses deploys independem das variáveis de habilitação do GitHub Actions, não aguardam o gate de CI descrito abaixo e não aplicam migrações automaticamente.
 
-Esta PR entrega código e procedimento revisáveis. **Nenhum environment, reviewer, secret ou proteção remota foi criado/configurado, nenhum deploy foi feito e nenhum banco real foi alterado.** Os workflows ficam desligados enquanto as variáveis de habilitação estiverem ausentes. Um YAML que menciona `environment: production` não cria sozinho uma regra de aprovação obrigatória.
+As seções abaixo descrevem o CD opcional pelo GitHub Actions e as migrações manuais. Esses workflows ficam desligados enquanto as variáveis de habilitação estiverem ausentes; isso não desliga a integração Git da Vercel. Antes de habilitar o CD opcional, defina qual fluxo será responsável pela publicação para evitar deploys duplicados. Um YAML que menciona `environment: production` não cria sozinho uma regra de aprovação obrigatória.
 
 ## Ambientes e habilitação pelo responsável
 
