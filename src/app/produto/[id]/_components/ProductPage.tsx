@@ -1,5 +1,6 @@
 'use client'
 import { Gift, Heart, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
+import { useRef } from 'react'
 
 import { AddToCartButton } from '@/components/product/AddToCartButton'
 import { Photo } from '@/components/product/Photo'
@@ -12,6 +13,7 @@ import { formatMoney } from '@/lib/domain/money'
 import { useProduct } from '../_lib/use-product'
 
 export function ProductPage() {
+    const photoRef = useRef<HTMLDivElement>(null)
     const { product, count, setCount, photoIndex, setPhotoIndex, saved, related, favorite } = useProduct()
     if (!product)
         return (
@@ -26,7 +28,7 @@ export function ProductPage() {
             <Breadcrumb items={[{ label: 'Todos os produtos', to: '/catalogo' }, { label: product.name }]} />
             <div className="grid items-start gap-7 md:grid-cols-2 lg:gap-14">
                 <div>
-                    <div className="relative aspect-[.97] overflow-hidden rounded-xl bg-cream">
+                    <div ref={photoRef} className="relative aspect-[.97] overflow-hidden rounded-xl bg-cream">
                         <Photo
                             className="size-full object-cover"
                             source={product.images[photoIndex]?.url ?? product.images[0]?.url ?? ''}
@@ -59,7 +61,7 @@ export function ProductPage() {
                     <p className="text-[10px] text-muted">Disponibilidade a confirmar pelo WhatsApp.</p>
                     <div className="my-6 flex flex-wrap items-center gap-2 lg:flex-nowrap">
                         <Quantity value={count} onChange={setCount} name={product.name} />
-                        <AddToCartButton key={product.id} product={product} quantity={count} />
+                        <AddToCartButton key={product.id} product={product} photoRef={photoRef} quantity={count} />
                         <button
                             className="relative inline-flex shrink-0 items-center justify-center transition hover:bg-cream aria-pressed:text-brand h-11 w-10 rounded-lg border border-[#dfd4c8] ml-auto"
                             aria-label={saved ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
