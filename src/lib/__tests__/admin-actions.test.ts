@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => {
 
 vi.mock('@/lib/server/auth', () => ({ requireAdmin: mocks.requireAdmin, createSession: vi.fn(), deleteSession: vi.fn() }))
 vi.mock('@/lib/server/db', () => ({ database: mocks.database }))
+vi.mock('@/lib/server/login-rate-limit', () => ({ consumeLoginAttempt: vi.fn() }))
 vi.mock('@/lib/server/cloudinary', () => ({
     validImageUrl: (url: unknown) => typeof url === 'string' && url.startsWith('https://res.cloudinary.com/'),
     imageService: vi.fn(),
