@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { addToCart, reconcileVisitor, setQuantity } from '../domain/cart'
+import { removeUnavailableFavorites } from '../domain/favorites'
 import { emptyVisitor, readVisitorForCatalog, VISITOR_LEGACY_KEYS, VISITOR_STORAGE_KEY, writeVisitor } from '../storage/visitor-state'
 import type { Product, StoreState } from '../types/store'
 import type { Store } from './store-context'
@@ -23,7 +24,7 @@ export function useStoreState(products: Product[], catalogError: boolean): Store
         loadVisitor()
     }, [loadVisitor])
     useEffect(() => {
-        if (!toast) return
+        if (!toast || toast.cartAdded) return
         const timeout = setTimeout(() => setToast(null), toast.error ? 10000 : 4000)
         return () => clearTimeout(timeout)
     }, [toast])
@@ -35,7 +36,7 @@ export function useStoreState(products: Product[], catalogError: boolean): Store
         window.addEventListener('storage', sync)
         return () => window.removeEventListener('storage', sync)
     }, [loadVisitor])
-    const update = (fn: (previous: StoreState) => StoreState, message?: string): boolean => {
+    const update = (fn: (previous: StoreState) => StoreState, successToast?: Store['toast']): boolean => {
         try {
             if (!ready) throw new Error('Aguarde o carregamento dos seus dados locais.')
             const next = fn({ ...reconcileVisitor(current.current, products, catalogError), products })
@@ -43,7 +44,7 @@ export function useStoreState(products: Product[], catalogError: boolean): Store
             writeVisitor(local)
             current.current = local
             setVisitor(local)
-            if (message) notify(message)
+            if (successToast) setToast(successToast)
             return true
         } catch (error) {
             notify(error instanceof Error ? error.message : 'Não foi possível salvar.', true)
@@ -57,8 +58,10 @@ export function useStoreState(products: Product[], catalogError: boolean): Store
         notify,
         toast,
         dismissToast: () => setToast(null),
-        add: (id, quantity = 1) => update((s) => addToCart(s, id, quantity), 'Um encanto a mais no seu carrinho!'),
+        add: (id, quantity = 1) => update((s) => addToCart(s, id, quantity), { message: 'Um encanto a mais no seu carrinho!', error: false, cartAdded: true }),
         quantity: (id, count) => update((s) => setQuantity(s, id, count)),
         favorite: (id) => update((s) => ({ ...s, favorites: s.favorites.includes(id) ? s.favorites.filter((f) => f !== id) : [...s.favorites, id] })),
+        removeUnavailableFavorites: () =>
+            update((s) => removeUnavailableFavorites(s, catalogError), { message: 'Itens indisponíveis removidos dos favoritos.', error: false }),
     }
 }
