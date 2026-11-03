@@ -44,7 +44,7 @@ export function ProductCard({ product }: { product: Product }) {
                 <span className={`${styles.category} text-muted`} title={product.category}>
                     {product.category}
                 </span>
-                <Link href={`/produto/${product.id}`} aria-label={`Ver ${product.name}`} title={product.name}>
+                <Link className="block" href={`/produto/${product.id}`} aria-label={`Ver ${product.name}`} title={product.name}>
                     <h3 className={`${styles.name} mt-1 mb-2 font-serif font-medium tracking-tight hover:text-brand`}>{product.name}</h3>
                 </Link>
                 <div className={styles.purchase}>
