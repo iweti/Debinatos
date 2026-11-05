@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+vi.mock('server-only', () => ({}))
+
 const mocks = vi.hoisted(() => ({ sql: vi.fn(), consume: vi.fn(), createSession: vi.fn(), redirect: vi.fn() }))
 vi.mock('@/lib/server/db', () => ({ database: () => mocks.sql }))
 vi.mock('@/lib/server/login-rate-limit', () => ({ consumeLoginAttempt: mocks.consume }))

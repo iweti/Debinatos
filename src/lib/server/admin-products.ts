@@ -6,6 +6,7 @@ import type { AdminProduct } from '@/lib/types/admin'
 
 import { requireAdmin } from './auth'
 import { database } from './db'
+import { type ProductRow, toPublicProduct } from './product-mapper'
 
 export const getAdminProducts = cache(async (): Promise<AdminProduct[]> => {
     await requireAdmin()
@@ -17,20 +18,5 @@ export const getAdminProducts = cache(async (): Promise<AdminProduct[]> => {
         FROM products p
         ORDER BY p.created_at DESC, p.id
     `
-    return rows.map((row) => ({
-        id: row.id,
-        name: row.name,
-        description: row.description,
-        stock: row.stock,
-        priceCents: row.price_cents,
-        createdAt: new Date(row.created_at).toISOString(),
-        category: row.category,
-        material: row.material,
-        dimensions: row.dimensions,
-        active: row.active,
-        featured: row.featured,
-        featuredOrder: row.featured_order,
-        images: row.images,
-        ...(row.badge ? { badge: row.badge } : {}),
-    }))
+    return (rows as (ProductRow & { stock: number })[]).map((row) => ({ ...toPublicProduct(row), stock: row.stock }))
 })

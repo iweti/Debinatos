@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+vi.mock('server-only', () => ({}))
+
 const mocks = vi.hoisted(() => {
     const transaction = vi.fn(async () => [[]])
     const sql = Object.assign(
@@ -19,7 +21,8 @@ vi.mock('@/lib/server/cloudinary', () => ({
 vi.mock('next/cache', () => ({ revalidatePath: mocks.revalidatePath }))
 vi.mock('next/navigation', () => ({ redirect: vi.fn() }))
 
-import { saveHighlights, saveProduct } from '@/app/admin/_lib/actions'
+import { authorizeImageUpload, saveHighlights, saveProduct, setProductActive } from '@/app/admin/_lib/actions'
+import { saveProduct as persistProduct } from '@/lib/server/admin-product-mutations'
 import type { HighlightsInput, ProductInput } from '@/lib/types/admin'
 
 const highlights: HighlightsInput = { favorites: [], hero: { primary: null, secondary: null } }
@@ -51,6 +54,9 @@ describe('Ações administrativas', () => {
         mocks.requireAdmin.mockRejectedValue(new Error('NEXT_REDIRECT'))
         await expect(saveHighlights(highlights)).rejects.toThrow('NEXT_REDIRECT')
         await expect(saveProduct(product)).rejects.toThrow('NEXT_REDIRECT')
+        await expect(setProductActive('00000000-0000-0000-0000-000000000001', true)).rejects.toThrow('NEXT_REDIRECT')
+        await expect(authorizeImageUpload()).rejects.toThrow('NEXT_REDIRECT')
+        await expect(persistProduct(product)).rejects.toThrow('NEXT_REDIRECT')
         expect(mocks.database).not.toHaveBeenCalled()
         expect(mocks.revalidatePath).not.toHaveBeenCalled()
     })

@@ -5,6 +5,7 @@ import { cache } from 'react'
 import type { HeroSelections, Product } from '@/lib/types/store'
 
 import { database } from './db'
+import { type ProductRow, toPublicProduct } from './product-mapper'
 
 export const getProducts = cache(async (): Promise<Product[]> => {
     const rows = await database()`
@@ -15,22 +16,7 @@ export const getProducts = cache(async (): Promise<Product[]> => {
         FROM products p WHERE p.active = true
         ORDER BY p.created_at DESC, p.id
     `
-    // Only public fields may cross the StoreProvider's server/client boundary.
-    return rows.map((row) => ({
-        id: row.id,
-        name: row.name,
-        description: row.description,
-        priceCents: row.price_cents,
-        createdAt: new Date(row.created_at).toISOString(),
-        category: row.category,
-        material: row.material,
-        dimensions: row.dimensions,
-        active: row.active,
-        featured: row.featured,
-        featuredOrder: row.featured_order,
-        images: row.images,
-        ...(row.badge ? { badge: row.badge } : {}),
-    }))
+    return (rows as ProductRow[]).map(toPublicProduct)
 })
 
 export async function getHeroSelections(): Promise<HeroSelections> {

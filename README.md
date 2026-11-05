@@ -77,6 +77,22 @@ No painel, cadastre os produtos, envie até cinco fotos por produto e configure 
 
 Antes de enviar alterações, execute `npx next typegen`, `make check`, `make test` e `npm run build`. O CI também verifica vulnerabilidades das dependências de produção. Login, uploads e conexão com os serviços precisam de validação no ambiente configurado.
 
+## Testes de integração com PostgreSQL
+
+O CI inicia um PostgreSQL 17 descartável e executa também os testes SQL de migrações e do limitador de login. Falhas ao iniciar ou acessar esse banco interrompem a validação.
+
+Para executar a mesma suíte localmente com Docker:
+
+```sh
+docker run --detach --rm --name debinatos-tests --env POSTGRES_HOST_AUTH_METHOD=trust postgres:17-alpine
+# Aguarde este comando indicar que o PostgreSQL está aceitando conexões:
+docker exec debinatos-tests pg_isready -U postgres
+LOGIN_RATE_LIMIT_TEST_CONTAINER=debinatos-tests npm test
+docker stop debinatos-tests
+```
+
+O contêiner não publica portas e não usa as credenciais da aplicação. Sem `LOGIN_RATE_LIMIT_TEST_CONTAINER`, os 13 testes de integração são ignorados na execução local.
+
 ## Publicação
 
 A publicação usa o projeto **debinatos** na Vercel, com deploys automáticos pela integração Git habilitados em [vercel.json](vercel.json). A Vercel define o destino das branches e os domínios. Esses deploys não aguardam o CI nem aplicam migrações automaticamente. O [CD opcional](.github/workflows/deploy.yml) e o [workflow manual de migrações](.github/workflows/migrate.yml) dependem de variáveis explícitas de habilitação; evite habilitar dois fluxos de publicação ao mesmo tempo.
