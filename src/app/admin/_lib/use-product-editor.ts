@@ -2,17 +2,19 @@
 import type { FormEvent } from 'react'
 import { useRef, useState, useTransition } from 'react'
 
+import { IMAGE_UPLOAD_TYPES, MAX_IMAGE_BYTES } from '@/lib/domain/image-upload'
+import { parsePrice, priceInput } from '@/lib/domain/money'
 import { useStore } from '@/lib/state/store-context'
-import type { ProductImageInput } from '@/lib/types/admin'
-import type { Product } from '@/lib/types/store'
+import type { AdminProduct, ProductImageInput } from '@/lib/types/admin'
 
-import { authorizeImageUpload, saveProduct } from './actions'
+import { saveProduct, uploadImage } from './actions'
 
-export function useProductEditor(product: Product | null, close: () => void) {
+export function useProductEditor(product: AdminProduct | null, close: () => void) {
     const { notify } = useStore()
     const [name, setName] = useState(product?.name ?? '')
     const [category, setCategory] = useState(product?.category ?? 'Bijuterias')
     const [stock, setStock] = useState(product?.stock.toString() ?? '1')
+    const [price, setPrice] = useState(product ? priceInput(product.priceCents) : '')
     const [description, setDescription] = useState(product?.description ?? '')
     const [material, setMaterial] = useState(product?.material ?? '')
     const [dimensions, setDimensions] = useState(product?.dimensions ?? '')
@@ -30,9 +32,9 @@ export function useProductEditor(product: Product | null, close: () => void) {
         const selected = Array.from(files)
         if (
             images.length + selected.length > 5 ||
-            selected.some((file) => !['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size === 0 || file.size > 5 * 1024 * 1024)
+            selected.some((file) => !IMAGE_UPLOAD_TYPES.some((type) => type === file.type) || file.size === 0 || file.size > MAX_IMAGE_BYTES)
         ) {
-            setError('Use de 1 a 5 fotos JPG, PNG ou WebP, de até 5 MB cada.')
+            setError('Use de 1 a 5 fotos JPG, PNG ou WebP, de até 4 MB cada.')
             setUploadFailed(true)
             return
         }
@@ -42,22 +44,11 @@ export function useProductEditor(product: Product | null, close: () => void) {
             try {
                 const sources: string[] = []
                 for (const file of selected) {
-                    const authorization = await authorizeImageUpload()
-                    if ('error' in authorization) throw new Error(authorization.error)
                     const form = new FormData()
                     form.set('file', file)
-                    form.set('api_key', authorization.apiKey)
-                    form.set('signature', authorization.signature)
-                    for (const [key, value] of Object.entries(authorization.parameters)) form.set(key, String(value))
-                    const response = await fetch(`https://api.cloudinary.com/v1_1/${authorization.cloudName}/image/upload`, {
-                        method: 'POST',
-                        body: form,
-                        signal: AbortSignal.timeout(60000),
-                    })
-                    const result = await response.json()
-                    if (!response.ok || typeof result.secure_url !== 'string')
-                        throw new Error('Não foi possível enviar a foto. Tente adicionar as fotos novamente.')
-                    sources.push(result.secure_url)
+                    const result = await uploadImage(form)
+                    if ('error' in result) throw new Error(result.error)
+                    sources.push(result.url)
                 }
                 setImages((previous) => [...previous, ...sources.map((url) => ({ url }))])
                 setUploadFailed(false)
@@ -74,6 +65,11 @@ export function useProductEditor(product: Product | null, close: () => void) {
         event.preventDefault()
         if (busy.current || uploadFailed) return
         const quantity = Number(stock)
+        const priceCents = parsePrice(price)
+        if (priceCents === undefined) {
+            setError('Informe um preço maior que zero, com até duas casas decimais e no máximo R$ 21.474.836,47.')
+            return
+        }
         if (
             !stock.trim() ||
             !name.trim() ||
@@ -99,6 +95,7 @@ export function useProductEditor(product: Product | null, close: () => void) {
                     name,
                     category,
                     stock: quantity,
+                    priceCents,
                     description,
                     material,
                     dimensions,
@@ -125,6 +122,8 @@ export function useProductEditor(product: Product | null, close: () => void) {
         setCategory,
         stock,
         setStock,
+        price,
+        setPrice,
         description,
         setDescription,
         material,

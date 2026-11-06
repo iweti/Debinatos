@@ -1,0 +1,150 @@
+.animation {
+    --bag-top: calc(50dvh - 60px);
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    pointer-events: none;
+    isolation: isolate;
+    opacity: 1;
+    transition: opacity 180ms ease;
+}
+
+.animation[data-leaving='true'] {
+    opacity: 0;
+}
+
+.animation::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(0 0 0 / 38%);
+    animation: dim-screen 180ms ease-out both;
+}
+
+@keyframes dim-screen {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.photo {
+    position: absolute;
+    left: var(--photo-left);
+    top: var(--photo-top);
+    width: var(--photo-width);
+    height: var(--photo-height);
+    max-width: none;
+    object-fit: var(--photo-fit);
+    object-position: var(--photo-position);
+    border-radius: 8px;
+    z-index: 1;
+    will-change: transform, opacity;
+    animation: fly-into-bag 1.4s both;
+}
+
+.bagBack,
+.bagFront {
+    position: absolute;
+    left: calc(50vw - 60px);
+    top: var(--bag-top);
+    width: 120px;
+    height: 120px;
+    color: var(--color-ink);
+    animation: bag-arrives 200ms ease-out both;
+}
+
+.bagBack {
+    z-index: 0;
+    filter: drop-shadow(0 12px 18px #350f0c22);
+}
+
+.bagFront {
+    /* Keep the opening behind the photo and the bag body in front of it. */
+    clip-path: inset(25% 0 0);
+    z-index: 2;
+}
+
+.hearts {
+    position: absolute;
+    left: 50vw;
+    top: calc(var(--bag-top) + 36px);
+    z-index: 3;
+}
+
+.heart {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--color-brand);
+    filter: drop-shadow(0 2px 4px #350f0c22);
+    animation: hearts-rise 700ms ease-out both;
+}
+
+.heart:nth-child(even) {
+    color: var(--color-gold);
+}
+
+@keyframes hearts-rise {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 0) scale(0.2) rotate(0deg);
+    }
+    15% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--heart-x)), var(--heart-y)) scale(1) rotate(var(--heart-rotation));
+    }
+}
+
+@keyframes fly-into-bag {
+    0% {
+        transform: translate(0, 0) scale(1);
+        border-radius: 8px;
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    58%,
+    64% {
+        transform: translate(var(--travel-x), var(--travel-y)) scale(var(--photo-scale));
+        border-radius: calc(8px / var(--photo-scale));
+        opacity: 1;
+        animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.45);
+    }
+    82% {
+        transform: translate(var(--travel-x), var(--drop-y)) scale(var(--photo-scale));
+        border-radius: calc(8px / var(--photo-scale));
+        opacity: 1;
+    }
+    83%,
+    100% {
+        transform: translate(var(--travel-x), var(--drop-y)) scale(var(--photo-scale));
+        border-radius: calc(8px / var(--photo-scale));
+        opacity: 0;
+    }
+}
+
+@keyframes bag-arrives {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .animation {
+        display: none;
+    }
+}

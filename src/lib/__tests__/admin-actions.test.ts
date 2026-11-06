@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+vi.mock('server-only', () => ({}))
+
 const mocks = vi.hoisted(() => {
     const transaction = vi.fn(async () => [[]])
     const sql = Object.assign(
@@ -11,6 +13,7 @@ const mocks = vi.hoisted(() => {
 
 vi.mock('@/lib/server/auth', () => ({ requireAdmin: mocks.requireAdmin, createSession: vi.fn(), deleteSession: vi.fn() }))
 vi.mock('@/lib/server/db', () => ({ database: mocks.database }))
+vi.mock('@/lib/server/login-rate-limit', () => ({ consumeLoginAttempt: vi.fn() }))
 vi.mock('@/lib/server/cloudinary', () => ({
     validImageUrl: (url: unknown) => typeof url === 'string' && url.startsWith('https://res.cloudinary.com/'),
     imageService: vi.fn(),
@@ -18,7 +21,8 @@ vi.mock('@/lib/server/cloudinary', () => ({
 vi.mock('next/cache', () => ({ revalidatePath: mocks.revalidatePath }))
 vi.mock('next/navigation', () => ({ redirect: vi.fn() }))
 
-import { saveHighlights, saveProduct } from '@/app/admin/_lib/actions'
+import { saveHighlights, saveProduct, setProductActive, uploadImage } from '@/app/admin/_lib/actions'
+import { saveProduct as persistProduct } from '@/lib/server/admin-product-mutations'
 import type { HighlightsInput, ProductInput } from '@/lib/types/admin'
 
 const highlights: HighlightsInput = { favorites: [], hero: { primary: null, secondary: null } }
@@ -29,6 +33,7 @@ const product: ProductInput = {
     material: 'Vidro',
     dimensions: '10 cm',
     stock: 1,
+    priceCents: 1990,
     active: true,
     images: [{ url: 'https://res.cloudinary.com/test/image/upload/a.webp' }],
 }
@@ -40,10 +45,18 @@ beforeEach(() => {
 })
 
 describe('Ações administrativas', () => {
+    it('recusa preço inválido antes de acessar o banco', async () => {
+        expect((await saveProduct({ ...product, priceCents: 0 })).error).toBeTruthy()
+        expect(mocks.database).not.toHaveBeenCalled()
+    })
+
     it('bloqueia destaques e cadastro sem sessão antes de acessar o banco', async () => {
         mocks.requireAdmin.mockRejectedValue(new Error('NEXT_REDIRECT'))
         await expect(saveHighlights(highlights)).rejects.toThrow('NEXT_REDIRECT')
         await expect(saveProduct(product)).rejects.toThrow('NEXT_REDIRECT')
+        await expect(setProductActive('00000000-0000-0000-0000-000000000001', true)).rejects.toThrow('NEXT_REDIRECT')
+        await expect(uploadImage(new FormData())).rejects.toThrow('NEXT_REDIRECT')
+        await expect(persistProduct(product)).rejects.toThrow('NEXT_REDIRECT')
         expect(mocks.database).not.toHaveBeenCalled()
         expect(mocks.revalidatePath).not.toHaveBeenCalled()
     })
@@ -71,6 +84,8 @@ describe('Ações administrativas', () => {
         expect(await saveProduct({ ...product, featured: true, featuredOrder: 1 } as ProductInput)).toEqual({ success: true })
         const values = mocks.sql.mock.calls[0].slice(1)
         const data = JSON.parse(values[1] as string)
+        expect(data.priceCents).toBe(1990)
+        expect(data.stock).toBe(product.stock)
         expect(data).not.toHaveProperty('featured')
         expect(data).not.toHaveProperty('featuredOrder')
         expect(mocks.transaction).toHaveBeenCalledTimes(1)

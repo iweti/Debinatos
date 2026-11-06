@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     devIndicators: false,
     experimental: {
         agentUpgrade: 'security',
+        serverActions: { bodySizeLimit: '4250kb' },
     },
 }
 
