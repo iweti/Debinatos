@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { catalogFilterUrl, catalogProducts, parseCatalogSort } from '../domain/catalog'
+import { catalogCategories, catalogFilterUrl, catalogProducts, parseCatalogSort } from '../domain/catalog'
 import type { Product } from '../types/store'
 import { createStoreState } from './fixtures/store'
 
@@ -11,6 +11,26 @@ function product(id: string, overrides: Partial<Product> = {}): Product {
 function ids(products: Product[]) {
     return products.map((item) => item.id)
 }
+
+describe('Categorias do catálogo', () => {
+    it('conta ativos por categoria e no total, preservando a ordem de aparição', () => {
+        const items = [
+            product('colar', { category: 'Bijuterias' }),
+            product('oculto', { category: 'Indisponíveis', active: false }),
+            product('vaso', { category: 'Decoração' }),
+            product('anel', { category: 'Bijuterias' }),
+            product('especial', { category: '__proto__' }),
+        ]
+        const { categories, categoryCounts } = catalogCategories(items)
+        expect(categories).toEqual(['Bijuterias', 'Decoração', '__proto__'])
+        expect(categoryCounts).toEqual({ '': 4, Bijuterias: 2, Decoração: 1, ['__proto__']: 1 })
+    })
+
+    it('mantém o total zerado quando não há produtos ativos', () => {
+        expect(catalogCategories([])).toEqual({ categories: [], categoryCounts: { '': 0 } })
+        expect(catalogCategories([product('oculto', { active: false })])).toEqual({ categories: [], categoryCounts: { '': 0 } })
+    })
+})
 
 describe('Ordenação do catálogo', () => {
     const items = [

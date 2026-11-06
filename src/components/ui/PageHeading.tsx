@@ -1,4 +1,3 @@
-'use client'
 import type { ReactNode } from 'react'
 
 export function PageHeading({ eyebrow, title, children }: { eyebrow: string; title: string; children?: ReactNode }) {
