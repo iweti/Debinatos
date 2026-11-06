@@ -39,9 +39,22 @@
 }
 
 .tagline {
-    height: 3em;
+    height: 1.5em;
+    overflow: hidden;
     font-size: 7px;
     line-height: 1.5;
+    white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    .tagline {
+        display: -webkit-box;
+        height: 3em;
+        overflow-wrap: anywhere;
+        white-space: normal;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
 }
 
 /* Use the card width: the same viewport also contains narrower carousel slides. */

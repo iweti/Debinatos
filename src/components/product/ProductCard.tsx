@@ -45,7 +45,9 @@ export function ProductCard({ product }: { product: Product }) {
                     <p className={`${styles.price} font-semibold text-brand`}>{formatMoney(product.priceCents)}</p>
                     <AddToCartButton key={product.id} product={product} photoRef={photoRef} compact />
                 </div>
-                <small className={`${styles.tagline} mt-1.5 block text-muted`}>Um detalhe para chamar de seu.</small>
+                <small className={`${styles.tagline} mt-1.5 block text-muted`} title={product.description}>
+                    {product.description}
+                </small>
             </div>
         </article>
     )

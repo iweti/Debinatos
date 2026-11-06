@@ -21,7 +21,7 @@ vi.mock('@/lib/server/cloudinary', () => ({
 vi.mock('next/cache', () => ({ revalidatePath: mocks.revalidatePath }))
 vi.mock('next/navigation', () => ({ redirect: vi.fn() }))
 
-import { saveHighlights, saveProduct, setProductActive,uploadImage } from '@/app/admin/_lib/actions'
+import { saveHighlights, saveProduct, setProductActive, uploadImage } from '@/app/admin/_lib/actions'
 import { saveProduct as persistProduct } from '@/lib/server/admin-product-mutations'
 import type { HighlightsInput, ProductInput } from '@/lib/types/admin'
 
