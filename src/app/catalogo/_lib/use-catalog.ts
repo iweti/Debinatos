@@ -1,8 +1,8 @@
 'use client'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { catalogFilterUrl, catalogProducts, parseCatalogSort } from '@/lib/domain/catalog'
+import { catalogCategories, catalogFilterUrl, catalogProducts, parseCatalogSort } from '@/lib/domain/catalog'
 import { useStore } from '@/lib/state/store-context'
 
 export function useCatalog() {
@@ -18,7 +18,7 @@ export function useCatalog() {
     }, [urlQuery])
     const category = params.get('categoria') ?? ''
     const sort = parseCatalogSort(params.get('ordem'))
-    const categories = [...new Set(state.products.filter((p) => p.active).map((p) => p.category))]
+    const { categories, categoryCounts } = useMemo(() => catalogCategories(state.products), [state.products])
     const updateFilter = (key: 'q' | 'categoria' | 'ordem', value: string) => {
         window.history.replaceState(null, '', catalogFilterUrl(window.location.search, { [key]: value }))
     }
@@ -26,8 +26,7 @@ export function useCatalog() {
         setQuery('')
         window.history.replaceState(null, '', catalogFilterUrl(window.location.search, { q: '', categoria: '' }))
     }
-    const products = catalogProducts(state.products, { query, category, sort })
-    const categoryCounts = Object.fromEntries(['', ...categories].map((c) => [c, state.products.filter((p) => p.active && (!c || p.category === c)).length]))
+    const products = useMemo(() => catalogProducts(state.products, { query, category, sort }), [state.products, query, category, sort])
     function changeSearch(value: string) {
         setQuery(value)
         updateFilter('q', value)

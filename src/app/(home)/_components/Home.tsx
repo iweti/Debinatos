@@ -1,15 +1,12 @@
-'use client'
 import { ArrowRight, ArrowUpRight, Flower2, Gem, Gift, Heart, Sparkles, Truck } from 'lucide-react'
 import Link from 'next/link'
 
 import type { HeroPhotos } from '@/lib/types/store'
 
-import { useHome } from '../_lib/use-home'
-import { FavoritesCarousel } from './FavoritesCarousel'
+import { FeaturedProducts } from './FeaturedProducts'
 import { Hero } from './Hero'
 
 export function Home({ heroPhotos }: { heroPhotos: HeroPhotos }) {
-    const { featured } = useHome()
     return (
         <>
             <Hero photos={heroPhotos} />
@@ -57,8 +54,7 @@ export function Home({ heroPhotos }: { heroPhotos: HeroPhotos }) {
                             Ver todos os produtos <ArrowRight size={16} />
                         </Link>
                     </div>
-                    <FavoritesCarousel products={featured} />
-                    {!featured.length && <p className="text-xs text-muted">Novos encantos em breve. Explore nosso catálogo.</p>}
+                    <FeaturedProducts />
                 </div>
             </section>
             <section className="mx-auto w-[calc(100%-36px)] max-w-310 md:w-[calc(100%-64px)] xl:w-[calc(100%-96px)] py-10 md:py-16">

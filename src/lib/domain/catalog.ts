@@ -23,6 +23,17 @@ const comparators: Record<CatalogSort, (a: Product, b: Product) => number> = {
     relevantes: compareFeatured,
 }
 
+export function catalogCategories(products: readonly Product[]) {
+    const counts = new Map<string, number>()
+    let total = 0
+    for (const product of products) {
+        if (!product.active) continue
+        total++
+        counts.set(product.category, (counts.get(product.category) ?? 0) + 1)
+    }
+    return { categories: [...counts.keys()], categoryCounts: Object.fromEntries([...counts, ['', total]]) }
+}
+
 export function catalogProducts(products: readonly Product[], filters: { query: string; category: string; sort: CatalogSort }) {
     const normalize = (value: string) =>
         value
