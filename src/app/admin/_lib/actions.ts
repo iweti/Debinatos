@@ -9,7 +9,7 @@ import {
     saveProduct as persistProduct,
     setProductActive as persistProductActive,
 } from '@/lib/server/admin-product-mutations'
-import { authorizeImageUpload as prepareImageUpload } from '@/lib/server/admin-uploads'
+import { uploadImage as storeImage } from '@/lib/server/admin-uploads'
 import { deleteSession } from '@/lib/server/auth'
 import type { ActionResult, HighlightsInput, ProductInput } from '@/lib/types/admin'
 
@@ -41,6 +41,6 @@ export async function setProductActive(id: string, active: boolean): Promise<Act
     return revalidateCatalog(await persistProductActive(id, active))
 }
 
-export async function authorizeImageUpload() {
-    return prepareImageUpload()
+export async function uploadImage(form: FormData) {
+    return storeImage(form)
 }

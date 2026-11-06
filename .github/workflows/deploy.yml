@@ -102,7 +102,7 @@ jobs:
       - name: Confirmar migrações necessárias sem alterar o banco
         run: |
           npm run check:env -- --context=migration
-          node scripts/migrate.mjs --verify-through 007_admin_login_rate_limit.sql
+          node scripts/migrate.mjs --verify-through 008_bound_login_and_upload_attempts.sql
         env:
           MIGRATION_DATABASE_URL: ${{ secrets.MIGRATION_DATABASE_URL }}
 

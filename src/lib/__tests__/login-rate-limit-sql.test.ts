@@ -27,11 +27,12 @@ async function isolatedQuery(sql: string) {
 describe.skipIf(!container)('Limite atômico em PostgreSQL descartável', () => {
     beforeAll(async () => {
         const migration = await readFile(new URL('../../../migrations/007_admin_login_rate_limit.sql', import.meta.url), 'utf8')
-        await query(`CREATE SCHEMA ${schema}; SET search_path TO ${schema}; ${migration}`)
+        const fix = await readFile(new URL('../../../migrations/008_bound_login_and_upload_attempts.sql', import.meta.url), 'utf8')
+        await query(`CREATE SCHEMA ${schema}; SET search_path TO ${schema}; CREATE TABLE admin_users (id uuid PRIMARY KEY); ${migration} ${fix}`)
     }, 30000)
 
     beforeEach(async () => {
-        await isolatedQuery('TRUNCATE admin_login_attempts;')
+        await isolatedQuery('TRUNCATE admin_login_attempts, admin_upload_attempts, admin_users;')
     })
 
     afterAll(async () => {
@@ -58,6 +59,11 @@ describe.skipIf(!container)('Limite atômico em PostgreSQL descartável', () => 
             expect(await isolatedQuery(`SELECT consume_admin_login_attempt('${uniqueAccount}', '${origin}');`)).toBe('t')
         }
         expect(await isolatedQuery(reserve)).toBe('f')
+        expect(await isolatedQuery("SELECT count(*) FROM admin_login_attempts WHERE bucket_key LIKE 'account:%'")).toBe('30')
+        for (let count = 100; count < 120; count++) {
+            expect(await isolatedQuery(`SELECT consume_admin_login_attempt('account:${count.toString(16).padStart(64, '0')}', '${origin}');`)).toBe('f')
+        }
+        expect(await isolatedQuery('SELECT count(*) FROM admin_login_attempts')).toBe('31')
     }, 30000)
 
     it('recupera a janela expirada sem desbloqueio manual', async () => {
@@ -82,6 +88,7 @@ describe.skipIf(!container)('Limite atômico em PostgreSQL descartável', () => 
         )
         expect(results.filter((result) => result === 't')).toHaveLength(30)
         expect(results.filter((result) => result === 'f')).toHaveLength(10)
+        expect(await isolatedQuery('SELECT count(*) FROM admin_login_attempts')).toBe('31')
     }, 30000)
 
     it('remove no máximo cem chaves expiradas por reserva', async () => {
@@ -91,4 +98,20 @@ describe.skipIf(!container)('Limite atômico em PostgreSQL descartável', () => 
         expect(await isolatedQuery(reserve)).toBe('t')
         expect(await isolatedQuery('SELECT count(*) FROM admin_login_attempts;')).toBe('52')
     })
+    it('limita uploads concorrentes por administrador e recupera a janela sem crescer a tabela', async () => {
+        const admin = '00000000-0000-0000-0000-000000000001'
+        const other = '00000000-0000-0000-0000-000000000002'
+        await isolatedQuery(`INSERT INTO admin_users VALUES ('${admin}'), ('${other}');`)
+        const upload = `SELECT consume_admin_upload_attempt('${admin}');`
+        const results = await Promise.all(Array.from({ length: 40 }, () => isolatedQuery(upload)))
+        expect(results.filter((result) => result === 't')).toHaveLength(30)
+        expect(results.filter((result) => result === 'f')).toHaveLength(10)
+        const expiry = await isolatedQuery(`SELECT expires_at FROM admin_upload_attempts WHERE admin_id = '${admin}';`)
+        expect(await isolatedQuery(upload)).toBe('f')
+        expect(await isolatedQuery(`SELECT expires_at FROM admin_upload_attempts WHERE admin_id = '${admin}';`)).toBe(expiry)
+        expect(await isolatedQuery('SELECT count(*) FROM admin_upload_attempts')).toBe('1')
+        expect(await isolatedQuery(`SELECT consume_admin_upload_attempt('${other}');`)).toBe('t')
+        await isolatedQuery("UPDATE admin_upload_attempts SET expires_at = statement_timestamp() - interval '1 second';")
+        expect(await isolatedQuery(upload)).toBe('t')
+    }, 30000)
 })

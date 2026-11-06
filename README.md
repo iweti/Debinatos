@@ -62,6 +62,15 @@ Acesse [localhost:3000](http://localhost:3000). Reinicie o servidor após altera
 Abra `/admin` ou o link **Painel administrativo** no rodapé. O proprietário deve criar a conta diretamente na tabela `admin_users`, com senha armazenada como hash bcrypt. Não há usuário padrão nem cadastro público.
 
 No painel, cadastre os produtos, envie até cinco fotos por produto e configure os destaques da página inicial.
+Cada foto deve ter até 4 MB e ser JPG, PNG ou WebP. O servidor verifica o arquivo antes do envio ao Cloudinary e limita a 30 tentativas por administrador a cada 15 minutos, inclusive envios que falham.
+
+Antes de publicar esta versão, aplique `008_bound_login_and_upload_attempts.sql` pelo executor de migrações, após a 007. Ela corrige a reserva das tentativas de login e cria a cota persistente de uploads. Exemplo, com a conexão direta de migração configurada:
+
+```sh
+node --env-file=.env.local scripts/migrate.mjs 008_bound_login_and_upload_attempts.sql
+```
+
+As migrações anteriores não foram alteradas. Sem a 008, o novo upload recusa o envio; o CD opcional também exige essa versão do banco.
 
 ## Comandos úteis
 
@@ -91,7 +100,7 @@ LOGIN_RATE_LIMIT_TEST_CONTAINER=debinatos-tests npm test
 docker stop debinatos-tests
 ```
 
-O contêiner não publica portas e não usa as credenciais da aplicação. Sem `LOGIN_RATE_LIMIT_TEST_CONTAINER`, os 13 testes de integração são ignorados na execução local.
+O contêiner não publica portas e não usa as credenciais da aplicação. Sem `LOGIN_RATE_LIMIT_TEST_CONTAINER`, os 14 testes de integração são ignorados na execução local.
 
 ## Publicação
 

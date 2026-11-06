@@ -1,5 +1,5 @@
 .animation {
-    --bag-bottom: calc(104px + env(safe-area-inset-bottom));
+    --bag-top: calc(50dvh - 60px);
     position: fixed;
     inset: 0;
     z-index: 110;
@@ -50,7 +50,7 @@
 .bagFront {
     position: absolute;
     left: calc(50vw - 60px);
-    bottom: var(--bag-bottom);
+    top: var(--bag-top);
     width: 120px;
     height: 120px;
     color: var(--color-ink);
@@ -66,6 +66,43 @@
     /* Keep the opening behind the photo and the bag body in front of it. */
     clip-path: inset(25% 0 0);
     z-index: 2;
+}
+
+.hearts {
+    position: absolute;
+    left: 50vw;
+    top: calc(var(--bag-top) + 36px);
+    z-index: 3;
+}
+
+.heart {
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--color-brand);
+    filter: drop-shadow(0 2px 4px #350f0c22);
+    animation: hearts-rise 700ms ease-out both;
+}
+
+.heart:nth-child(even) {
+    color: var(--color-gold);
+}
+
+@keyframes hearts-rise {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 0) scale(0.2) rotate(0deg);
+    }
+    15% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--heart-x)), var(--heart-y)) scale(1) rotate(var(--heart-rotation));
+    }
 }
 
 @keyframes fly-into-bag {
@@ -106,15 +143,8 @@
     }
 }
 
-@media (min-width: 1024px) {
-    .animation {
-        --bag-bottom: 24px;
-    }
-}
-
 @media (prefers-reduced-motion: reduce) {
     .animation {
-        --bag-bottom: calc(104px + env(safe-area-inset-bottom));
         display: none;
     }
 }

@@ -137,7 +137,7 @@ export function ProductEditor({ product, close, categories }: { product: AdminPr
                     <div className="mt-6">
                         <h3 className="mb-2 text-xs">Fotos do produto</h3>
                         <small className="block text-[9px] leading-relaxed text-muted">
-                            JPG, PNG ou WebP • até 5 MB por foto • máximo de 5 fotos. A primeira é a capa. Arraste pela alça para reorganizar.
+                            JPG, PNG ou WebP • até 4 MB por foto • máximo de 5 fotos. A primeira é a capa. Arraste pela alça para reorganizar.
                         </small>
                         <output className="sr-only">{reorder.announcement}</output>
                         <ol ref={reorder.container} className="mt-4 grid grid-cols-2 items-start gap-4 sm:grid-cols-3">

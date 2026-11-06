@@ -171,5 +171,9 @@ describe.skipIf(!container)('Runner em PostgreSQL isolado', () => {
         execute(plan)
         expect(query("SELECT count(*) FROM public.schema_migrations WHERE method = 'baseline'")).toBe('7')
         execute(await migrationPlan(names[6], { verify: true }))
+        const securityFix = '008_bound_login_and_upload_attempts.sql'
+        execute(await migrationPlan(securityFix))
+        execute(await migrationPlan(securityFix, { verify: true }))
+        expect(query('SELECT count(*) FROM public.schema_migrations')).toBe('8')
     })
 })

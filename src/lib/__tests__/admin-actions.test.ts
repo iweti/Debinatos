@@ -21,7 +21,7 @@ vi.mock('@/lib/server/cloudinary', () => ({
 vi.mock('next/cache', () => ({ revalidatePath: mocks.revalidatePath }))
 vi.mock('next/navigation', () => ({ redirect: vi.fn() }))
 
-import { authorizeImageUpload, saveHighlights, saveProduct, setProductActive } from '@/app/admin/_lib/actions'
+import { saveHighlights, saveProduct, setProductActive,uploadImage } from '@/app/admin/_lib/actions'
 import { saveProduct as persistProduct } from '@/lib/server/admin-product-mutations'
 import type { HighlightsInput, ProductInput } from '@/lib/types/admin'
 
@@ -55,7 +55,7 @@ describe('Ações administrativas', () => {
         await expect(saveHighlights(highlights)).rejects.toThrow('NEXT_REDIRECT')
         await expect(saveProduct(product)).rejects.toThrow('NEXT_REDIRECT')
         await expect(setProductActive('00000000-0000-0000-0000-000000000001', true)).rejects.toThrow('NEXT_REDIRECT')
-        await expect(authorizeImageUpload()).rejects.toThrow('NEXT_REDIRECT')
+        await expect(uploadImage(new FormData())).rejects.toThrow('NEXT_REDIRECT')
         await expect(persistProduct(product)).rejects.toThrow('NEXT_REDIRECT')
         expect(mocks.database).not.toHaveBeenCalled()
         expect(mocks.revalidatePath).not.toHaveBeenCalled()
